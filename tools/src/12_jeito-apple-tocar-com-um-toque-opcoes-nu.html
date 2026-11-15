@@ -55,6 +55,7 @@ function devMsg(x){return['📖 *Devocional da banda*'+(x.t?' — '+x.t:''),x.re
 function vDev(A,T){const all=espA('dev').sort((a,b)=>(b.d||'').localeCompare(a.d||'')),cur=devAtual(),fut=all.filter(x=>x.d>T).reverse(),old=all.filter(x=>x!==cur&&!(x.d>T)),fe=espLs('feito'),nf=all.filter(x=>!(x.d>T)&&fe[x.id]).length;
  return`${A?`<div class="eac"><button class="sm pri" onclick="devEd()">+ Novo devocional</button><span class="mut">Programe com antecedência: a banda só vê a partir da data de início.</span></div>`:''}
  ${cur?devCard(cur,A,1):`<div class="dbc"><p class="mut">${A?'Nenhum devocional publicado ainda. Toque em “+ Novo devocional” para começar.':'Nenhum devocional publicado ainda.'}</p></div>`}
+ ${vDevRep(A)}
  ${A&&fut.length?`<h2 class="dsh">Programados <small>${fut.length}</small></h2>${fut.map(x=>devCard(x,A)).join('')}`:''}
  ${old.length?`<h2 class="dsh">Anteriores <small>${old.length}${nf?' · '+nf+' feito'+(nf>1?'s':'')+' neste aparelho':''}</small></h2>${old.map(x=>devCard(x,A)).join('')}`:''}`}
 function devEd(id){const x=id?espA('dev').find(y=>y.id==id):null,v=k=>esc((x||{})[k]||''),T=td();

@@ -36,14 +36,15 @@ function flR(){const e=$('#flw');if(!e||!P)return;const SM=Object.fromEntries(S.
 {const _s=slR;slR=function(){_s.apply(this,arguments);try{flR()}catch(e){console.warn(e)}}}
 /* espiritual: devocionais, jejum e inspiração */
 const VFT='<footer id="vft"><p>“Nunca falte a vocês o zelo; antes, sejam <b>fervorosos</b> no espírito, servindo ao Senhor.”</p><cite>Romanos 12:11 | NVI</cite><button type="button" class="vfp" data-ic="1" onclick="privD()">Privacidade e seus dados</button></footer>';
-const EPK=['dev','jej','lnk','rec'],F_ESP='M12 3c.8 3.2 5 5.4 5 10.4A5 5 0 0 1 7 13.4c0-2.5 1.3-4.3 2.6-5.4.2 1.8 1 3 2.3 3.6-.6-3 .1-5.9.1-8.6zM12 21a2 2 0 0 1-2-2c0-1.3 1-2.2 2-3.2 1 1 2 1.9 2 3.2a2 2 0 0 1-2 2z';
+const EPK=['dev','jej','lnk','rec','mus'],F_ESP='M12 3c.8 3.2 5 5.4 5 10.4A5 5 0 0 1 7 13.4c0-2.5 1.3-4.3 2.6-5.4.2 1.8 1 3 2.3 3.6-.6-3 .1-5.9.1-8.6zM12 21a2 2 0 0 1-2-2c0-1.3 1-2.2 2-3.2 1 1 2 1.9 2 3.2a2 2 0 0 1-2 2z';
 const espSx=(v,n)=>String(v==null?'':v).slice(0,n);
 const espUrl=u=>{u=String(u||'').trim();return /^https:\/\/[^\s"'<>]{3,600}$/.test(u)?u:''};
 const espDt=d=>/^\d{4}-\d\d-\d\d$/.test(d||'')?d:'';
-function espClean(o){const r={dev:[],jej:[],lnk:[],rec:[]};if(!o||typeof o!='object')return r;
+function espClean(o){const r={dev:[],jej:[],lnk:[],rec:[],mus:[]};if(!o||typeof o!='object')return r;
  EPK.forEach(k=>{(Array.isArray(o[k])?o[k]:[]).slice(0,400).forEach(x=>{if(!x||typeof x!='object'||!x.id)return;const b={id:espSx(x.id,20),u:+x.u||0};if(x.del){b.del=1;r[k].push(b);return}if(x.av)b.av=1;if(x.avd)b.avd=1;
   if(k=='dev')Object.assign(b,{t:espSx(x.t,120),d:espDt(x.d),ref:espSx(x.ref,120),txt:espSx(x.txt,6000),q:espSx(x.q,2000),ora:espSx(x.ora,2000),lk:espUrl(x.lk)});
   if(k=='jej')Object.assign(b,{t:espSx(x.t,120),ini:espDt(x.ini),fim:espDt(x.fim)||espDt(x.ini),tp:espSx(x.tp,80),hr:espSx(x.hr,80),txt:espSx(x.txt,3000)});
+  if(k=='mus')Object.assign(b,{t:espSx(x.t,120),key:espSx(x.key,80),txt:espSx(x.txt,1200),ref:espSx(x.ref,200)});
   if(k=='rec')Object.assign(b,{t:espSx(x.t,120),txt:espSx(x.txt,2000),ini:espDt(x.ini),fim:espDt(x.fim),aud:x.aud=='todos'?'todos':'banda',lk:espUrl(x.lk)});
   if(k=='lnk'){b.tp=x.tp=='louv'?'louv':'preg';Object.assign(b,{t:espSx(x.t,140),by:espSx(x.by,120),url:espUrl(x.url),nota:espSx(x.nota,600)});if(!b.url)return}
   r[k].push(b)})});return r}
@@ -56,7 +57,7 @@ async function espAv(k,x){if(!window.__SB||!x||x.avd)return false;const SITE='ht
  const c=espA(k).find(y=>y.id==x.id);if(c){const o=Object.assign({},c,{avd:1});delete o.av;espPut(k,o)}toast(data&&data.total?'Aviso enviado para '+data.enviados+' celular(es)':'Ninguém ativou os avisos ainda');return true}catch(e){toast('Não consegui enviar o aviso agora; tento de novo depois');return false}}
 function espAvPend(){if(S.band||!window.__SB||!window.__SYNCOK)return;const T=td();espA('dev').filter(x=>x.av&&!x.avd&&x.d&&x.d<=T).slice(0,3).forEach(x=>espAv('dev',x));espA('rec').filter(x=>x.av&&!x.avd&&(x.ini||'')<=T&&(!x.fim||x.fim>=T)).slice(0,3).forEach(x=>espAv('rec',x))}
 setInterval(()=>{try{espAvPend()}catch(e){}},36e5);setTimeout(()=>{try{espAvPend()}catch(e){}},15000);
-function espPut(k,x){S.esp=S.esp||{dev:[],jej:[],lnk:[],rec:[]};x.u=Date.now();const a=S.esp[k]=S.esp[k]||[],i=a.findIndex(y=>y.id==x.id);if(i>=0)a[i]=x;else a.push(x);save();R()}
+function espPut(k,x){S.esp=S.esp||{dev:[],jej:[],lnk:[],rec:[],mus:[]};x.u=Date.now();const a=S.esp[k]=S.esp[k]||[],i=a.findIndex(y=>y.id==x.id);if(i>=0)a[i]=x;else a.push(x);save();R()}
 function espDel(k,id,nm){const x=espA(k).find(y=>y.id==id);espPut(k,{id,del:1});if(x)toastA('Excluído','Desfazer',()=>espPut(k,x));else toast('Excluído')}
 /* visto/feito: só neste aparelho */
 const espLs=(k,v)=>{try{if(v===undefined)return JSON.parse(localStorage.getItem('rep.esp.'+k)||'{}');localStorage.setItem('rep.esp.'+k,JSON.stringify(v))}catch(e){return{}}};
