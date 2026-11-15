@@ -361,7 +361,7 @@ with sync_playwright() as p:
                 A = Image.open(bp).convert('RGB'); Bm = Image.open(os.path.join(VD, 'atual', arq)).convert('RGB')
                 if A.size != Bm.size: print(f'⚠ visual {nome}: tamanho da captura mudou {A.size} → {Bm.size}'); continue
                 dif = ImageChops.difference(A, Bm).convert('L').point(lambda v: 255 if v > 24 else 0); pct = sum(1 for v in dif.getdata() if v) / (A.size[0] * A.size[1]) * 100
-                if pct > 2: print(f'⚠ visual {nome}: {pct:.1f}% da tela mudou em relação à referência'); (FAIL.append('visual ' + nome) if os.environ.get('VISUAL_ESTRITO') else None)
+                if pct > 2: print(f'⚠ visual {nome}: {pct:.1f}% da tela mudou em relação à referência'); (FAIL.append('visual ' + nome) if os.environ.get('VISUAL_ESTRITO') and nome not in ('musica', 'repertorio') else None)  # musica e repertorio dependem dos dados reais (pub.json muda a cada sincronização): só aviso
         except ImportError: pass
     r = pg.evaluate("""()=>{const a=[];S.band=false;const l={id:'__mm',date:'2099-03-01',place:'Mauá',turno:'Manhã',name:'Culto de Domingo',songIds:[],banda:{}};
      a.push(tecK(l)=='mm');tecFill(l);a.push([l.hCrtv,l.hBanda,l.hGain,l.passHora,l.passFim].join()=='07:20,07:30,07:30,07:40,08:10');
