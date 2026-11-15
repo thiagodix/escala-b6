@@ -624,6 +624,10 @@ with sync_playwright() as p:
             if r != 'ok': ruins.append(f'{nome}: {oc[:60]} -> {r}')
         pg.evaluate("()=>{S.tab='hoje';S.lv=null;S.sel=null;S.ctx=null;R()}")
     pg.wait_for_timeout(300)
+    r = pg.evaluate("""()=>{const o=S.lists.slice(),a=[];const l=JSON.parse(JSON.stringify(S.lists.find(x=>x.songIds.length)||S.lists[0]));
+     for(const v of [undefined,null,'',[null,'s1']]){const x=JSON.parse(JSON.stringify(l));if(v===undefined)delete x.songIds;else x.songIds=v;S.lists=[x];S.tab='lists';S.lv=x.id;S.lvm=1;S.band=1;R();a.push(!/Algo deu errado/.test(document.querySelector('#m').innerText))}
+     S.lists=o;S.tab='hoje';S.lv=null;R();return a}""")
+    ok(r == [True]*4, 'culto sem lista de músicas (vazia/nula) abre sem erro', str(r))
     ok(tot > 150 and not ruins and not E7, f'botões: {tot} tipos de botão clicados em {len(TELAS)} telas sem erro', '; '.join((ruins + E7)[:4]))
     c.close()
     b.close()
