@@ -1867,6 +1867,11 @@ async function pdfP(id){const l=S.lists.find(x=>x.id==id);if(!l)return;if(!windo
 /* ===== aviso de mudança (detalhes extras) */
 const fp2=l=>JSON.stringify([l.cant||{},l.ensData||'',l.ensHora||'',l.ensLocal||'',(l.passHora||'')+(l.passFim||l.hBanda||l.hGain||l.hCrtv?'|'+(l.passFim||'')+'|'+(l.hBanda||'')+'|'+(l.hGain||'')+'|'+(l.hCrtv||''):''),!!l.semEns,l.banda||{},l.rot||null,l.rn||{},l.tr||{}]);
 const sn2=l=>({o:JSON.stringify(l.ord||{}),d:drTxt(l)||'',g:l.pregador||'',c:Object.assign({},l.cant||{}),e:l.semEns?'sem ensaio':[l.ensData&&fd(l.ensData),l.ensHora,l.ensLocal].filter(Boolean).join(' · '),p:pasR(l)+(l.hBanda?' · banda pronta '+l.hBanda:''),b:Object.assign({},l.banda||{}),r:JSON.stringify([l.rot||null,l.rn||{},l.tr||{}])});
+
+function chg2(l,o){if(!o.s2)return[];const a=o.s2,n=sn2(l),it=[],nm=id=>{const s=S.songs.find(x=>x.id==id);return s?esc(s.title):'?'};
+ if(a.e!=n.e)it.push('Ensaio: '+esc(n.e||'a definir'));if(a.p!=n.p)it.push('Passagem de som: '+esc(n.p||'a definir'));
+ const cc=l.songIds.filter(i=>(a.c[i]||'')!=(n.c[i]||''));if(cc.length)it.push('Quem canta mudou: '+cc.map(i=>nm(i)+(n.c[i]?' ('+esc(n.c[i])+')':'')).join(', '));
+ const bb=BR.filter(r=>(a.b[r[0]]||'')!=(n.b[r[0]]||''));if(bb.length)it.push('Equipe: '+bb.map(r=>r[1]+' '+esc(n.b[r[0]]||'—')).join(', '));if(a.r!=n.r)it.push('Roteiro ou observações da banda atualizados.');if(a.o!==undefined&&a.o!=n.o){const ao=JSON.parse(a.o||'{}'),no=JSON.parse(n.o||'{}'),ch=l.songIds.filter(i=>(ao[i]||'')!=(no[i]||''));if(ch.length)it.push('Posição no culto: '+ch.map(i=>nm(i)+' → '+esc(SLN[no[i]]||no[i]||'Louvor')).join(', '))}if(a.d!==undefined&&a.d!=n.d)it.push(esc(n.d||'Paleta removida'));if(a.g!==undefined&&a.g!=n.g)it.push('Pregador(a): '+esc(n.g||'a definir'));return it}
 /* ===== minha escala */
 function meG(){let v='';try{v=localStorage.getItem('rep.me')||''}catch(e){}if(!v&&window.__FVME&&__FVME.nome)v=S.band?pubNm(__FVME.nome):__FVME.nome;return v}
 function meAsk(n){n=n||0;if(!S.band||S.bandPrev||meG()||seenK('rep.meask')||n>40)return;if(dlg.open||(window.d2&&d2.open)||document.getElementById('tour')||document.body.classList.contains('fs')||!meNames().length)return setTimeout(()=>meAsk(n+1),3000);setSeen('rep.meask');meD(1)}
@@ -1968,7 +1973,7 @@ function rn1(){if(S.mig.rn1)return;S.lists.forEach(l=>{const n=(l.name||'').trim
 function rn2(){if(S.mig.rn2)return;S.lists.forEach(l=>{const n=(l.name||'').trim();if(/^Domingo:\s*/i.test(n))l.name=n.replace(/^Domingo:\s*/i,'')});S.mig.rn2=1}
 const VMIMP={};
 const VMML={'PODEROSO DEUS ETERNO':'majestade','MESSIAS':'maranata','SOU GRATO POR SEU AMOR':'santo pra sempre','DIGNO É O SENHOR':'*'};function vm1(){if(S.mig.vm1)return;const M={};Object.keys(VMIMP).forEach(k=>M[nz(k)]=[VMIMP[k],VMML[k]]);S.songs.forEach(s=>{const e=M[nz(s.title)];if(!e||(s.vmap||[]).length)return;const md=s.medleys||[],ok=e[1]?(e[1]=='*'?md.length>0:md.some(x=>nz(x).includes(e[1]))):!md.length;if(ok)s.vmap=e[0].map(r=>{if(!r[0])return{t:''};const h=VH.test(r[0])?1:0;return{t:r[0],h,v:h?'':r[1]}})});S.mig.vm1=1}
-const VER='15/11/2026 · 408';
+const VER='15/11/2026 · 409';
 
 const td=()=>new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);
 const asc2=s=>String(s||'').replace(/♭/g,'b').replace(/♯/g,'#').replace(/→/g,'>').replace(/←/g,'<').replace(/[^\x20-\x7E\u00A0-\u00FF\u2013\u2014\u2018-\u201D\u2022\u2026]/g,'');

@@ -628,6 +628,11 @@ with sync_playwright() as p:
      for(const v of [undefined,null,'',[null,'s1']]){const x=JSON.parse(JSON.stringify(l));if(v===undefined)delete x.songIds;else x.songIds=v;S.lists=[x];S.tab='lists';S.lv=x.id;S.lvm=1;S.band=1;R();a.push(!/Algo deu errado/.test(document.querySelector('#m').innerText))}
      S.lists=o;S.tab='hoje';S.lv=null;R();return a}""")
     ok(r == [True]*4, 'culto sem lista de músicas (vazia/nula) abre sem erro', str(r))
+    r = pg.evaluate("""()=>{const a=[],l=S.lists.find(x=>x.songIds.length>2),o=sn2(l);o.e='99:99';o.c={};o.b={};o.r='x';o.g='zz';
+     try{a.push(Array.isArray(chg2(l,{s2:o})))}catch(e){a.push(String(e))}
+     try{S.band=1;S.tab='lists';S.lv=l.id;S.lvm=1;R();a.push(!/Algo deu errado/.test(document.querySelector('#m').innerText))}catch(e){a.push(String(e))}
+     S.tab='hoje';S.lv=null;R();return a}""")
+    ok(r == [True, True], 'aviso de mudança do repertório (chg2) funciona e a tela abre', str(r))
     ok(tot > 150 and not ruins and not E7, f'botões: {tot} tipos de botão clicados em {len(TELAS)} telas sem erro', '; '.join((ruins + E7)[:4]))
     c.close()
     b.close()
