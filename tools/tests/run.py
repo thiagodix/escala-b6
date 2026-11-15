@@ -598,6 +598,34 @@ with sync_playwright() as p:
     pg.wait_for_timeout(300); pg.evaluate("S.tab='songs';S.sel=S.songs[0].id;R()"); pg.wait_for_timeout(300); pg.evaluate("S.tab='dash';R()"); pg.wait_for_timeout(300)
     ok(pg.evaluate('window.__x===undefined'), 'segurança: textos com código não são executados')
     ok(not E, 'admin: sem erros de JavaScript', '; '.join(E[:3])); c.close()
+    # 7) todos os botões de cada tela: executa o clique de cada tipo de botão e confere que nada dá erro
+    c = ctx_of(b); c.route('**/*.supabase.co/**', lambda r: r.fulfill(status=200, content_type='application/json', body='[]'))
+    c.add_init_script("try{localStorage.setItem('rep.tour','1');localStorage.setItem('rep.meask','1')}catch(e){}")
+    pg = c.new_page(); E7 = []; pg.on('pageerror', lambda x: E7.append(str(x)[:200])); pg.on('dialog', lambda d: d.dismiss())
+    pg.goto(B + '/'); pg.wait_for_timeout(3000)
+    TELAS = {'hoje': "S.tab='hoje';R()", 'repertorios': "S.tab='lists';S.lvm=0;S.lv=null;R()",
+             'repertorio aberto': "const l=[...S.lists].filter(x=>x.songIds.length).sort((a,b)=>b.date.localeCompare(a.date))[0];S.tab='lists';S.lv=l.id;S.lvm=1;R()",
+             'musicas': "S.tab='songs';S.hide=false;S.sel=null;R()", 'musica aberta': "S.tab='songs';S.sel=(S.songs.find(x=>x.vmap&&x.vmap.length)||S.songs[0]).id;S.hide=true;R()",
+             'espiritual': "S.tab='esp';R()", 'perfil': "S.tab='perf';R()", 'chat': "S.tab='chat';R()"}
+    tot = 0; ruins = []
+    for nome, js in TELAS.items():
+        pg.evaluate("()=>{" + js + "}"); pg.wait_for_timeout(150)
+        n_el = pg.evaluate("document.querySelectorAll('[onclick]').length")
+        vistos = set()
+        for i in range(n_el):
+            oc = pg.evaluate("(i)=>{const e=document.querySelectorAll('[onclick]')[i];return e?e.getAttribute('onclick'):null}", i)
+            if not oc: continue
+            k = re.sub(r"'[A-Za-z0-9_\\-]{3,}'", "'X'", oc)
+            if k in vistos: continue
+            vistos.add(k); tot += 1
+            pg.evaluate("()=>{" + js + "}")
+            r = pg.evaluate("(i)=>{try{const e=document.querySelectorAll('[onclick]')[i];if(!e)return 'ok';e.click();return 'ok'}catch(e){return (e&&e.message)||String(e)}}", i)
+            pg.wait_for_timeout(40)
+            if r != 'ok': ruins.append(f'{nome}: {oc[:60]} -> {r}')
+        pg.evaluate("()=>{S.tab='hoje';S.lv=null;S.sel=null;S.ctx=null;R()}")
+    pg.wait_for_timeout(300)
+    ok(tot > 150 and not ruins and not E7, f'botões: {tot} tipos de botão clicados em {len(TELAS)} telas sem erro', '; '.join((ruins + E7)[:4]))
+    c.close()
     b.close()
 srv.shutdown()
 print(f'\n{"TUDO CERTO" if not FAIL else str(len(FAIL)) + " FALHA(S): " + "; ".join(FAIL)}')

@@ -34,7 +34,7 @@ function secD(){const g=k=>{try{return +localStorage.getItem(k)||0}catch(e){retu
  <div class="cfh">Backup</div>
  <div class="ac"><button onclick="bkDl().then(secD)">Baixar backup agora</button><button onclick="bk()">Restaurar backup</button></div>
  <div class="cfh">Diagnóstico</div>
- <div class="ac">${window.__SB?'<button onclick="audD()">Registro de atividades</button><button onclick="repubAll()">Republicar visão da banda</button>':''}<button onclick="trD()">Abrir lixeira</button></div>
+ <div class="ac">${window.__SB?'<button onclick="audD()">Registro de atividades</button><button onclick="repubAll()">Republicar visão da banda</button><button onclick="expDados()">Baixar dados atuais</button><button onclick="errD()">Erros dos aparelhos</button>':''}<button onclick="trD()">Abrir lixeira</button></div>
  <div class="cfh">Dispositivo</div>
  <div class="ac"><button class="dng" onclick="sairDev()">Apagar dados deste aparelho</button></div>`;if(!dlg.open)dlg.showModal()}
 /* backup */
