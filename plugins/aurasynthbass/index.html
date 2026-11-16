@@ -6,7 +6,7 @@
 <link rel="icon" href="../assets/aura-icon.svg" type="image/svg+xml"><meta name="theme-color" content="#121315">
 <link rel="stylesheet" href="/plugins/assets/plugins.css"></head><body data-nav="aura">
 <main class="wrap">
-<div class="crumb"><a href="/">Fervor</a> / <a href="/plugins/">Plugins</a> / AURA Synth Bass</div>
+<div class="crumb"><a href="/plugins/">Plugins</a> / AURA Synth Bass</div>
 <div class="pd">
  <div class="gal"><div class="main"><img id="gm" src="panel.jpg" alt="Painel do AURA Synth Bass"></div>
   <div class="thumbs" id="th"></div></div>
@@ -79,7 +79,7 @@ var AURA={released:true,version:'1.0.0',price:'',buy:'',
   var $=function(i){return document.getElementById(i)};
   if(AURA.released){ $('dlWin').href=AURA.win;$('dlWin').textContent='BAIXAR PARA WINDOWS';$('dlWin').removeAttribute('aria-disabled');
     $('dlMac').href=AURA.mac;$('dlMac').textContent='BAIXAR PARA MAC';$('dlMac').removeAttribute('aria-disabled');
-    var mac=/Mac/i.test(navigator.platform||navigator.userAgent); $('dlMain').href=mac?AURA.mac:AURA.win; $('ver').textContent='Versão '+AURA.version+'.'; }
+    var mac=/Mac/i.test(navigator.platform||navigator.userAgent); $('ver').textContent='Versão '+AURA.version+'.'; }
   if(AURA.buy){ $('buyBtn').href=AURA.buy;$('buyBtn').textContent='COMPRAR LICENÇA';$('buyBtn').removeAttribute('aria-disabled'); }
   if(AURA.price){ $('price').innerHTML=AURA.price+' <small>licença para 3 aparelhos</small>'; }
   var imgs=['panel','manual/img/t_claro','manual/img/m_topo','manual/img/s_arp','manual/img/c_mixfil'],th=$('th'),gm=$('gm');
