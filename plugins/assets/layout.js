@@ -5,9 +5,10 @@
   '<header class="hd"><div class="in"><a class="brand" href="/plugins/">AURA <small>PLUGINS</small></a><nav>'+
   '<a href="/plugins/"'+(cur==='all'?' class="on"':'')+'>Todos os plugins</a>'+
   '<a href="/plugins/aurasynthbass/"'+(cur==='aura'?' class="on"':'')+'>AURA Synth Bass</a>'+
+  '<a href="/plugins/aurabass/"'+(cur==='aurabass'?' class="on"':'')+'>AURA Bass</a>'+
   '<a href="/plugins/aurasynthbass/manual/"'+(cur==='manual'?' class="on"':'')+'>Manual</a></nav>'+
-  '<a class="btn pr sm cta" href="/plugins/aurasynthbass/#download">Baixar teste grátis</a></div></header>';
-  var f='<div class="wood"></div><footer class="ft"><div class="in"><div><a href="/plugins/">Plugins</a><a href="/plugins/aurasynthbass/">AURA Synth Bass</a><a href="/plugins/aurasynthbass/manual/">Manual</a></div>'+
+  '<a class="btn pr sm cta" href="'+(cur==='aurabass'?'/plugins/aurabass/#baixar':'/plugins/aurasynthbass/#download')+'">Baixar teste grátis</a></div></header>';
+  var f='<div class="wood"></div><footer class="ft"><div class="in"><div><a href="/plugins/">Plugins</a><a href="/plugins/aurasynthbass/">AURA Synth Bass</a><a href="/plugins/aurabass/">AURA Bass</a><a href="/plugins/aurasynthbass/manual/">Manual</a></div>'+
   '<div>© 2026 Thiago R. Galvão · Todos os direitos reservados<br>Nomes de outros fabricantes citados pertencem a seus donos; não há afiliação.</div></div></footer>';
   document.body.insertAdjacentHTML('afterbegin',h); document.body.insertAdjacentHTML('beforeend',f);
 })();
