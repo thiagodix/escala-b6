@@ -145,5 +145,6 @@ grant execute on function public.apv_dados()                         to authenti
 grant execute on function public.apv_ver(text)                       to anon, authenticated;
 grant execute on function public.apv_responder(text,text,text,text,jsonb) to anon, authenticated;
 
-select public.marcar_script(26, 'aprovacao_repertorio');
+notify pgrst, 'reload schema';   -- faz a API enxergar as funções novas na hora
+do $m$ begin if to_regproc('public.marcar_script(integer,text)') is not null then perform public.marcar_script(26, 'aprovacao_repertorio'); end if; end $m$;  -- só registra se o script 25 já tiver rodado
 select 'ok: aprovação do repertório por link' as status;

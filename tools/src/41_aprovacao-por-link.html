@@ -15,13 +15,13 @@ function apvSnap(l,prev){const ss=lSongs(l),c=l.cant||{},ms=ss.map((s,i)=>({p:lP
   const ca=ia.filter(x=>ib.includes(x)).join('|'),cb=ib.filter(x=>ia.includes(x)).join('|');if(ca!=cb)mu.push('Ordem das músicas mudou');
   o.mudancas=mu.join('\n')}
  return o}
-const apvTxt2=(l,tk)=>['🙏 *Repertório para aprovação*',lPlain(l),(l.songIds||[]).length+' músicas','','Abra, ouça e responda com um toque:',APSITE+tk].join('\n');
+const apvTxt2=(l,tk)=>['Oi, tudo bem? 🙏','','Preparamos o repertório do culto *'+lPlain(l)+'* ('+(l.songIds||[]).length+' músicas) e queremos muito o seu olhar.','','Quando puder, abra o link, ouça as músicas e toque em *Aprovar*. Se quiser mudar algo, é só tocar em *Sugerir alteração*. Leva menos de 1 minuto:',APSITE+tk,'','Muito obrigado pelo cuidado com o ministério! 🙌'].join('\n');
 async function apvSend(id){const l=S.lists.find(x=>x.id==id);if(!l)return;uSnap('Enviado para aprovação');
  const sn=apvSnap(l,(l.apv||{}).sl);let tk='',ok=false,er='';
  if(window.__SB&&!S.band){try{const r=await __SB.rpc('apv_enviar',{p_list_id:l.id,p_snapshot:sn,p_por:ME||''});if(r.error)throw r.error;tk=r.data.token;ok=!!tk}catch(e){er=String((e&&e.message)||e||'')}}
  l.apv=Object.assign({},l.apv,{st:'env',t:Date.now(),by:ME||'',h:apvH(l.apv,'env',sn.mudancas||''),tk:ok?tk:(l.apv||{}).tk||'',sl:sn.musicas.map(m=>m.t+'|'+m.k),sf:sn.f});delete l.apv.n;delete l.apv.vs;delete l.apv.vt;save();R();
  if(ok){txD('Enviar para a liderança',apvTxt2(l,tk),'Mande no WhatsApp. A liderança do ministério abre o link, vê o repertório e toca em Aprovar ou Sugerir alteração. A resposta aparece aqui sozinha.');apvSync(1)}
- else txD('Enviar para aprovação',apvTxt(l),(/function|does not exist|schema cache|Could not find/i.test(er)?'O link automático ainda não foi ativado (falta rodar o script 26 no Supabase). ':'Não deu para criar o link agora. ')+'Envie este texto à liderança. Quando ela responder, marque aqui "Aprovado" ou "Ajustes pedidos".')}
+ else txD('Enviar para aprovação',apvTxt(l),'Não deu para criar o link agora'+(er?' ('+er.slice(0,140)+')':window.__SB?'':' (abra pelo painel de administração)')+'. Envie este texto à liderança. Quando ela responder, marque aqui "Aprovado" ou "Ajustes pedidos".')}
 async function apvSync(f){if(S.band||!window.__SB||!S.lists||APXB)return;if(!f&&Date.now()-APX.t<60000)return;APXB=1;
  try{const r=await __SB.rpc('apv_dados');if(r.error||!r.data)return;APX={t:Date.now(),a:{},e:r.data.eventos||[]};(r.data.aprov||[]).forEach(a=>APX.a[a.list_id]=a);apvApply()}catch(e){}finally{APXB=0}}
 function apvApply(){let ch=0;const msg=[];
@@ -37,7 +37,7 @@ function apvApply(){let ch=0;const msg=[];
 function apvCp(id){const l=S.lists.find(x=>x.id==id),u=l&&l.apv&&l.apv.tk?APSITE+l.apv.tk:'';if(!u)return;try{navigator.clipboard.writeText(u).then(()=>toast('Link copiado'),()=>prompt('Copie o link:',u))}catch(e){prompt('Copie o link:',u)}}
 function apvLog(id,ev,n){if(window.__SB&&!S.band)try{__SB.rpc('apv_registrar',{p_list_id:id,p_evento:ev,p_por:ME||'',p_nota:n||''}).then(()=>apvSync(1),()=>{})}catch(e){}}
 function apvLem(id){const l=S.lists.find(x=>x.id==id);if(!l||!l.apv||!l.apv.tk)return;
- txD('Lembrar a liderança',['Oi! Só lembrando do repertório de '+lPlain(l)+' que está aguardando sua aprovação 🙏','Dá para abrir, ouvir e aprovar com um toque:',APSITE+l.apv.tk].join('\n'),'Mande no WhatsApp. O lembrete fica registrado no histórico.');apvLog(id,'lembrete','')}
+ txD('Lembrar a liderança',['Oi, tudo bem? 😊','','Passando só para lembrar, com todo carinho, do repertório de *'+lPlain(l)+'* que ainda está esperando o seu olhar. Quando tiver um minutinho, abra o link, ouça e toque em *Aprovar* (ou sugira o que preferir mudar):',APSITE+l.apv.tk,'','Gratidão! 🙏'].join('\n'),'Mande no WhatsApp. O lembrete fica registrado no histórico.');apvLog(id,'lembrete','')}
 /* padrões: quando a liderança costuma responder */
 function apvStats(){const E=APX.e||[],env={},first={},rod={};
  E.forEach(x=>{const k=x.list_id+'|'+x.versao;if(x.evento=='enviado'||x.evento=='reenviado')env[k]=Date.parse(x.criado_em);if((x.evento=='aprovado'||x.evento=='ajuste')&&!first[k])first[k]=x;rod[x.list_id]=Math.max(rod[x.list_id]||0,x.versao||1)});
