@@ -87,12 +87,13 @@ with sync_playwright() as p:
     b = p.chromium.launch()
     # 2) visão da banda (dados de pub.json, sem login)
     c = band_ctx(b)
+    c.add_init_script("try{const r=Storage.prototype.removeItem;window.__rm=[];Storage.prototype.removeItem=function(k){try{window.__rm.push(k+'@'+(new Error().stack||'').split('\\n').slice(2,4).join('<').replace(/http:[^ )]*\\//g,''))}catch(e){}return r.call(this,k)}}catch(e){}")
     pg = c.new_page(); E = []; pg.on('pageerror', lambda x: E.append(str(x)[:200])); D = []; pg.on('console', lambda m: D.append('c:' + m.text[:120]) if m.type in ('error', 'warning') else None); pg.on('requestfailed', lambda r: D.append('f:' + r.url[-60:]))
     pg.goto(B + '/')
     try: pg.wait_for_function('typeof S!="undefined"&&S.lists&&S.lists.length>0', timeout=20000)
     except Exception: pass
     pg.wait_for_timeout(1500)
-    n = pg.evaluate('S.lists.length'); ok(n == NL, 'banda: todos os cultos publicados aparecem', f'{n} de {NL} · ' + pg.evaluate("(document.body.innerText||'').slice(0,160)") + ' · ' + ' | '.join(E[:2] + D[:6]) + ' · ls=' + pg.evaluate("Object.keys(localStorage).join(',')+'|'+Object.keys(sessionStorage).join(',')+'|on='+navigator.onLine+'|'+(localStorage.getItem('fv-band-auth')||'').slice(0,60)") + ' · sb=' + str(pg.evaluate('typeof window.supabase')) + ' · ' + pg.evaluate("(document.getElementById('fvl')||{innerText:'sem fvl'}).innerText.slice(0,120)"))
+    n = pg.evaluate('S.lists.length'); ok(n == NL, 'banda: todos os cultos publicados aparecem', f'{n} de {NL} · ' + pg.evaluate("(document.body.innerText||'').slice(0,160)") + ' · ' + ' | '.join(E[:2] + D[:6]) + ' · ls=' + pg.evaluate("Object.keys(localStorage).join(',')+'|'+Object.keys(sessionStorage).join(',')+'|on='+navigator.onLine+'|'+(localStorage.getItem('fv-band-auth')||'').slice(0,60)") + ' · rm=' + str(pg.evaluate('(window.__rm||[]).slice(0,4)')) + ' · sb=' + str(pg.evaluate('typeof window.supabase')) + ' · ' + pg.evaluate("(document.getElementById('fvl')||{innerText:'sem fvl'}).innerText.slice(0,120)"))
     inc = pg.evaluate("S.lists.filter(l=>l.songIds.some(id=>!S.songs.find(s=>s.id==id))).length"); ok(inc == 0, 'banda: nenhum culto com música faltando', f'{inc} cultos incompletos')
     lid = pg.evaluate("(S.lists.filter(l=>l.songIds.length&&l.date).sort((a,b)=>b.date.localeCompare(a.date))[0]||{}).id")
     if lid:
