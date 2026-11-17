@@ -52,7 +52,7 @@ function chOut(id){const n=CH.msgs.length;CH.msgs=CH.msgs.filter(x=>x.id!==id);i
 async function chInit(){if(CH.sub||CH.start||CH.anon)return;const c=FVC();if(!c&&!window.__FVREST)return;CH.start=1;chShow();
  if(c){try{let r=c.auth&&c.auth.getSession?await c.auth.getSession():null;CH.u=r&&r.data&&r.data.session&&r.data.session.user||null;if(!CH.u&&c.auth&&c.auth.getUser){r=await c.auth.getUser();CH.u=r&&r.data&&r.data.user||null}}catch(e){CH.u=null}}
  CH.start=0;CH.seen=chSeenGet();
- if(!CH.u){if(!window.__FVREST)return;CH.anon=1;chFixos();chLoad();if(!CH.tm)CH.tm=setInterval(chPoll,5000);return}
+ if(!CH.u)return;
  chLoad();if(!CH.tm)CH.tm=setInterval(chPoll,5000);
  try{if(!c.channel)return;CH.sub=c.channel('chat-banda').on('postgres_changes',{event:'INSERT',schema:'public',table:'chat_mensagens'},p=>chIn(p.new)).on('postgres_changes',{event:'DELETE',schema:'public',table:'chat_mensagens'},p=>chOut(p.old&&p.old.id)).subscribe(st=>{const was=CH.live;CH.live=st==='SUBSCRIBED';if(CH.live&&!was&&CH.ok)chLoad()})}catch(e){}}
 async function chSend(){const t=$('#chi');if(!t)return;const v=t.value.trim();if(!v)return;if(v.length>2000)return say('A mensagem é grande demais (máximo de 2000 letras).');if(!chEnabled())return say('O chat está desligado pela liderança.');if(!chOn())return say(CH.anon?'Escolha quem você é para escrever.':'Entre na sua conta para usar o chat.');

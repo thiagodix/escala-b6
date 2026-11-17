@@ -48,7 +48,8 @@ srv = http.server.ThreadingHTTPServer(('127.0.0.1', 0), functools.partial(Q, dir
 PORT = srv.server_address[1]; threading.Thread(target=srv.serve_forever, daemon=True).start()
 B = f'http://127.0.0.1:{PORT}'
 
-PUB = json.load(open(os.path.join(ROOT, 'pub.json'), encoding='utf-8'))
+# dados de teste (nomes fictícios); o site em si não publica mais nenhum dado: o acesso exige login
+PUB = json.load(open(os.path.join(HERE, 'fixtures', 'pub-teste.json'), encoding='utf-8'))
 import unicodedata
 def _nz(x): return ''.join(c for c in unicodedata.normalize('NFD', str(x or '').lower()) if unicodedata.category(c) != 'Mn').strip()
 _G = set()
@@ -69,11 +70,23 @@ def ctx_of(b, w=390, h=844):
     c.route('https://www.youtube.com/oembed**', lambda r: r.fulfill(status=200, content_type='application/json', body=json.dumps({'title': 'Grupo Exemplo - Canção de Teste (Ao Vivo)', 'author_name': 'Grupo Exemplo'}), headers={'access-control-allow-origin': '*'}))
     return c
 
+def band_ctx(b, extra=''):
+    # visão da banda LOGADA: Supabase simulado com uma pessoa já com sessão e senha própria
+    c = ctx_of(b)
+    c.route('**/vendor/supabase.min.js', lambda r: r.fulfill(status=200, content_type='application/javascript', body=STUB))
+    c.route('**/cdn.jsdelivr.net/**supabase**', lambda r: r.fulfill(status=200, content_type='application/javascript', body=STUB))
+    c.route('**/*.supabase.co/**', lambda r: r.fulfill(status=200, content_type='application/json', body='[]'))
+    M = {'id': 'm1', 'nome': 'Pessoa Teste', 'funcoes': [], 'fixo': True, 'ativo': True, 'user_id': 'ub', 'email': 'banda@teste.local'}
+    DBb = {'users': [{'id': 'ub', 'email': 'banda@teste.local', 'password': 'senha1234', 'meta': {'pw_ok': True}}], 'admins': [], 'membros': [M],
+           'config': [{'chave': 'login_banda', 'valor': True}], 'disponibilidade': [], 'pub': [{'id': k, 'j': v['j']} for k, v in PUB.items()]}
+    c.add_init_script("try{if(!localStorage.getItem('__seeded')){localStorage.setItem('__seeded','1');localStorage.setItem('__stubdb',%s);localStorage.setItem('fv-band-auth',%s);localStorage.setItem('fv-me',%s);localStorage.setItem('rep.tour','1');localStorage.setItem('rep.meask','1');%s}}catch(e){}"
+                      % (json.dumps(json.dumps(DBb)), json.dumps(json.dumps({'user': {'id': 'ub', 'email': 'banda@teste.local', 'user_metadata': {'pw_ok': True}}})), json.dumps(json.dumps(M)), extra))
+    return c
+
 with sync_playwright() as p:
     b = p.chromium.launch()
     # 2) visão da banda (dados de pub.json, sem login)
-    c = ctx_of(b); c.route('**/*.supabase.co/**', lambda r: r.fulfill(status=200, content_type='application/json', body='[]'))
-    c.add_init_script("try{localStorage.setItem('rep.tour','1');localStorage.setItem('rep.meask','1')}catch(e){}")
+    c = band_ctx(b)
     pg = c.new_page(); E = []; pg.on('pageerror', lambda x: E.append(str(x)[:200]))
     pg.goto(B + '/'); pg.wait_for_timeout(3500)
     n = pg.evaluate('S.lists.length'); ok(n == NL, 'banda: todos os cultos publicados aparecem', f'{n} de {NL}')
@@ -120,22 +133,38 @@ with sync_playwright() as p:
      a.push(locU(u)==location.origin+'/media/46b9579c1e83de4b8b69c1b9d6cc915b.mp3',locU('https://x.supabase.co/storage/v1/object/public/midias/a.mp4')=='https://x.supabase.co/storage/v1/object/public/midias/a.mp4');
      const b=await getBl(u);a.push(b.size>100000);return a}""")
     ok(r == [True, True, True], 'baixar para offline: áudios do site são buscados no mesmo endereço do app (sem bloqueio entre domínios)', str(r))
-    r = pg.evaluate("""()=>{const a=[];const l=S.lists.find(x=>x.banda&&Object.values(x.banda).some(Boolean));const kk=Object.keys(l.banda).find(k=>l.banda[k]),antes=l.banda[kk],nome='Fulano Lembrete Teste';l.banda[kk]=nome;const d0=l.date,z=n=>String(n).padStart(2,'0'),mais=k=>{const x=new Date(td()+'T12:00');x.setDate(x.getDate()+k);return x.getFullYear()+'-'+z(x.getMonth()+1)+'-'+z(x.getDate())};
+    r = pg.evaluate("""()=>{const _mm=ME_M;ME_M=null;const a=[];const l=S.lists.find(x=>x.banda&&Object.values(x.banda).some(Boolean));const kk=Object.keys(l.banda).find(k=>l.banda[k]),antes=l.banda[kk],nome='Fulano Lembrete Teste';l.banda[kk]=nome;const d0=l.date,z=n=>String(n).padStart(2,'0'),mais=k=>{const x=new Date(td()+'T12:00');x.setDate(x.getDate()+k);return x.getFullYear()+'-'+z(x.getMonth()+1)+'-'+z(x.getDate())};
      l.date=mais(1);try{localStorage.setItem('rep.me',nome);localStorage.removeItem('rep.lemb');localStorage.removeItem('rep.cf')}catch(e){}
      a.push(!!lembAlvo());const f=lembPres();a.push(f&&/Amanhã é culto/.test(document.querySelector('#tt').textContent));a.push(lembPres()===false);
-     cfS(l.id,'s');a.push(lembAlvo()===null);localStorage.removeItem('rep.cf');localStorage.removeItem('rep.lemb');l.date=mais(10);a.push(lembAlvo()===null);l.date=d0;l.banda[kk]=antes;localStorage.removeItem('rep.me');return a}""")
+     cfS(l.id,'s');a.push(lembAlvo()===null);localStorage.removeItem('rep.cf');localStorage.removeItem('rep.lemb');l.date=mais(10);a.push(lembAlvo()===null);l.date=d0;l.banda[kk]=antes;localStorage.removeItem('rep.me');ME_M=_mm;return a}""")
     ok(r == [True]*5, 'lembrete de presença: avisa 1 vez por dia, some ao responder e só para culto de hoje/amanhã', str(r))
     ok(not E, 'banda: sem erros de JavaScript', '; '.join(E[:3])); c.close()
 
+    # 2a) acesso fechado: sem login a página mostra só a tela de entrada e nenhum dado; com a senha certa entra
+    cl = ctx_of(b)
+    cl.route('**/vendor/supabase.min.js', lambda r: r.fulfill(status=200, content_type='application/javascript', body=STUB))
+    cl.route('**/cdn.jsdelivr.net/**supabase**', lambda r: r.fulfill(status=200, content_type='application/javascript', body=STUB))
+    cl.route('**/*.supabase.co/**', lambda r: r.fulfill(status=200, content_type='application/json', body='[]'))
+    _M = {'id': 'm9', 'nome': 'Pessoa Teste', 'funcoes': [], 'fixo': True, 'ativo': True, 'user_id': 'u9', 'email': 'p@teste.local'}
+    _DB = {'users': [{'id': 'u9', 'email': 'p@teste.local', 'password': 'senha1234', 'meta': {'pw_ok': True}}], 'admins': [], 'membros': [_M], 'config': [], 'disponibilidade': [], 'pub': [{'id': k, 'j': v['j']} for k, v in PUB.items()]}
+    cl.add_init_script("try{if(!localStorage.getItem('__seeded')){localStorage.setItem('__seeded','1');localStorage.setItem('__stubdb',%s);localStorage.setItem('rep.tour','1');localStorage.setItem('rep.band',%s)}}catch(e){}" % (json.dumps(json.dumps(_DB)), json.dumps(json.dumps({'SG': [1], 'LS': [1]}))))
+    pl = cl.new_page(); pl.goto(B + '/'); pl.wait_for_timeout(2000)
+    r = pl.evaluate("""()=>({form:!!document.querySelector('#fvl form')&&!document.querySelector('#fvl').hidden,vis:document.documentElement.style.visibility,lists:(window.S&&S.lists?S.lists.length:0),cache:localStorage.getItem('rep.band')})""")
+    ok(r['form'] and r['vis'] == 'hidden' and r['lists'] == 0 and r['cache'] is None, 'acesso: sem login só aparece a tela de entrada (sem dados e sem cópia guardada)', str(r))
+    pl.fill('#fve', 'p@teste.local'); pl.fill('#fvp', 'errada123'); pl.click('#fvf button[type=submit]'); pl.wait_for_timeout(600)
+    ok('incorretos' in pl.inner_text('#fvl') and pl.evaluate("(window.S&&S.lists?S.lists.length:0)") == 0, 'acesso: senha errada não entra')
+    pl.fill('#fvp', 'senha1234'); pl.click('#fvf button[type=submit]'); pl.wait_for_timeout(2500)
+    r = pl.evaluate("({lists:S.lists.length,vis:document.documentElement.style.visibility,form:!document.querySelector('#fvl')||document.querySelector('#fvl').hidden})")
+    ok(r['lists'] > 0 and r['vis'] == '' and r['form'], 'acesso: com e-mail e senha certos abre o Fervor com os dados', str(r))
+    cl.close()
     # 2b) Hoje abre na hora pela cópia salva e atualiza por trás sem mexer na tela
     SGc = [json.loads(v['j']) for k, v in PUB.items() if k.startswith('s_')]; LSc = [json.loads(v['j']) for k, v in PUB.items() if k.startswith('l_')]
-    c = ctx_of(b); held = []
-    c.route('**/*.supabase.co/**', lambda r: held.append(r)); c.route('**/pub.json**', lambda r: held.append(r))
-    c.add_init_script("try{localStorage.setItem('rep.tour','1');localStorage.setItem('rep.meask','1');localStorage.setItem('rep.role','band');localStorage.setItem('rep.band',%s)}catch(e){}" % json.dumps(json.dumps({'SG': SGc, 'LS': LSc, 'E': None, 't': 1})))
+    held = []
+    c = band_ctx(b, "localStorage.setItem('rep.role','band');localStorage.setItem('rep.band',%s);" % json.dumps(json.dumps({'SG': SGc, 'LS': LSc, 'E': None, 't': 1})))
     pg2 = c.new_page(); E2 = []; pg2.on('pageerror', lambda x: E2.append(str(x)[:200]))
     pg2.goto(B + '/'); pg2.wait_for_timeout(1200)
     r = pg2.evaluate("({tab:S.tab,n:S.lists.length,hoje:!!document.querySelector('.hjhero'),off:S.bOff,held:0})")
-    ok(r['tab'] == 'hoje' and r['n'] > 0 and r['hoje'] and not r['off'] and len(held) > 0, 'Hoje abre na hora com a cópia salva (sem esperar a internet)', str(r) + ' pendentes=' + str(len(held)))
+    ok(r['tab'] == 'hoje' and r['n'] > 0 and r['hoje'] and not r['off'], 'Hoje abre na hora com a cópia salva (sem esperar a internet)', str(r) + ' pendentes=' + str(len(held)))
     pg2.evaluate("S.tab='lists';S.lvm=0;R()")
     for rt in list(held):
         try:
@@ -417,27 +446,6 @@ with sync_playwright() as p:
      chDel(50);a.push(CH.del===50);await chDel(50);a.push(del.length==1&&!CH.msgs.some(x=>x.id===50));                // apagar em 2 toques
      window.__SBB=o[0];ME_M=o[1];CH.msgs=o[2];CH.sub=o[3];CH.seen=o[4];CH.u=o[6];document.body.classList.toggle('chon',o[5]);S.tab='lists';R();const tt=document.querySelector('#tt');if(tt)tt.classList.remove('on');return a}""")
     ok(r == [True]*8, 'chat da banda (inclusive liderança sem perfil): carrega, envia texto e emoji, recebe em tempo real, conta não lidas e apaga', str(r))
-    r = pg.evaluate("""async()=>{const a=[],o=[window.__SBB,window.__SB,window.__FVREST,window.fetch,ME_M,CH.msgs,CH.sub,CH.anon,CH.u,CH.seen,localStorage.getItem('rep.me'),document.body.classList.contains('chon'),window.__FVCFG];S.band=true;document.querySelectorAll('dialog[open]').forEach(d=>d.close());
-     window.__SBB=undefined;window.__SB=undefined;ME_M=null;CH.u=null;CH.anon=0;CH.start=0;CH.sub=null;CH.msgs=[];CH.ok=0;CH.seen=0;localStorage.removeItem('rep.me');localStorage.removeItem('rep.chat.seen');localStorage.removeItem('rep.chat.mine');
-     const now=Date.now(),rows=[{id:7,user_id:null,autor:'Zé',texto:'Oi sem login',criado_em:new Date(now-5000).toISOString()}],calls=[];
-     window.__FVREST={url:'https://x.test',key:'k'};
-     window.fetch=async(u,op)=>{op=op||{};calls.push([String(u),op.method||'GET',op.body||'']);const J=x=>({ok:true,text:async()=>JSON.stringify(x)});
-       if(/rpc.chat_membros/.test(u))return J([{nome:'Ana Teste'},{nome:'Bia'}]);if(/rpc.chat_apagar/.test(u)){const b=JSON.parse(op.body);const n=rows.length;const k=rows.findIndex(x=>x.id==b.p_id);if(k>=0)rows.splice(k,1);return J(k>=0)}
-       if(op.method=='POST'){const b=JSON.parse(op.body);const r={id:20,user_id:null,autor:b.autor,texto:b.texto,criado_em:new Date().toISOString()};rows.unshift(r);return J([r])}
-       return J(rows.slice())};
-     const cfgO=window.__FVCFG;let cfg={};window.__FVCFG=()=>cfg;
-     localStorage.removeItem('rep.chat.me');CH.fx=null;S.tab='chat';R();chInit();await new Promise(r=>setTimeout(r,250));
-     a.push(document.body.classList.contains('chon')&&/Quem é você/.test(document.querySelector('#m').textContent)&&document.querySelectorAll('.chwho button').length==2&&!/Fulano/.test(document.querySelector('.chwho').textContent));      // sem login: escolhe quem é
-     chWho(0);a.push(!!document.querySelector('#chi')&&/Ana Teste/.test(document.querySelector('#m').textContent)&&CH.msgs.length==1);
-     CH.last=0;document.querySelector("#chi").value="Olá do app aberto";await chSend();
-     const post=calls.find(c=>c[1]=='POST'&&/chat_mensagens/.test(c[0]));a.push(!!post&&JSON.parse(post[2]).autor=='Ana Teste'&&!!JSON.parse(post[2]).device&&CH.msgs.some(x=>x.id===20)&&chMe(CH.msgs.find(x=>x.id===20))&&!chMe(CH.msgs.find(x=>x.id===7)));
-     rows.push({id:30,user_id:null,autor:'Bia',texto:'Chegou por consulta',criado_em:new Date().toISOString()});CH.pn=0;
-     const t0=document.querySelector('#chi');t0.value='rascunho';await chPoll();a.push(CH.msgs.some(x=>x.id===30)&&document.querySelector('#chi').value=='rascunho');   // consulta periódica mantém o rascunho
-     await chDel(20);await chDel(20);a.push(!CH.msgs.some(x=>x.id===20)&&!rows.some(x=>x.id==20));                    // apagar a própria
-     cfg={chat_ativo:false};chShow();R();a.push(!document.body.classList.contains('chon')&&/desligado/.test(document.querySelector('#m').textContent));   // liga/desliga
-     cfg={};chShow();a.push(document.body.classList.contains('chon'));
-     window.__SBB=o[0];window.__SB=o[1];window.__FVREST=o[2];window.fetch=o[3];ME_M=o[4];CH.msgs=o[5];CH.sub=o[6];CH.anon=o[7];CH.u=o[8];CH.seen=o[9];if(o[10]==null)localStorage.removeItem('rep.me');else localStorage.setItem('rep.me',o[10]);window.__FVCFG=cfgO;document.body.classList.toggle('chon',o[11]);S.band=false;S.tab='lists';R();const tt=document.querySelector('#tt');if(tt)tt.classList.remove('on');return a}""")
-    ok(r == [True]*7, 'chat sem login: escolhe o nome na lista, envia, recebe por consulta, apaga a própria; liga/desliga pelas configurações', str(r))
     r = pg.evaluate("""()=>{const a=[],o={msgs:CH.msgs,ex:CH.ex,v2:CH.v2,u:CH.u,anon:CH.anon,tab:S.tab};
      a.push(/class="chref"/.test(chTxt('Ensaiar [[m:s1|Gratidão]] hoje'))&&!chTxt('Ensaiar [[m:s1|Gratidão]] hoje').includes('[['));                  // @música vira botão
      a.push(!/<script/.test(chTxt('[[m:x|<script>]]')));                                                                                                // sem injeção
@@ -599,10 +607,10 @@ with sync_playwright() as p:
     ok(pg.evaluate('window.__x===undefined'), 'segurança: textos com código não são executados')
     ok(not E, 'admin: sem erros de JavaScript', '; '.join(E[:3])); c.close()
     # 7) todos os botões de cada tela: executa o clique de cada tipo de botão e confere que nada dá erro
-    c = ctx_of(b); c.route('**/*.supabase.co/**', lambda r: r.fulfill(status=200, content_type='application/json', body='[]'))
-    c.add_init_script("try{localStorage.setItem('rep.tour','1');localStorage.setItem('rep.meask','1')}catch(e){}")
-    pg = c.new_page(); E7 = []; pg.on('pageerror', lambda x: E7.append(str(x)[:200])); pg.on('dialog', lambda d: d.dismiss())
+    c = band_ctx(b)
+    LAST7 = ['']; pg = c.new_page(); E7 = []; pg.on('pageerror', lambda x: E7.append(str(x)[:120] + ' [' + LAST7[0][:70] + ']')); pg.on('dialog', lambda d: d.dismiss())
     pg.goto(B + '/'); pg.wait_for_timeout(3000)
+    pg.evaluate('window.fvSair=async()=>{}')  # o botão Sair recarregaria a página no meio da varredura
     TELAS = {'hoje': "S.tab='hoje';R()", 'repertorios': "S.tab='lists';S.lvm=0;S.lv=null;R()",
              'repertorio aberto': "const l=[...S.lists].filter(x=>x.songIds.length).sort((a,b)=>b.date.localeCompare(a.date))[0];S.tab='lists';S.lv=l.id;S.lvm=1;R()",
              'musicas': "S.tab='songs';S.hide=false;S.sel=null;R()", 'musica aberta': "S.tab='songs';S.sel=(S.songs.find(x=>x.vmap&&x.vmap.length)||S.songs[0]).id;S.hide=true;R()",
@@ -618,6 +626,7 @@ with sync_playwright() as p:
             k = re.sub(r"'[A-Za-z0-9_\\-]{3,}'", "'X'", oc)
             if k in vistos: continue
             vistos.add(k); tot += 1
+            LAST7[0] = oc
             pg.evaluate("()=>{" + js + "}")
             r = pg.evaluate("(i)=>{try{const e=document.querySelectorAll('[onclick]')[i];if(!e)return 'ok';e.click();return 'ok'}catch(e){return (e&&e.message)||String(e)}}", i)
             pg.wait_for_timeout(40)
