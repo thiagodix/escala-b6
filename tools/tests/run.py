@@ -311,7 +311,7 @@ with sync_playwright() as p:
     ok(r == [True, True, True, True], 'correção de grafia dos mapas vocais (con8go → contigo)', str(r))
     r = pg.evaluate("""()=>{const s=S.songs.find(x=>(x.vmap||[]).length)||S.songs[0];s.vmap.push({t:'Minha gra@dão e con8go',h:0,v:''});R();const t=s.vmap[s.vmap.length-1].t;s.vmap.pop();return t}""")
     ok(r == 'Minha gratidão e contigo', 'grafia dos mapas corrigida automaticamente ao abrir', str(r))
-    r = pg.evaluate("""()=>{const a=[];const l=S.lists.find(x=>x.songIds.length)||S.lists[0];const was=l.apv;S.band=false;ME='Teste';apvSend(l.id);dlg.close&&0;d2.close&&d2.close();apvSet(l.id,'ok');apvD();const h=l.apv.h.map(x=>x.e).join();const txt=dlg.textContent;a.push(h=='env,ok',/Histórico de aprovações/.test(txt),/Aprovado/.test(txt),/Teste/.test(txt));dlg.close();l.apv=was;if(!was)delete l.apv;return a}""")
+    r = pg.evaluate("""async()=>{const a=[];const l=S.lists.find(x=>x.songIds.length)||S.lists[0];const was=l.apv;S.band=false;ME='Teste';await apvSend(l.id);dlg.close&&0;d2.close&&d2.close();apvSet(l.id,'ok');apvD();const h=l.apv.h.map(x=>x.e).join();const txt=dlg.textContent;a.push(h=='env,ok',/Histórico de aprovações/.test(txt),/Aprovado/.test(txt),/Teste/.test(txt));dlg.close();l.apv=was;if(!was)delete l.apv;return a}""")
     ok(r == [True, True, True, True], 'histórico de aprovações da liderança registra envio e resposta', str(r))
     r = pg.evaluate("""()=>{const a=[];a.push(/skl/.test(skl()));const s0=S.songs[0];S.band=false;spotD();$('#spq').value=s0.title.split(' ')[0];spR();a.push(/class="it"/.test($('#spr').innerHTML));$('#spq').value='zzzxqq';spR();a.push(/Nada encontrado/.test($('#spr').innerHTML));dlg.close();
      spM(s0.id);a.push(/Abrir/.test(dlg.innerHTML)&&/Adicionar ao repertório/.test(dlg.innerHTML));dlg.close();
@@ -633,6 +633,44 @@ with sync_playwright() as p:
      try{S.band=1;S.tab='lists';S.lv=l.id;S.lvm=1;R();a.push(!/Algo deu errado/.test(document.querySelector('#m').innerText))}catch(e){a.push(String(e))}
      S.tab='hoje';S.lv=null;R();return a}""")
     ok(r == [True, True], 'aviso de mudança do repertório (chg2) funciona e a tela abre', str(r))
+    # aprovação por link: envio gera o link, resposta do servidor atualiza o culto, histórico mostra
+    r = pg.evaluate("""async()=>{
+     window.__EV=[];let id=100;const a=[];
+     window.__SB={rpc:async(n,x)=>{
+       if(n=='apv_enviar'){__EV.push({id:++id,list_id:x.p_list_id,versao:1,evento:'enviado',criado_em:new Date().toISOString(),dow:2,hora:20});return{data:{token:'b'.repeat(32),versao:1}}}
+       if(n=='apv_dados')return{data:{aprov:[{list_id:__EV[0]&&__EV[0].list_id,token:'b'.repeat(32),versao:1,status:'aguardando'}],eventos:__EV}};
+       return{data:{ok:true}}}};
+     S.band=0;const l=S.lists.filter(x=>x.songIds.length)[0];
+     await apvSend(l.id);const tx=(document.getElementById('sht')||{}).value||'';dlg.close();
+     a.push(/fervor\\.website\\/aprovar\\/\\?t=b{32}/.test(tx),l.apv.st=='env',l.apv.tk=='b'.repeat(32));
+     __EV.push({id:300,list_id:l.id,versao:1,evento:'ajuste',por:'Pr. João',nota:'Trocar a 2ª',itens:[],criado_em:new Date().toISOString(),dow:2,hora:20});
+     await apvSync(1);a.push(l.apv.st=='aj',/Trocar a 2/.test(l.apv.n||''));
+     __EV.push({id:301,list_id:l.id,versao:1,evento:'aprovado',por:'Pr. João',criado_em:new Date().toISOString(),dow:2,hora:20});
+     await apvSync(1);a.push(l.apv.st=='ok');
+     S.tab='lists';S.lv=l.id;S.lvm=1;R();a.push(!/Algo deu errado/.test(document.querySelector('#m').innerText),!!document.querySelector('.apv .apx a'));
+     apvD();a.push(/Padrões de resposta/.test(dlg.innerText));dlg.close();
+     delete window.__SB;S.tab='hoje';S.lv=null;R();return a}""")
+    ok(all(r), 'aprovação por link: envia, recebe a resposta, mostra card e histórico', str(r))
+    # página da liderança do ministério (sem login): mostra o repertório e envia a resposta
+    ap = c.new_page(); posts = []; apE = []
+    ap.on('pageerror', lambda e: apE.append(str(e)))
+    def _h(route):
+        u = route.request.url
+        if u.endswith('apv_ver'):
+            route.fulfill(status=200, content_type='application/json', body=json.dumps({'ok': True, 'versao': 1, 'status': 'aguardando', 'resposta': None, 'culto': {'titulo': 'Santo André · Noite', 'musicas': [{'p': '1.', 't': 'Rei da Glória', 'm': [], 'k': 'E', 'c': 'Manu', 'l': ''}, {'p': '2.', 't': 'Praise', 'm': [], 'k': 'G', 'c': '', 'l': ''}], 'pp': []}}))
+        elif u.endswith('apv_responder'):
+            posts.append(json.loads(route.request.post_data)); route.fulfill(status=200, content_type='application/json', body='{"ok":true}')
+        else:
+            route.fulfill(status=404, body='')
+    ap.route('**/*.supabase.co/**', _h)
+    ap.goto(B + '/aprovar/?t=' + 'c' * 32); ap.wait_for_timeout(500)
+    t1 = ap.inner_text('body')
+    ap.fill('#nmi', 'Pr. João'); ap.click('#apr'); ap.wait_for_timeout(300)
+    ap.click('#again'); ap.wait_for_timeout(300); ap.click('#saj'); ap.click('li.s >> nth=1'); ap.click('#env'); ap.wait_for_timeout(300)
+    ok('Rei da Glória' in t1 and len(posts) == 2 and posts[0]['p_acao'] == 'aprovado' and posts[1]['p_acao'] == 'ajuste' and posts[1]['p_itens'] == ['Praise'] and not apE, 'página de aprovação: mostra o repertório, aprova e sugere alteração', str(posts) + str(apE))
+    ap.goto(B + '/aprovar/?t=invalido'); ap.wait_for_timeout(200)
+    ok('Link indisponível' in ap.inner_text('body'), 'página de aprovação: link inválido não abre nada')
+    ap.close()
     ok(tot > 150 and not ruins and not E7, f'botões: {tot} tipos de botão clicados em {len(TELAS)} telas sem erro', '; '.join((ruins + E7)[:4]))
     c.close()
     b.close()

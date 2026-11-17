@@ -1,0 +1,61 @@
+/* v410+ · aprovação do repertório por link: a liderança do ministério abre uma página limpa e toca em Aprovar ou Sugerir alteração.
+   Tudo vai para o histórico no banco (script 26). Sem o script, o envio por texto continua funcionando como antes. */
+var APX={t:0,a:{},e:[]},APXB=0;
+const APSITE='https://fervor.website/aprovar/?t=',APE2={enviado:'Enviado à liderança',reenviado:'Reenviado (nova versão)',visto:'Liderança abriu o link',aprovado:'Aprovado',ajuste:'Ajustes pedidos',lembrete:'Lembrete enviado',manual_aprovado:'Aprovado (resposta por WhatsApp)',manual_ajuste:'Ajustes pedidos (por WhatsApp)',desfeito:'Aprovação desfeita'},
+ APDS=['domingo','segunda','terça','quarta','quinta','sexta','sábado'],APDP=['domingos','segundas','terças','quartas','quintas','sextas','sábados'];
+const apvPer=h=>h>=5&&h<12?'manhã':h>=12&&h<18?'tarde':'noite';
+const apvDur=h=>h<1?'menos de 1 h':h<24?Math.round(h)+' h':Math.floor(h/24)+(Math.floor(h/24)==1?' dia':' dias');
+function apvDt(t){const d=new Date(t),n=new Date(),hm=d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}),dd=Math.round((new Date(n.getFullYear(),n.getMonth(),n.getDate())-new Date(d.getFullYear(),d.getMonth(),d.getDate()))/864e5);return(dd==0?'hoje':dd==1?'ontem':d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}))+' '+hm}
+function apvSnap(l,prev){const ss=lSongs(l),c=l.cant||{},ms=ss.map((s,i)=>({p:lPos(l,s,i+1),t:s.title,m:s.medleys||[],k:lKey(l,s),c:(c[s.id]||'').trim()?fN(c[s.id].trim()):'',l:s.link||''})),
+ pc=(l.ppc||[]).map(i=>S.songs.find(x=>x.id==i)).filter(Boolean).map(s=>s.title),
+ o={id:l.id,titulo:[l.place,l.turno].filter(Boolean).join(' · ')||l.name||'Culto',nome:l.name&&l.place?l.name:'',data:l.date||'',data_txt:l.date?new Date(l.date+'T00:00').toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'2-digit'}):'',pregador:l.pregador||'',musicas:ms,pp:pc,f:fpL(l)};
+ if(prev&&prev.length){const A=prev.map(x=>x.split('|')),B=ms.map(m=>[m.t,m.k]),mu=[],nm=x=>x[0],ia=A.map(nm),ib=B.map(nm);
+  B.forEach(b=>{if(!ia.includes(b[0]))mu.push('Entrou: '+b[0])});A.forEach(a=>{if(!ib.includes(a[0]))mu.push('Saiu: '+a[0])});
+  B.forEach(b=>{const a=A.find(x=>x[0]==b[0]);if(a&&a[1]!=b[1])mu.push('Tom de '+b[0]+': '+a[1]+' → '+b[1])});
+  const ca=ia.filter(x=>ib.includes(x)).join('|'),cb=ib.filter(x=>ia.includes(x)).join('|');if(ca!=cb)mu.push('Ordem das músicas mudou');
+  o.mudancas=mu.join('\n')}
+ return o}
+const apvTxt2=(l,tk)=>['🙏 *Repertório para aprovação*',lPlain(l),(l.songIds||[]).length+' músicas','','Abra, ouça e responda com um toque:',APSITE+tk].join('\n');
+async function apvSend(id){const l=S.lists.find(x=>x.id==id);if(!l)return;uSnap('Enviado para aprovação');
+ const sn=apvSnap(l,(l.apv||{}).sl);let tk='',ok=false,er='';
+ if(window.__SB&&!S.band){try{const r=await __SB.rpc('apv_enviar',{p_list_id:l.id,p_snapshot:sn,p_por:ME||''});if(r.error)throw r.error;tk=r.data.token;ok=!!tk}catch(e){er=String((e&&e.message)||e||'')}}
+ l.apv=Object.assign({},l.apv,{st:'env',t:Date.now(),by:ME||'',h:apvH(l.apv,'env',sn.mudancas||''),tk:ok?tk:(l.apv||{}).tk||'',sl:sn.musicas.map(m=>m.t+'|'+m.k),sf:sn.f});delete l.apv.n;delete l.apv.vs;delete l.apv.vt;save();R();
+ if(ok){txD('Enviar para a liderança',apvTxt2(l,tk),'Mande no WhatsApp. A liderança do ministério abre o link, vê o repertório e toca em Aprovar ou Sugerir alteração. A resposta aparece aqui sozinha.');apvSync(1)}
+ else txD('Enviar para aprovação',apvTxt(l),(/function|does not exist|schema cache|Could not find/i.test(er)?'O link automático ainda não foi ativado (falta rodar o script 26 no Supabase). ':'Não deu para criar o link agora. ')+'Envie este texto à liderança. Quando ela responder, marque aqui "Aprovado" ou "Ajustes pedidos".')}
+async function apvSync(f){if(S.band||!window.__SB||!S.lists||APXB)return;if(!f&&Date.now()-APX.t<60000)return;APXB=1;
+ try{const r=await __SB.rpc('apv_dados');if(r.error||!r.data)return;APX={t:Date.now(),a:{},e:r.data.eventos||[]};(r.data.aprov||[]).forEach(a=>APX.a[a.list_id]=a);apvApply()}catch(e){}finally{APXB=0}}
+function apvApply(){let ch=0;const msg=[];
+ S.lists.forEach(l=>{const a=l.apv,sa=APX.a[l.id];if(!a||!a.tk||!sa||sa.token!=a.tk)return;
+  const E=APX.e.filter(x=>x.list_id==l.id&&x.versao==sa.versao),vis=E.filter(x=>x.evento=='visto').pop();
+  if(vis&&a.vs!=vis.id){a.vs=vis.id;a.vt=Date.parse(vis.criado_em);ch=1}
+  E.filter(x=>x.id>(a.sy||0)&&(x.evento=='aprovado'||x.evento=='ajuste')).forEach(x=>{a.sy=x.id;const t=Date.parse(x.criado_em),it=(x.itens||[]).length?'Trocar: '+x.itens.join('; '):'',n=[x.nota,it].filter(Boolean).join('\n');
+   if(x.evento=='aprovado'){a.st='ok';a.f=a.sf||fpL(l);delete a.n}else{a.st='aj';a.n=n}
+   a.t=t;a.by=x.por||'';a.h=(a.h||[]).concat([{e:x.evento=='aprovado'?'ok':'aj',t,by:x.por||'',n}]).slice(-30);ch=1;
+   msg.push((x.evento=='aprovado'?'✓ Aprovado: ':'Ajustes pedidos: ')+(l.place||l.name||'Repertório')+(l.turno?' · '+l.turno:''))});});
+ if(ch){save();if(!dlg.open&&!d2.open)R()}
+ if(msg.length)toast(msg.join(' · '))}
+function apvCp(id){const l=S.lists.find(x=>x.id==id),u=l&&l.apv&&l.apv.tk?APSITE+l.apv.tk:'';if(!u)return;try{navigator.clipboard.writeText(u).then(()=>toast('Link copiado'),()=>prompt('Copie o link:',u))}catch(e){prompt('Copie o link:',u)}}
+function apvLog(id,ev,n){if(window.__SB&&!S.band)try{__SB.rpc('apv_registrar',{p_list_id:id,p_evento:ev,p_por:ME||'',p_nota:n||''}).then(()=>apvSync(1),()=>{})}catch(e){}}
+function apvLem(id){const l=S.lists.find(x=>x.id==id);if(!l||!l.apv||!l.apv.tk)return;
+ txD('Lembrar a liderança',['Oi! Só lembrando do repertório de '+lPlain(l)+' que está aguardando sua aprovação 🙏','Dá para abrir, ouvir e aprovar com um toque:',APSITE+l.apv.tk].join('\n'),'Mande no WhatsApp. O lembrete fica registrado no histórico.');apvLog(id,'lembrete','')}
+/* padrões: quando a liderança costuma responder */
+function apvStats(){const E=APX.e||[],env={},first={},rod={};
+ E.forEach(x=>{const k=x.list_id+'|'+x.versao;if(x.evento=='enviado'||x.evento=='reenviado')env[k]=Date.parse(x.criado_em);if((x.evento=='aprovado'||x.evento=='ajuste')&&!first[k])first[k]=x;rod[x.list_id]=Math.max(rod[x.list_id]||0,x.versao||1)});
+ const K=Object.keys(first),hs=K.map(k=>env[k]?(Date.parse(first[k].criado_em)-env[k])/36e5:null).filter(v=>v!=null&&v>=0).sort((a,b)=>a-b),dow=Array(7).fill(0),per={manhã:0,tarde:0,noite:0};
+ K.forEach(k=>{const x=first[k];dow[x.dow]++;per[apvPer(x.hora)]++});
+ const v1=K.filter(k=>/\|1$/.test(k)),L=Object.keys(rod),it={};E.forEach(x=>{if(x.evento=='ajuste')(x.itens||[]).forEach(t=>it[t]=(it[t]||0)+1)});
+ return{n:K.length,med:hs.length?hs[Math.floor(hs.length/2)]:null,dow,per,n1:v1.length,ap1:v1.filter(k=>first[k].evento=='aprovado').length,rod:L.length?L.reduce((s,l)=>s+rod[l],0)/L.length:0,nl:E.filter(x=>x.evento=='lembrete').length,itens:Object.entries(it).sort((a,b)=>b[1]-a[1]).slice(0,3),notas:E.filter(x=>x.evento=='ajuste'&&x.nota).slice(-4).reverse()}}
+function apvBest(){const s=apvStats();if(s.n<3)return null;const d=s.dow.indexOf(Math.max(...s.dow)),p=Object.keys(s.per).sort((a,b)=>s.per[b]-s.per[a])[0];return{d,p,s}}
+const apvWhen=b=>APDP[b.d]+', '+(b.p=='noite'?'à noite':b.p=='tarde'?'à tarde':'de manhã'),
+ apvNow=b=>{const n=new Date();return n.getDay()==b.d&&apvPer(n.getHours())==b.p},
+ apvNext=b=>{const n=new Date(),H=b.p=='manhã'?8:b.p=='tarde'?14:19;let dd=(b.d-n.getDay()+7)%7;if(dd==0&&n.getHours()>=(b.p=='manhã'?12:b.p=='tarde'?18:23))dd=7;return(dd==0?'hoje':dd==1?'amanhã':APDS[b.d])+', por volta das '+H+'h'};
+function apvX(l){const a=l.apv||{};if(!a.tk||S.band)return'';const u=APSITE+a.tk;let o='';
+ if(a.st=='env'){const h=(Date.now()-(a.t||Date.now()))/36e5,b=apvBest();o+=`<small class="${h>=24?'wrn':''}">Enviado há ${apvDur(h)}${a.vt?' · aberto pela liderança '+apvDt(a.vt):' · a liderança ainda não abriu'}</small>`;if(b)o+=`<small>Costumam responder ${apvWhen(b)}.</small>`}
+ return o+`<span class="apx"><button class="sm" onclick="apvCp('${l.id}')">Copiar link</button><a class="sm" href="${esc(u)}" target="_blank" rel="noopener">Ver a página</a>${a.st=='env'?`<button class="sm" onclick="apvLem('${l.id}')">Lembrar</button>`:''}</span>`}
+function apvBan(){if(S.band||!window.__SB)return'';const T=td(),P=S.lists.filter(l=>l.apv&&l.apv.st=='env'&&l.apv.tk&&(!l.date||l.date>=T)).sort((a,b)=>(a.date||'').localeCompare(b.date||''));if(!P.length)return'';
+ const h=(Date.now()-Math.min(...P.map(l=>l.apv.t||Date.now())))/36e5,b=apvBest(),now=b&&apvNow(b),sub=b?(now?'Agora é um bom momento para lembrar: costumam responder '+apvWhen(b)+'.':'Costumam responder '+apvWhen(b)+'. Próximo bom momento: '+apvNext(b)+'.'):'';
+ return`<div class="apvb${now?' now':''}"><b>${P.length==1?'1 repertório aguarda':P.length+' repertórios aguardam'} a liderança${h>=1?' há '+apvDur(h):''}.</b>${sub?`<small>${esc(sub)}</small>`:''}<span class="apx"><button class="sm pri" onclick="apvLem('${P[0].id}')">Lembrar a liderança</button><button class="sm" onclick="apvD()">Ver histórico</button></span></div>`}
+function apvInsH(){const s=apvStats();if(!window.__SB)return'';if(s.n<1)return`<div class="apvi"><b>Padrões de resposta</b><small>Quando a liderança do ministério responder pelo link, o Fervor passa a mostrar aqui o tempo de resposta, os dias e horários mais comuns e o que mais pedem para mudar.</small></div>`;
+ const mx=Math.max(...s.dow,1),bars=s.dow.map((v,i)=>`<span class="bz" title="${APDP[i]}: ${v}"><i style="height:${Math.round(v/mx*34)+2}px"></i><em>${APDS[i][0].toUpperCase()}</em></span>`).join(''),b=apvBest(),pp=Object.keys(s.per).map(k=>k+' '+s.per[k]).join(' · ');
+ return`<div class="apvi"><b>Padrões de resposta</b><div class="bzs">${bars}</div><small>${s.n} ${s.n==1?'resposta':'respostas'} pelo link · ${pp}</small>${s.med!=null?`<small>Tempo típico até responder: ${apvDur(s.med)}</small>`:''}${s.n1?`<small>${s.ap1} de ${s.n1} aprovados de primeira · média de ${s.rod.toFixed(1).replace('.',',')} ${s.rod>=1.5?'envios':'envio'} por culto</small>`:''}${b?`<small class="ok">Costumam responder ${esc(apvWhen(b))}. O Fervor sugere o lembrete nesse horário.</small>`:'<small>Com 3 respostas o Fervor começa a sugerir o melhor horário de lembrete.</small>'}${s.itens.length?`<small>Músicas mais marcadas para trocar: ${s.itens.map(x=>esc(x[0])+' ('+x[1]+'×)').join(', ')}</small>`:''}${s.notas.length?`<details><summary>Últimos pedidos de ajuste</summary>${s.notas.map(x=>`<p>${esc(x.nota)}<small> — ${esc(x.por||'')}</small></p>`).join('')}</details>`:''}${s.nl?`<small>${s.nl} ${s.nl==1?'lembrete enviado':'lembretes enviados'}</small>`:''}</div>`}
+setTimeout(()=>apvSync(1),4000);setInterval(()=>{if(!document.hidden&&S.lists&&S.lists.some(l=>l.apv&&l.apv.st=='env'&&l.apv.tk))apvSync(1)},90000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)apvSync()});
