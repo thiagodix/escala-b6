@@ -87,12 +87,12 @@ with sync_playwright() as p:
     b = p.chromium.launch()
     # 2) visão da banda (dados de pub.json, sem login)
     c = band_ctx(b)
-    pg = c.new_page(); E = []; pg.on('pageerror', lambda x: E.append(str(x)[:200]))
+    pg = c.new_page(); E = []; pg.on('pageerror', lambda x: E.append(str(x)[:200])); pg.on('console', lambda m: E.append('c:' + m.text[:120]) if m.type in ('error', 'warning') else None); pg.on('requestfailed', lambda r: E.append('f:' + r.url[-60:]))
     pg.goto(B + '/')
     try: pg.wait_for_function('typeof S!="undefined"&&S.lists&&S.lists.length>0', timeout=20000)
     except Exception: pass
     pg.wait_for_timeout(1500)
-    n = pg.evaluate('S.lists.length'); ok(n == NL, 'banda: todos os cultos publicados aparecem', f'{n} de {NL} · ' + pg.evaluate("(document.body.innerText||'').slice(0,160)") + ' · ' + ' | '.join(E[:2]))
+    n = pg.evaluate('S.lists.length'); ok(n == NL, 'banda: todos os cultos publicados aparecem', f'{n} de {NL} · ' + pg.evaluate("(document.body.innerText||'').slice(0,160)") + ' · ' + ' | '.join(E[:6]) + ' · sb=' + str(pg.evaluate('typeof window.supabase')) + ' · ' + pg.evaluate("(document.getElementById('fvl')||{innerText:'sem fvl'}).innerText.slice(0,120)"))
     inc = pg.evaluate("S.lists.filter(l=>l.songIds.some(id=>!S.songs.find(s=>s.id==id))).length"); ok(inc == 0, 'banda: nenhum culto com música faltando', f'{inc} cultos incompletos')
     lid = pg.evaluate("(S.lists.filter(l=>l.songIds.length&&l.date).sort((a,b)=>b.date.localeCompare(a.date))[0]||{}).id")
     if lid:
