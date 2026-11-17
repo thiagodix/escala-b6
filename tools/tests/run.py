@@ -74,7 +74,8 @@ def band_ctx(b, extra=''):
     # visão da banda LOGADA: Supabase simulado com uma pessoa já com sessão e senha própria
     c = ctx_of(b)
     c.route('**/vendor/supabase.min.js', lambda r: r.fulfill(status=200, content_type='application/javascript', body=STUB))
-    c.route('**/cdn.jsdelivr.net/**supabase**', lambda r: r.fulfill(status=200, content_type='application/javascript', body=STUB))
+    c.route(lambda u: 'cdn.jsdelivr.net' in u and 'supabase' in u, lambda r: r.fulfill(status=200, content_type='application/javascript', body=STUB, headers={'access-control-allow-origin': '*'}))
+    c.route('**/vendor/manifest.json', lambda r: r.fulfill(status=200, content_type='application/json', body='{}'))
     c.route('**/*.supabase.co/**', lambda r: r.fulfill(status=200, content_type='application/json', body='[]'))
     M = {'id': 'm1', 'nome': 'Pessoa Teste', 'funcoes': [], 'fixo': True, 'ativo': True, 'user_id': 'ub', 'email': 'banda@teste.local'}
     DBb = {'users': [{'id': 'ub', 'email': 'banda@teste.local', 'password': 'senha1234', 'meta': {'pw_ok': True}}], 'admins': [], 'membros': [M],
@@ -147,7 +148,8 @@ with sync_playwright() as p:
     # 2a) acesso fechado: sem login a página mostra só a tela de entrada e nenhum dado; com a senha certa entra
     cl = ctx_of(b)
     cl.route('**/vendor/supabase.min.js', lambda r: r.fulfill(status=200, content_type='application/javascript', body=STUB))
-    cl.route('**/cdn.jsdelivr.net/**supabase**', lambda r: r.fulfill(status=200, content_type='application/javascript', body=STUB))
+    cl.route(lambda u: 'cdn.jsdelivr.net' in u and 'supabase' in u, lambda r: r.fulfill(status=200, content_type='application/javascript', body=STUB, headers={'access-control-allow-origin': '*'}))
+    cl.route('**/vendor/manifest.json', lambda r: r.fulfill(status=200, content_type='application/json', body='{}'))
     cl.route('**/*.supabase.co/**', lambda r: r.fulfill(status=200, content_type='application/json', body='[]'))
     _M = {'id': 'm9', 'nome': 'Pessoa Teste', 'funcoes': [], 'fixo': True, 'ativo': True, 'user_id': 'u9', 'email': 'p@teste.local'}
     _DB = {'users': [{'id': 'u9', 'email': 'p@teste.local', 'password': 'senha1234', 'meta': {'pw_ok': True}}], 'admins': [], 'membros': [_M], 'config': [], 'disponibilidade': [], 'pub': [{'id': k, 'j': v['j']} for k, v in PUB.items()]}
@@ -190,7 +192,8 @@ with sync_playwright() as p:
           'membros': [], 'config': [], 'disponibilidade': [], 'team': [dict(x, u=1) for x in lists], 'pub': lists}
     c = ctx_of(b)
     c.route('**/vendor/supabase.min.js', lambda r: r.fulfill(status=200, content_type='application/javascript', body=STUB))
-    c.route('**/cdn.jsdelivr.net/**supabase**', lambda r: r.fulfill(status=200, content_type='application/javascript', body=STUB))
+    c.route(lambda u: 'cdn.jsdelivr.net' in u and 'supabase' in u, lambda r: r.fulfill(status=200, content_type='application/javascript', body=STUB, headers={'access-control-allow-origin': '*'}))
+    c.route('**/vendor/manifest.json', lambda r: r.fulfill(status=200, content_type='application/json', body='{}'))
     c.route('**/*.supabase.co/**', lambda r: r.fulfill(status=200, content_type='application/json', body='[]'))
     c.add_init_script("if(!localStorage.getItem('__seeded')){localStorage.setItem('__seeded','1');localStorage.setItem('__stubdb',%s);localStorage.setItem('adm:rep.tour','1')}" % json.dumps(json.dumps(DB)))
     pg = c.new_page(); E = []; pg.on('pageerror', lambda x: E.append(str(x)[:200]))
