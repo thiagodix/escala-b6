@@ -1,55 +1,16 @@
-<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"><script>document.documentElement.className="js"</script><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>AURA Bass — todos os timbres de baixo num painel só</title>
 <meta name="description" content="AURA Bass: pré com drive, equalização, caixa, oitava, chorus e afinador num plugin só, com oito timbres prontos. VST3, AU e programa autônomo, para Windows e Mac. Teste grátis por 15 dias.">
 <meta name="copyright" content="© 2026 Thiago R. Galvão. Todos os direitos reservados.">
 <meta property="og:title" content="AURA Bass"><meta property="og:description" content="Drive, equalização, caixa, oitava, chorus e afinador num painel só, com oito timbres prontos. Teste grátis por 15 dias."><meta property="og:image" content="https://fervor.website/plugins/aurabass/panel.jpg">
 <link rel="canonical" href="https://fervor.website/plugins/aurabass/"><meta property="og:type" content="website"><meta property="og:url" content="https://fervor.website/plugins/aurabass/"><meta property="og:locale" content="pt_BR"><meta name="twitter:card" content="summary_large_image"><script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"AURA Bass","applicationCategory":"MultimediaApplication","operatingSystem":"Windows, macOS","description":"Pré de baixo com drive, equalização, caixa, oitava, chorus e afinador, em VST3, AU e programa autônomo para Windows e Mac.","image":"https://fervor.website/plugins/aurabass/panel.jpg","author":{"@type":"Person","name":"Thiago R. Galvão"},"inLanguage":"pt-BR"}</script><link rel="icon" href="../assets/aura-icon.svg" type="image/svg+xml"><meta name="theme-color" content="#000000">
-<style>
-:root{--o:#ff9f0a;--g:#86868b;--bg:#000;--bg2:#161617;--w:#f5f5f7}
-*{box-sizing:border-box;margin:0}html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--w);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Inter","Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.4}
-a{color:inherit;text-decoration:none}
-nav{position:fixed;top:0;left:0;right:0;height:48px;z-index:20;background:rgba(22,22,23,.8);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);display:flex;align-items:center;justify-content:center;gap:34px;font-size:12px;color:#d2d2d7}
-nav b{color:#fff;font-weight:600;font-size:15px}nav .in a.pill{margin-left:auto}nav .in{width:min(1000px,92%);display:flex;align-items:center;gap:30px}nav a:hover{color:#fff}
-.pill{background:#0071e3;color:#fff!important;padding:5px 13px;border-radius:980px;font-size:12px}.pill:hover{background:#0077ed}
-section{text-align:center;padding:120px 20px 0;overflow:hidden}
-.eb{color:var(--o);font-size:21px;font-weight:600;margin-bottom:8px}
-h1{font-size:clamp(48px,9vw,96px);font-weight:700;letter-spacing:-.03em;line-height:1.04}
-h2{font-size:clamp(34px,6vw,64px);font-weight:700;letter-spacing:-.025em;line-height:1.08;max-width:900px;margin:0 auto}
-.sub{font-size:clamp(19px,2.4vw,28px);color:var(--g);max-width:760px;margin:18px auto 0;font-weight:500;line-height:1.28}
-.links{display:flex;gap:26px;justify-content:center;margin-top:26px;flex-wrap:wrap;font-size:21px}.links a{color:#2997ff}.links a:hover{text-decoration:underline}
-.btn{background:#0071e3;color:#fff!important;padding:12px 24px;border-radius:980px;font-size:17px}.btn:hover{background:#0077ed;text-decoration:none!important}
-.hero{padding-top:110px}
-.hero .shot{margin:56px auto 0;width:min(1100px,94%);border-radius:22px;box-shadow:0 40px 120px rgba(255,159,10,.18),0 0 0 1px #2a2a2c}
-.shot{display:block;margin:56px auto 0;width:min(1100px,94%);border-radius:20px;border:1px solid #2a2a2c}
-.shot.sm{width:min(380px,80%)}
-.grad{background:linear-gradient(90deg,#ffd27a,#ff9f0a 55%,#ff6a3d);-webkit-background-clip:text;background-clip:text;color:transparent}
-.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;width:min(1100px,94%);margin:56px auto 0}
-.tile{background:var(--bg2);border-radius:28px;padding:44px 34px 0;min-height:480px;display:flex;flex-direction:column;overflow:hidden;text-align:center}
-.tile h3{font-size:32px;font-weight:700;letter-spacing:-.02em;line-height:1.12}.tile p{color:var(--g);font-size:19px;margin-top:12px;font-weight:500}
-.tile img{margin:auto auto 0;max-width:100%;border-radius:14px 14px 0 0;padding-top:30px}
-.tile.wide{grid-column:1/-1;min-height:0;padding-bottom:44px}
-.light{background:#f5f5f7;color:#1d1d1f}.light .sub{color:#6e6e73}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;width:min(1000px,92%);margin:60px auto 0}
-.stats div{font-size:clamp(40px,6vw,72px);font-weight:700;letter-spacing:-.03em}.stats small{display:block;font-size:15px;color:var(--g);font-weight:500;letter-spacing:0;margin-top:4px}
+<link rel="stylesheet" href="../assets/produto.css?v=3"><style>
 .tons{display:grid;grid-template-columns:repeat(2,1fr);gap:0 40px;width:min(980px,94%);margin:50px auto 0;text-align:left}
 .tons div{display:grid;grid-template-columns:150px 1fr;gap:14px;padding:16px 0;border-top:1px solid #2a2a2c;font-size:16px;align-items:baseline}
 .tons b{font-weight:600;color:#fff}.tons span{color:var(--g)}
-.spec{width:min(840px,92%);margin:50px auto 0;text-align:left}.spec div{display:grid;grid-template-columns:190px 1fr;gap:20px;padding:18px 0;border-top:1px solid #d2d2d7;font-size:17px}.spec b{font-weight:600}.spec span{color:#424245}
-.dl{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:44px}
-.card{background:var(--bg2);border-radius:24px;padding:34px 38px;width:320px}.card h3{font-size:28px}.card p{color:var(--g);margin:8px 0 22px;font-size:16px}
-footer{margin-top:120px;padding:26px 20px 40px;border-top:1px solid #2a2a2c;color:var(--g);font-size:12px;text-align:center;line-height:1.7}
-.rv{opacity:0;transform:translateY(40px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}.rv.on{opacity:1;transform:none}
-.badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:28px}.badges span{border:1px solid #3a3a3c;color:#a1a1a6;border-radius:980px;padding:4px 13px;font-size:12px;letter-spacing:.12em;font-weight:600}
-.fine{color:var(--g);font-size:14px;margin-top:14px}
-.feat{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;width:min(1100px,94%);margin:56px auto 0;text-align:left}
-.feat div{background:var(--bg2);border-radius:24px;padding:30px 28px}.feat h3{font-size:21px;font-weight:700;letter-spacing:-.01em;color:#fff}.feat h3:before{content:"";display:block;width:26px;height:4px;border-radius:2px;background:var(--o);margin-bottom:16px}.feat p{color:var(--g);font-size:16px;margin-top:8px}
-.steps{width:min(840px,92%);margin:50px auto 0;text-align:left;counter-reset:s}.steps div{counter-increment:s;display:grid;grid-template-columns:64px 1fr;gap:16px;align-items:start;padding:22px 0;border-top:1px solid #2a2a2c;font-size:20px;color:var(--g);font-weight:500}.steps div:before{content:counter(s);font-size:44px;font-weight:700;line-height:1;color:var(--o)}.steps b{color:#fff;font-weight:600}
-.faq{width:min(840px,92%);margin:44px auto 0;text-align:left}.faq details{border-top:1px solid #2a2a2c;padding:20px 0}.faq summary{cursor:pointer;font-size:21px;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:16px}.faq summary::-webkit-details-marker{display:none}.faq summary:after{content:"+";color:var(--o);font-size:28px;line-height:1}.faq details[open] summary:after{content:"–"}.faq p{color:var(--g);font-size:17px;margin-top:12px;max-width:720px}
 @media(max-width:800px){.feat{grid-template-columns:1fr}.steps div{grid-template-columns:44px 1fr;font-size:18px}.steps div:before{font-size:34px}.tons{grid-template-columns:1fr}.tons div{grid-template-columns:1fr;gap:2px}}
-@media(max-width:800px){.tiles{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}nav .h{display:none}.spec div{grid-template-columns:1fr;gap:4px}}
-nav .h{padding:14px 0}a:focus-visible,summary:focus-visible{outline:3px solid #ff9f0a;outline-offset:3px;border-radius:6px}</style></head><body>
-<nav><div class="in"><b>AURA</b><a class="h" href="/plugins/">Todos os plugins</a><a class="h" href="#visao">Visão geral</a><a class="h" href="#timbres">Timbres</a><a class="h" href="#recursos">Recursos</a><a class="h" href="#specs">Especificações</a><a class="h" href="#licenca">Licença</a><a class="h" href="#faq">Dúvidas</a><a class="pill" href="#baixar">Baixar</a></div></nav>
+</style></head><body>
+<a class="skip" href="#main">Pular para o conteúdo</a><nav aria-label="Principal"><div class="in"><a class="brand" href="/plugins/" aria-label="AURA Plugins, todos os plugins"><b>AURA</b></a><a class="h" href="/plugins/">Todos os plugins</a><a class="h" href="#visao">Visão geral</a><a class="h" href="#timbres">Timbres</a><a class="h" href="#recursos">Recursos</a><a class="h" href="#specs">Especificações</a><a class="h" href="#licenca">Licença</a><a class="h" href="#faq">Dúvidas</a><a class="pill" href="#baixar">Baixar</a><details class="mm"><summary aria-label="Abrir menu">Menu</summary><div class="mmp"><a href="/plugins/">Todos os plugins</a><a href="#visao">Visão geral</a><a href="#timbres">Timbres</a><a href="#recursos">Recursos</a><a href="#specs">Especificações</a><a href="#licenca">Licença</a><a href="#faq">Dúvidas</a></div></details></div></nav><main id="main">
 
 <section class="hero" id="topo">
  <p class="eb rv">AURA Bass</p>
@@ -58,7 +19,7 @@ nav .h{padding:14px 0}a:focus-visible,summary:focus-visible{outline:3px solid #f
  <div class="links rv"><a class="btn" href="#baixar">Baixar teste grátis</a><a href="#visao">Ver como funciona ›</a></div>
  <div class="badges rv"><span>VST3</span><span>AU</span><span>PROGRAMA</span><span>WINDOWS</span><span>MAC</span></div>
  <p class="fine rv">Teste grátis por 15 dias, sem cartão. Uma licença vale para 3 aparelhos seus.</p>
- <img class="shot rv" src="panel.jpg" alt="Painel do AURA Bass">
+ <img width="1452" height="886" decoding="async" class="shot rv" src="panel.jpg" alt="Painel do AURA Bass">
 </section>
 
 <section id="visao">
@@ -110,7 +71,7 @@ nav .h{padding:14px 0}a:focus-visible,summary:focus-visible{outline:3px solid #f
 <section>
  <h2 class="rv">Afinador na <span class="grad">mesma tela.</span></h2>
  <p class="sub rv">Toque o footswitch TUNER: a saída fica muda e o painel vira um afinador grande, legível de longe, com a nota e os cents.</p>
- <img class="shot rv" src="afinador.jpg" alt="O AURA Bass em modo afinador">
+ <img width="1452" height="886" decoding="async" loading="lazy" class="shot rv" src="afinador.jpg" alt="O AURA Bass em modo afinador">
 </section>
 
 <section>
@@ -128,7 +89,7 @@ nav .h{padding:14px 0}a:focus-visible,summary:focus-visible{outline:3px solid #f
   <div><span><b>Use em até 3 aparelhos seus.</b> Para trocar de computador, desative o antigo dentro do AURA e ative no novo.</span></div>
  </div>
  <p class="fine rv">Sem internet, o AURA continua funcionando por até 30 dias entre as confirmações da licença.</p>
- <img class="shot rv" src="ativacao.jpg" alt="Tela de ativação do AURA Bass" style="margin-top:46px">
+ <img width="1452" height="886" decoding="async" loading="lazy" class="shot rv" src="ativacao.jpg" alt="Tela de ativação do AURA Bass" style="margin-top:46px">
 </section>
 
 <section class="light" id="specs" style="margin-top:120px;padding-bottom:110px">
@@ -151,9 +112,10 @@ nav .h{padding:14px 0}a:focus-visible,summary:focus-visible{outline:3px solid #f
 
 <section id="baixar"><h2 class="rv">Experimente por 15 dias.</h2>
  <p class="sub rv">Todos os recursos liberados. Sem cartão.</p>
+ <p class="fine rv" id="mobnote" hidden>Neste aparelho (celular ou tablet) o instalador não funciona: ele é para Windows e Mac. Abra esta página num computador para baixar.</p>
  <div class="dl rv">
-  <div class="card"><h3>Windows</h3><p>Windows 10 ou 11 · 64 bits</p><a class="btn" href="https://github.com/thiagorgalvao-sketch/AURA/releases/latest/download/AURA-Bass-Windows.exe">Baixar</a></div>
-  <div class="card"><h3>macOS</h3><p>11 ou superior · Intel e Apple Silicon</p><a class="btn" href="https://github.com/thiagorgalvao-sketch/AURA/releases/latest/download/AURA-Bass-macOS.pkg">Baixar</a></div>
+  <div class="card" data-os="win"><p class="recl">Recomendado para o seu computador</p><h3>Windows</h3><p>Windows 10 ou 11 · 64 bits</p><a class="btn" href="https://github.com/thiagorgalvao-sketch/AURA/releases/latest/download/AURA-Bass-Windows.exe">Baixar</a></div>
+  <div class="card" data-os="mac"><p class="recl">Recomendado para o seu computador</p><h3>macOS</h3><p>11 ou superior · Intel e Apple Silicon</p><a class="btn" href="https://github.com/thiagorgalvao-sketch/AURA/releases/latest/download/AURA-Bass-macOS.pkg">Baixar</a></div>
  </div>
  <p class="fine rv">Licença completa: <span style="color:#fff">em breve</span>. Garantia de 7 dias após a compra.</p>
  <p class="fine rv" style="max-width:640px;margin:10px auto 0">Se o Windows ou o Mac avisar que o instalador é de um desenvolvedor desconhecido, confirme que o arquivo veio desta página. Windows: “Mais informações” → “Executar assim mesmo”. Mac: botão direito no instalador → “Abrir”.</p>
@@ -172,6 +134,19 @@ nav .h{padding:14px 0}a:focus-visible,summary:focus-visible{outline:3px solid #f
   <details><summary>E se eu não gostar?</summary><p>Você tem 7 dias de garantia: reembolso integral e a licença é desativada.</p></details>
  </div>
 </section>
+</main>
+<a class="stk" id="stk" href="#baixar">Baixar teste grátis</a>
 <footer><a href="/plugins/" style="color:#2997ff">Todos os plugins</a><br>© 2026 Thiago R. Galvão. Todos os direitos reservados.<br>Nomes de outros fabricantes citados pertencem a seus donos; não há afiliação.</footer>
-<script>var io=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting){x.target.classList.add('on');io.unobserve(x.target)}})},{threshold:.12});document.querySelectorAll('.rv').forEach(function(n){io.observe(n)});</script>
+<script>if(!window.IntersectionObserver){document.documentElement.className=""}else{var io=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting){x.target.classList.add('on');io.unobserve(x.target)}})},{threshold:.12});document.querySelectorAll('.rv').forEach(function(n){io.observe(n)})}</script>
+<script>
+(function(){
+  var ua=navigator.userAgent,pl=((navigator.userAgentData&&navigator.userAgentData.platform)||navigator.platform||'')+' '+ua,touch=/Android|iPhone|iPad|iPod/.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1);
+  var os=touch?'':/Win/.test(pl)?'win':/Mac/.test(pl)?'mac':'';
+  if(touch){var n=document.getElementById('mobnote');if(n)n.hidden=false}
+  if(os){var c=document.querySelector('.card[data-os="'+os+'"]');if(c)c.classList.add('rec')}
+  var mm=document.querySelector('.mm');if(mm)[].forEach.call(mm.querySelectorAll('a'),function(a){a.addEventListener('click',function(){mm.open=false})});
+  var stk=document.getElementById('stk'),vis={};
+  if(stk&&window.IntersectionObserver){var o=new IntersectionObserver(function(es){es.forEach(function(e){vis[e.target.id]=e.isIntersecting});stk.classList.toggle('on',!vis.topo&&!vis.baixar&&scrollY>200)});['topo','baixar'].forEach(function(i){var e=document.getElementById(i);if(e)o.observe(e)});addEventListener('scroll',function(){stk.classList.toggle('on',!vis.topo&&!vis.baixar&&scrollY>200)},{passive:true})}
+})();
+</script>
 </body></html>
