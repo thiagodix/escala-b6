@@ -38,6 +38,11 @@ h2{font-size:clamp(34px,6vw,64px);font-weight:700;letter-spacing:-.025em;line-he
 footer{margin-top:120px;padding:26px 20px 40px;border-top:1px solid #2a2a2c;color:var(--g);font-size:12px;text-align:center;line-height:1.7}
 .rv{opacity:0;transform:translateY(40px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}.rv.on{opacity:1;transform:none}
 .badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:28px}.badges span{border:1px solid #3a3a3c;color:#a1a1a6;border-radius:980px;padding:4px 13px;font-size:12px;letter-spacing:.12em;font-weight:600}
+button.btn{border:0;font:inherit;font-size:17px;cursor:pointer}
+#demoModal{position:fixed;inset:0;z-index:50;background:#000;display:none;flex-direction:column}#demoModal.on{display:flex}
+#demoModal header{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;color:#a1a1a6;font-size:13px;background:#161617}
+#demoModal header button{background:#2c2c2e;color:#f5f5f7;border:0;border-radius:980px;padding:7px 16px;font:600 14px inherit;cursor:pointer}
+#demoModal iframe{flex:1;border:0;width:100%;background:#000}
 .fine{color:var(--g);font-size:14px;margin-top:14px}
 .feat{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;width:min(1100px,94%);margin:56px auto 0;text-align:left}
 .feat div{background:var(--bg2);border-radius:24px;padding:30px 28px}.feat h3{font-size:21px;font-weight:700;letter-spacing:-.01em;color:#fff}.feat h3:before{content:"";display:block;width:26px;height:4px;border-radius:2px;background:var(--o);margin-bottom:16px}.feat p{color:var(--g);font-size:16px;margin-top:8px}
@@ -46,13 +51,13 @@ footer{margin-top:120px;padding:26px 20px 40px;border-top:1px solid #2a2a2c;colo
 @media(max-width:800px){.feat{grid-template-columns:1fr}.steps div{grid-template-columns:44px 1fr;font-size:18px}.steps div:before{font-size:34px}}
 @media(max-width:800px){.tiles{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}nav .h{display:none}.spec div{grid-template-columns:1fr;gap:4px}}
 </style></head><body>
-<nav><div class="in"><b>AURA</b><a class="h" href="/plugins/">Todos os plugins</a><a class="h" href="#visao">Visão geral</a><a class="h" href="#recursos">Recursos</a><a class="h" href="#specs">Especificações</a><a class="h" href="#licenca">Licença</a><a class="h" href="#manual">Manual</a><a class="h" href="#faq">Dúvidas</a><a class="pill" href="#baixar">Baixar</a></div></nav>
+<nav><div class="in"><b>AURA</b><a class="h" href="/plugins/">Todos os plugins</a><a class="h" href="#visao">Visão geral</a><a class="h" href="#testar">Testar</a><a class="h" href="#recursos">Recursos</a><a class="h" href="#specs">Especificações</a><a class="h" href="#licenca">Licença</a><a class="h" href="#manual">Manual</a><a class="h" href="#faq">Dúvidas</a><a class="pill" href="#baixar">Baixar</a></div></nav>
 
 <section class="hero" id="topo">
  <p class="eb rv">AURA Synth Bass</p>
  <h1 class="rv">Feito para o <span class="grad">palco.</span></h1>
  <p class="sub rv">O sintetizador de baixo que responde como um instrumento de verdade. No Windows e no Mac, como programa ou plugin.</p>
- <div class="links rv"><a class="btn" href="#baixar">Baixar teste grátis</a><a href="#manual">Ver o manual ›</a></div>
+ <div class="links rv"><a class="btn" href="#baixar">Baixar teste grátis</a><a href="#testar" data-demo>Testar agora ›</a><a href="#manual">Ver o manual ›</a></div>
  <div class="badges rv"><span>APP</span><span>VST3</span><span>AU</span><span>WINDOWS</span><span>MAC</span></div>
  <p class="fine rv">Teste grátis por 15 dias, sem cartão. Uma licença vale para 3 aparelhos seus.</p>
  <img class="shot rv" src="panel.jpg" alt="Painel do AURA Synth Bass">
@@ -88,6 +93,13 @@ footer{margin-top:120px;padding:26px 20px 40px;border-top:1px solid #2a2a2c;colo
   <div><h3>Oito timbres de fábrica</h3><p>Drive, Drive (Stage 2), Octave (Clean), Octave (Wild), Sub Bass e Chorus — prontos no visor, feitos para o repertório de baixo.</p></div>
   <div><h3>Para iniciantes</h3><p>Manual ilustrado em português que explica do zero o que cada controle faz.</p></div>
  </div>
+</section>
+
+<section id="testar">
+ <h2 class="rv">Toque agora. <span class="grad">Sem instalar.</span></h2>
+ <p class="sub rv">Abra o AURA aqui mesmo, no navegador, e experimente por 5 minutos. Use fones ou caixas e, se tiver, um teclado MIDI.</p>
+ <div class="links rv"><button class="btn" id="demoBtn" type="button">Testar online por 5 minutos</button></div>
+ <p class="fine rv">Funciona em computador, iPad e tablet. Para usar sem limite, baixe o teste de 15 dias.</p>
 </section>
 
 <section id="recursos">
@@ -159,4 +171,17 @@ footer{margin-top:120px;padding:26px 20px 40px;border-top:1px solid #2a2a2c;colo
 </section>
 <footer><a href="/plugins/" style="color:#2997ff">Todos os plugins</a> · <a href="manual/" style="color:#2997ff">Manual</a><br>© 2026 Thiago R. Galvão. Todos os direitos reservados.<br>Nomes de outros fabricantes citados pertencem a seus donos; não há afiliação.</footer>
 <script>var io=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting){x.target.classList.add('on');io.unobserve(x.target)}})},{threshold:.12});document.querySelectorAll('.rv').forEach(function(n){io.observe(n)});</script>
+<script>
+(function(){
+  var m=document.createElement('div');m.id='demoModal';m.innerHTML='<header><span>AURA Synth Bass · demonstração de 5 minutos</span><button type="button" id="demoClose">Fechar</button></header>';document.body.appendChild(m);
+  var f=null;
+  function open(e){ if(e) e.preventDefault(); if(!f){ f=document.createElement('iframe'); f.allow='autoplay; midi; fullscreen'; f.title='AURA Synth Bass — demonstração'; f.src='https://thiagorgalvao-sketch.github.io/SynthBass/?demo=1'; m.appendChild(f); } m.classList.add('on'); document.documentElement.style.overflow='hidden'; }
+  function close(){ m.classList.remove('on'); document.documentElement.style.overflow=''; if(f){ f.remove(); f=null; } }
+  document.getElementById('demoBtn').onclick=open;
+  [].forEach.call(document.querySelectorAll('[data-demo]'),function(a){a.onclick=open});
+  document.getElementById('demoClose').onclick=close;
+  addEventListener('keydown',function(e){ if(e.key==='Escape') close(); });
+  addEventListener('message',function(e){ if(e.origin==='https://thiagorgalvao-sketch.github.io' && e.data && e.data.aura==='close') close(); });
+})();
+</script>
 </body></html>
