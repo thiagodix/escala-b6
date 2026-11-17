@@ -2,7 +2,7 @@
    Para ligar: crie a conta em goatcounter.com, escolha o código do site (ex.: aura)
    e coloque aqui, entre as aspas. Enquanto estiver vazio, nada é enviado. */
 (function(){
-  var CODE='';
+  var CODE='fervor';
   if(!CODE)return;
   var s=document.createElement('script');s.async=true;
   s.src='https://gc.zgo.at/count.js';
