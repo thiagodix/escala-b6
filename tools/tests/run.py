@@ -652,7 +652,7 @@ with sync_playwright() as p:
      delete window.__SB;S.tab='hoje';S.lv=null;R();return a}""")
     ok(all(r), 'aprovação por link: envia, recebe a resposta, mostra card e histórico', str(r))
     # página da liderança do ministério (sem login): mostra o repertório e envia a resposta
-    ap = c.new_page(); posts = []; apE = []
+    apc = b.new_context(viewport={'width': 390, 'height': 844}, service_workers='block'); ap = apc.new_page(); posts = []; apE = []
     ap.on('pageerror', lambda e: apE.append(str(e)))
     def _h(route):
         u = route.request.url
@@ -673,7 +673,7 @@ with sync_playwright() as p:
     ok('Rei da Glória' in t1 and len(posts) == 2 and posts[0]['p_acao'] == 'aprovado' and posts[1]['p_acao'] == 'ajuste' and posts[1]['p_itens'] == ['Praise'] and not apE, 'página de aprovação: mostra o repertório, aprova e sugere alteração', str(posts) + str(apE))
     ap.goto(B + '/aprovar/?t=invalido'); ap.wait_for_timeout(200)
     ok('Link indisponível' in ap.inner_text('body'), 'página de aprovação: link inválido não abre nada')
-    ap.close()
+    ap.close(); apc.close()
     ok(tot > 150 and not ruins and not E7, f'botões: {tot} tipos de botão clicados em {len(TELAS)} telas sem erro', '; '.join((ruins + E7)[:4]))
     c.close()
     b.close()
