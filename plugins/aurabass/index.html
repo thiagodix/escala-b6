@@ -1,8 +1,8 @@
 <!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AURA Bass — overdrive e pré de baixo para Windows e Mac</title>
-<meta name="description" content="AURA Bass: overdrive, equalização e simulação de caixa para contrabaixo, com afinador embutido. Plugin VST3 e AU, e programa autônomo, para Windows e Mac. Teste grátis por 15 dias.">
+<title>AURA Bass — todos os timbres de baixo num painel só</title>
+<meta name="description" content="AURA Bass: pré com drive, equalização, caixa, oitava, chorus e afinador num plugin só, com onze timbres prontos. VST3, AU e programa autônomo, para Windows e Mac. Teste grátis por 15 dias.">
 <meta name="copyright" content="© 2026 Thiago R. Galvão. Todos os direitos reservados.">
-<meta property="og:title" content="AURA Bass"><meta property="og:description" content="Overdrive e pré de baixo, com afinador embutido. Teste grátis por 15 dias."><meta property="og:image" content="https://fervor.website/plugins/aurabass/panel.jpg">
+<meta property="og:title" content="AURA Bass"><meta property="og:description" content="Drive, equalização, caixa, oitava, chorus e afinador num painel só, com onze timbres prontos. Teste grátis por 15 dias."><meta property="og:image" content="https://fervor.website/plugins/aurabass/panel.jpg">
 <link rel="icon" href="../assets/aura-icon.svg" type="image/svg+xml"><meta name="theme-color" content="#000000">
 <style>
 :root{--o:#ff9f0a;--g:#86868b;--bg:#000;--bg2:#161617;--w:#f5f5f7}
@@ -32,6 +32,9 @@ h2{font-size:clamp(34px,6vw,64px);font-weight:700;letter-spacing:-.025em;line-he
 .light{background:#f5f5f7;color:#1d1d1f}.light .sub{color:#6e6e73}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;width:min(1000px,92%);margin:60px auto 0}
 .stats div{font-size:clamp(40px,6vw,72px);font-weight:700;letter-spacing:-.03em}.stats small{display:block;font-size:15px;color:var(--g);font-weight:500;letter-spacing:0;margin-top:4px}
+.tons{display:grid;grid-template-columns:repeat(2,1fr);gap:0 40px;width:min(980px,94%);margin:50px auto 0;text-align:left}
+.tons div{display:grid;grid-template-columns:150px 1fr;gap:14px;padding:16px 0;border-top:1px solid #2a2a2c;font-size:16px;align-items:baseline}
+.tons b{font-weight:600;color:#fff}.tons span{color:var(--g)}
 .spec{width:min(840px,92%);margin:50px auto 0;text-align:left}.spec div{display:grid;grid-template-columns:190px 1fr;gap:20px;padding:18px 0;border-top:1px solid #d2d2d7;font-size:17px}.spec b{font-weight:600}.spec span{color:#424245}
 .dl{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:44px}
 .card{background:var(--bg2);border-radius:24px;padding:34px 38px;width:320px}.card h3{font-size:28px}.card p{color:var(--g);margin:8px 0 22px;font-size:16px}
@@ -43,15 +46,15 @@ footer{margin-top:120px;padding:26px 20px 40px;border-top:1px solid #2a2a2c;colo
 .feat div{background:var(--bg2);border-radius:24px;padding:30px 28px}.feat h3{font-size:21px;font-weight:700;letter-spacing:-.01em;color:#fff}.feat h3:before{content:"";display:block;width:26px;height:4px;border-radius:2px;background:var(--o);margin-bottom:16px}.feat p{color:var(--g);font-size:16px;margin-top:8px}
 .steps{width:min(840px,92%);margin:50px auto 0;text-align:left;counter-reset:s}.steps div{counter-increment:s;display:grid;grid-template-columns:64px 1fr;gap:16px;align-items:start;padding:22px 0;border-top:1px solid #2a2a2c;font-size:20px;color:var(--g);font-weight:500}.steps div:before{content:counter(s);font-size:44px;font-weight:700;line-height:1;color:var(--o)}.steps b{color:#fff;font-weight:600}
 .faq{width:min(840px,92%);margin:44px auto 0;text-align:left}.faq details{border-top:1px solid #2a2a2c;padding:20px 0}.faq summary{cursor:pointer;font-size:21px;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:16px}.faq summary::-webkit-details-marker{display:none}.faq summary:after{content:"+";color:var(--o);font-size:28px;line-height:1}.faq details[open] summary:after{content:"–"}.faq p{color:var(--g);font-size:17px;margin-top:12px;max-width:720px}
-@media(max-width:800px){.feat{grid-template-columns:1fr}.steps div{grid-template-columns:44px 1fr;font-size:18px}.steps div:before{font-size:34px}}
+@media(max-width:800px){.feat{grid-template-columns:1fr}.steps div{grid-template-columns:44px 1fr;font-size:18px}.steps div:before{font-size:34px}.tons{grid-template-columns:1fr}.tons div{grid-template-columns:1fr;gap:2px}}
 @media(max-width:800px){.tiles{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}nav .h{display:none}.spec div{grid-template-columns:1fr;gap:4px}}
 </style></head><body>
-<nav><div class="in"><b>AURA</b><a class="h" href="/plugins/">Todos os plugins</a><a class="h" href="#visao">Visão geral</a><a class="h" href="#recursos">Recursos</a><a class="h" href="#specs">Especificações</a><a class="h" href="#licenca">Licença</a><a class="h" href="#faq">Dúvidas</a><a class="pill" href="#baixar">Baixar</a></div></nav>
+<nav><div class="in"><b>AURA</b><a class="h" href="/plugins/">Todos os plugins</a><a class="h" href="#visao">Visão geral</a><a class="h" href="#timbres">Timbres</a><a class="h" href="#recursos">Recursos</a><a class="h" href="#specs">Especificações</a><a class="h" href="#licenca">Licença</a><a class="h" href="#faq">Dúvidas</a><a class="pill" href="#baixar">Baixar</a></div></nav>
 
 <section class="hero" id="topo">
  <p class="eb rv">AURA Bass</p>
- <h1 class="rv">O grave que <span class="grad">atravessa.</span></h1>
- <p class="sub rv">Overdrive, equalização e caixa de verdade para o seu contrabaixo. No Windows e no Mac, como plugin ou como programa.</p>
+ <h1 class="rv">Todos os seus timbres <span class="grad">num painel só.</span></h1>
+ <p class="sub rv">Limpo, drive, oitava, chorus, caixa e afinador no mesmo lugar — o canivete suíço do baixista. No Windows e no Mac, como plugin ou como programa.</p>
  <div class="links rv"><a class="btn" href="#baixar">Baixar teste grátis</a><a href="#visao">Ver como funciona ›</a></div>
  <div class="badges rv"><span>VST3</span><span>AU</span><span>PROGRAMA</span><span>WINDOWS</span><span>MAC</span></div>
  <p class="fine rv">Teste grátis por 15 dias, sem cartão. Uma licença vale para 3 aparelhos seus.</p>
@@ -59,8 +62,32 @@ footer{margin-top:120px;padding:26px 20px 40px;border-top:1px solid #2a2a2c;colo
 </section>
 
 <section id="visao">
+ <h2 class="rv">Seis pedais, <span class="grad">uma tela.</span></h2>
+ <p class="sub rv">Pré com drive, equalização, caixa, oitava, chorus e afinador. Sem montar corrente de plugin, sem descobrir no meio do ensaio qual deles está comendo o seu grave. Abre, escolhe o timbre e toca.</p>
+</section>
+
+<section>
  <h2 class="rv">Suja sem <span class="grad">sumir com o grave.</span></h2>
  <p class="sub rv">O caminho limpo e o caminho distorcido andam juntos, alinhados na mesma amostra. O Blend decide quanto de cada um você ouve — e o fundo do seu som continua inteiro.</p>
+</section>
+
+<section id="timbres">
+ <h2 class="rv">Onze timbres prontos. <span class="grad">Um clique cada.</span></h2>
+ <p class="sub rv">Do limpo de gravação ao sub grave, passando por oitava, chorus e dois estágios de drive. Dá para tocar a noite inteira sem abrir mais nada.</p>
+ <div class="tons rv">
+  <div><b>AURA</b><span>O ponto de partida: cheio, com a caixa ligada.</span></div>
+  <div><b>Clean DI</b><span>Sem drive nenhum, para gravar o baixo cru.</span></div>
+  <div><b>Grit leve</b><span>A sujeira que só aparece quando você toca forte.</span></div>
+  <div><b>Drive pesado</b><span>Distorção grossa com o grave inteiro por baixo.</span></div>
+  <div><b>Slap brilhante</b><span>Agudo aberto e médio recuado para o slap sair.</span></div>
+  <div><b>Só drive</b><span>Drive na frente, equalização quase reta.</span></div>
+  <div><b>Drive estágio 2</b><span>Mais ganho e médio empurrado, para o refrão.</span></div>
+  <div><b>Oitava limpa</b><span>A oitava abaixo somada ao limpo, para engrossar.</span></div>
+  <div><b>Oitava suja</b><span>A mesma oitava, agora com drive por cima.</span></div>
+  <div><b>Sub grave</b><span>Grave de sintetizador, médio bem recuado.</span></div>
+  <div><b>Chorus</b><span>Largura para partes limpas e notas longas.</span></div>
+  <div><b>E do seu jeito</b><span>Cada um é só o ponto de partida: gire e o som passa a ser seu.</span></div>
+ </div>
 </section>
 
 <section>
@@ -72,6 +99,7 @@ footer{margin-top:120px;padding:26px 20px 40px;border-top:1px solid #2a2a2c;colo
  <h2 class="rv">Tudo o que um baixo <span class="grad">precisa na frente.</span></h2>
  <p class="sub rv">Feito para o palco e para a gravação, sem curva de aprendizado.</p>
  <div class="feat rv">
+  <div><h3>Onze timbres de fábrica</h3><p>Limpo, drive, oitava, sub, chorus e slap já ajustados, no menu do painel. Serve de ponto de partida e tira você do zero em segundos.</p></div>
   <div><h3>Drive com blend alinhado</h3><p>Saturação assimétrica com 4× de oversampling, somada ao sinal limpo sem atraso nem cancelamento de fase. Dá para sujar muito sem perder o corpo.</p></div>
   <div><h3>Equalização de baixista</h3><p>Grave, médio e agudo com as frequências certas para contrabaixo, mais um controle de presença para o ataque aparecer na mistura.</p></div>
   <div><h3>Caixa de verdade</h3><p>Simulação por resposta de impulso, com 4×10 e 1×15 à escolha. Pode desligar com um toque quando a sua DAW já tiver a dela.</p></div>
@@ -116,6 +144,8 @@ footer{margin-top:120px;padding:26px 20px 40px;border-top:1px solid #2a2a2c;colo
   <div><b>Processamento</b><span>Saturação assimétrica com 4× de oversampling e caminho limpo alinhado</span></div>
   <div><b>Equalização</b><span>Grave, médio, agudo e presença, com as frequências voltadas ao contrabaixo</span></div>
   <div><b>Caixa</b><span>Resposta de impulso, 4×10 e 1×15, com opção de desligar</span></div>
+  <div><b>Efeitos</b><span>Oitava abaixo por divisor e chorus por atraso modulado, dosáveis de 0 a 100%</span></div>
+  <div><b>Timbres</b><span>Onze presets de fábrica, do limpo ao sub grave</span></div>
   <div><b>Afinador</b><span>Detecção de altura embutida, com silenciamento da saída</span></div>
   <div><b>Entrada</b><span>Medidor com aviso de clip e trim de −24 a +24 dB</span></div>
   <div><b>Internet</b><span>Só para ativar e, de tempos em tempos, confirmar a licença</span></div>
@@ -137,6 +167,7 @@ footer{margin-top:120px;padding:26px 20px 40px;border-top:1px solid #2a2a2c;colo
  <h2 class="rv">Dúvidas frequentes.</h2>
  <div class="faq rv">
   <details><summary>Funciona no Reaper, no Logic e nas outras DAWs?</summary><p>Sim. Como VST3 no Windows e no Mac, e como Audio Unit no Mac — o que cobre Reaper, Cubase, Studio One, Ableton, Logic e GarageBand. Também há o programa autônomo, para tocar sem abrir nenhuma DAW.</p></details>
+  <details><summary>Preciso de outros plugins junto com o AURA?</summary><p>Não. O pré com drive, a equalização, a caixa, a oitava, o chorus e o afinador estão todos dentro dele. Se a sua DAW já tiver uma caixa de que você goste, é só desligar a do AURA e usar o resto.</p></details>
   <details><summary>Preciso de uma interface de áudio?</summary><p>Para tocar o baixo, sim: é por ela que o instrumento entra no computador. No programa autônomo você escolhe a interface na própria tela do AURA.</p></details>
   <details><summary>Posso instalar em mais de um computador?</summary><p>Sim. Cada chave vale para até 3 aparelhos seus. Para mudar de aparelho, desative um deles dentro do AURA e ative no novo.</p></details>
   <details><summary>O que acontece depois dos 15 dias?</summary><p>O AURA pede a chave de ativação e para de processar o som até ser ativado. Nada do que você salvou se perde.</p></details>
