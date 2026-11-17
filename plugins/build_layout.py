@@ -5,8 +5,7 @@ import re, pathlib
 R = pathlib.Path(__file__).parent
 V = "3"
 CTA = {"all": ("#plugins", "Ver plugins"), "manual": ("/plugins/aurasynthbass/#baixar", "Baixar")}
-LINKS = [("all", "/plugins/", "Todos os plugins"), ("aura", "/plugins/aurasynthbass/", "AURA Synth Bass"),
-         ("manual", "/plugins/aurasynthbass/manual/", "Manual do Synth Bass")]
+LINKS = [("all", "/plugins/", "Todos os plugins"), ("aura", "/plugins/aurasynthbass/", "AURA Synth Bass")]
 def header(cur):
     nav = "".join(f'<a href="{h}"{" class=\"on\" aria-current=\"page\"" if k == cur else ""}>{t}</a>' for k, h, t in LINKS)
     href, txt = CTA[cur]
@@ -16,7 +15,7 @@ def header(cur):
       f'<a class="btn pr sm cta" href="{href}">{txt}</a>'
       f'<details class="mm"><summary aria-label="Abrir menu">Menu</summary><div class="mmp">{nav}</div></details></div></header>')
 def footer():
-    ls = "".join(f'<a href="{h}">{t}</a>' for k, h, t in LINKS[:4])
+    ls = "".join(f'<a href="{h}">{t}</a>' for k, h, t in LINKS)
     return ('<div class="wood"></div><footer class="ft"><div class="in"><div>' + ls + '</div>'
       '<div>© 2026 Thiago R. Galvão · Todos os direitos reservados<br>Nomes de outros fabricantes citados pertencem a seus donos; não há afiliação.</div></div></footer>')
 def patch(path, cur):
