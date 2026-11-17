@@ -665,8 +665,11 @@ with sync_playwright() as p:
     ap.route('**/*.supabase.co/**', _h)
     ap.goto(B + '/aprovar/?t=' + 'c' * 32); ap.wait_for_timeout(500)
     t1 = ap.inner_text('body')
-    ap.fill('#nmi', 'Pr. João'); ap.click('#apr'); ap.wait_for_timeout(300)
-    ap.click('#again'); ap.wait_for_timeout(300); ap.click('#saj'); ap.click('li.s >> nth=1'); ap.click('#env'); ap.wait_for_timeout(300)
+    try:
+        ap.fill('#nmi', 'Pr. João', timeout=8000); ap.click('#apr'); ap.wait_for_timeout(300)
+        ap.click('#again'); ap.wait_for_timeout(300); ap.click('#saj'); ap.click('li.s >> nth=1'); ap.click('#env'); ap.wait_for_timeout(300)
+    except Exception as e:
+        t1 = 'FALHOU: ' + ap.inner_text('body')[:200].replace('\n', ' | ') + ' ' + str(apE)[:200]
     ok('Rei da Glória' in t1 and len(posts) == 2 and posts[0]['p_acao'] == 'aprovado' and posts[1]['p_acao'] == 'ajuste' and posts[1]['p_itens'] == ['Praise'] and not apE, 'página de aprovação: mostra o repertório, aprova e sugere alteração', str(posts) + str(apE))
     ap.goto(B + '/aprovar/?t=invalido'); ap.wait_for_timeout(200)
     ok('Link indisponível' in ap.inner_text('body'), 'página de aprovação: link inválido não abre nada')
