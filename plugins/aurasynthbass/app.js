@@ -219,6 +219,13 @@
   var loading = document.getElementById("sheet-loading");
   var sheetClose = document.getElementById("sheet-close");
   var demo = null, lastFocus = null, failTimer = null;
+  /* Foco preso na demonstração: o resto da página fica inerte enquanto ela está aberta */
+  function setInert(on) {
+    Array.prototype.forEach.call(document.body.children, function (el) {
+      if (el === sheet || el.tagName === "SCRIPT") return;
+      if (on) el.setAttribute("inert", ""); else el.removeAttribute("inert");
+    });
+  }
 
   function openDemo() {
     lastFocus = document.activeElement;
@@ -234,6 +241,7 @@
     }, 20000);
     sheetBody.appendChild(demo);
     sheet.classList.add("on");
+    setInert(true);
     document.documentElement.style.overflow = "hidden";
     sheetClose.focus();
   }
@@ -260,6 +268,7 @@
     clearTimeout(failTimer);
     setRotated(false);
     sheet.classList.remove("on");
+    setInert(false);
     if (demo) { demo.remove(); demo = null; }
     document.documentElement.style.overflow = "";
     if (lastFocus && lastFocus.focus) lastFocus.focus();
@@ -295,7 +304,7 @@
         });
       });
     }, { rootMargin: "-45% 0px -50% 0px" });
-    ["topo", "por-dentro", "recursos", "preco", "duvidas", "baixar"].forEach(function (id) { spy.observe(document.getElementById(id)); });
+    ["topo", "por-dentro", "recursos", "duvidas", "baixar"].forEach(function (id) { spy.observe(document.getElementById(id)); });
   } else {
     Array.prototype.forEach.call(document.querySelectorAll(".rv"), function (n) { n.classList.add("on"); });
   }
