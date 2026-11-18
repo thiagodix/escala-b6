@@ -234,7 +234,7 @@
     demo = document.createElement("iframe");
     demo.src = DEMO_URL;
     demo.title = "AURA Synth Bass, demonstração tocável";
-    demo.allow = "autoplay; midi; fullscreen";
+    demo.allow = "autoplay; midi; bluetooth; fullscreen";
     demo.addEventListener("load", function () { clearTimeout(failTimer); loading.hidden = true; demo.classList.add("ready"); });
     failTimer = setTimeout(function () {
       loading.textContent = "Não foi possível abrir a demonstração. Verifique a conexão e tente de novo.";
