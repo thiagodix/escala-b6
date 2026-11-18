@@ -1,162 +1,308 @@
-<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"><script>document.documentElement.className="js"</script><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AURA Synth Bass — sintetizador de baixo para Windows e Mac</title>
-<meta name="description" content="AURA Synth Bass: sintetizador de baixo para o palco e o estúdio. Aplicativo para Windows e Mac com plugins VST3 e AU. Teste grátis por 15 dias.">
-<meta name="copyright" content="© 2026 Thiago R. Galvão. Todos os direitos reservados.">
-<meta property="og:title" content="AURA Synth Bass"><meta property="og:description" content="Sintetizador de baixo para o palco e o estúdio. Teste grátis por 15 dias."><meta property="og:image" content="https://fervor.website/plugins/aurasynthbass/panel.jpg">
-<link rel="canonical" href="https://fervor.website/plugins/aurasynthbass/"><meta property="og:type" content="website"><meta property="og:url" content="https://fervor.website/plugins/aurasynthbass/"><meta property="og:locale" content="pt_BR"><meta name="twitter:card" content="summary_large_image"><script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"AURA Synth Bass","applicationCategory":"MultimediaApplication","operatingSystem":"Windows, macOS","description":"Sintetizador de baixo para o palco e o estúdio, com app e plugins VST3 e AU para Windows e Mac.","image":"https://fervor.website/plugins/aurasynthbass/panel.jpg","author":{"@type":"Person","name":"Thiago R. Galvão"},"inLanguage":"pt-BR"}</script><link rel="icon" href="../assets/aura-icon.svg" type="image/svg+xml"><meta name="theme-color" content="#000000">
-<link rel="stylesheet" href="../assets/produto.css?v=3"><style>
-button.btn{border:0;font:inherit;font-size:17px;cursor:pointer}
-#demoModal{position:fixed;inset:0;z-index:50;background:#000;display:none;flex-direction:column}#demoModal.on{display:flex}
-#demoModal header{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;color:#a1a1a6;font-size:13px;background:#161617}
-#demoModal header button{background:#2c2c2e;color:#f5f5f7;border:0;border-radius:980px;padding:7px 16px;font:600 14px inherit;cursor:pointer}
-#demoModal iframe{flex:1;border:0;width:100%;background:#000}
-@media(max-width:800px){.feat{grid-template-columns:1fr}.steps div{grid-template-columns:44px 1fr;font-size:18px}.steps div:before{font-size:34px}}
-</style><script defer src="/plugins/assets/stats.js?v=2"></script></head><body>
-<a class="skip" href="#main">Pular para o conteúdo</a><nav aria-label="Principal"><div class="in"><a class="brand" href="/plugins/" aria-label="AURA Plugins, todos os plugins"><b>AURA</b></a><a class="h" href="/plugins/">Todos os plugins</a><a class="h" href="#visao">Visão geral</a><a class="h" href="#testar">Testar</a><a class="h" href="#recursos">Recursos</a><a class="h" href="#specs">Especificações</a><a class="h" href="#licenca">Licença</a><a class="h" href="#manual">Manual</a><a class="h" href="#faq">Dúvidas</a><a class="pill" href="#baixar">Baixar</a><details class="mm"><summary aria-label="Abrir menu">Menu</summary><div class="mmp"><a href="/plugins/">Todos os plugins</a><a href="#visao">Visão geral</a><a href="#testar">Testar</a><a href="#recursos">Recursos</a><a href="#specs">Especificações</a><a href="#licenca">Licença</a><a href="#manual">Manual</a><a href="#faq">Dúvidas</a></div></details></div></nav><main id="main">
+<!DOCTYPE html>
+<html lang="pt-BR" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>document.documentElement.className = "js";</script>
+<title>AURA Synth Bass · sintetizador de baixo para Windows e Mac</title>
+<meta name="description" content="Sintetizador de baixo feito para o palco. Três osciladores, filtro de 24 dB e 24 timbres. Teste grátis por 15 dias no Windows ou no Mac, como app, VST3 ou AU.">
+<link rel="canonical" href="https://fervor.website/plugins/aurasynthbass/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="AURA Synth Bass · o grave que você sente">
+<meta property="og:description" content="Sintetizador de baixo para o palco e o estúdio. Teste grátis por 15 dias.">
+<meta property="og:image" content="https://fervor.website/plugins/aurasynthbass/panel.jpg">
+<meta property="og:locale" content="pt_BR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0E0D0C">
+<link rel="icon" href="https://fervor.website/plugins/assets/aura-icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="img/panel-1600.webp" imagesrcset="img/panel-800.webp 800w, img/panel-1600.webp 1600w" imagesizes="(min-width: 1200px) 1100px, 92vw">
+<link rel="stylesheet" href="styles.css?v=4">
+<script defer src="/plugins/assets/stats.js?v=2"></script>
+</head>
+<body>
+<a class="skip" href="#main">Pular para o conteúdo</a>
 
-<section class="hero" id="topo">
- <p class="eb rv">AURA Synth Bass</p>
- <h1 class="rv">Feito para o <span class="grad">palco.</span></h1>
- <p class="sub rv">O sintetizador de baixo que responde como um instrumento de verdade. No Windows e no Mac, como programa ou plugin.</p>
- <div class="links rv"><a class="btn" href="#baixar">Baixar teste grátis</a><a href="#testar" data-demo>Testar agora ›</a><a href="#manual">Ver o manual ›</a></div>
- <div class="badges rv"><span>APP</span><span>VST3</span><span>AU</span><span>WINDOWS</span><span>MAC</span></div>
- <p class="fine rv">Teste grátis por 15 dias, sem cartão. Uma licença vale para 3 aparelhos seus.</p>
- <img width="1600" height="1000" decoding="async" class="shot rv" src="panel.jpg" alt="Painel do AURA Synth Bass">
-</section>
+<nav class="nav" aria-label="Principal">
+  <a class="nav-brand" href="#topo" aria-label="AURA Synth Bass, voltar ao topo"><b>AURA</b></a>
+  <ul class="nav-links title-4">
+    <li><a href="#por-dentro">Por dentro</a></li>
+    <li><a href="#recursos">Recursos</a></li>
+    <li><a href="#preco">Preço</a></li>
+    <li><a href="#duvidas">Dúvidas</a></li>
+  </ul>
+  <a class="btn btn-primary button-sm" href="#baixar">Baixar grátis</a>
+</nav>
 
-<section id="visao">
- <h2 class="rv">Três osciladores. <span class="grad">Um grave que você sente.</span></h2>
- <p class="sub rv">Onda, oitava, detune, sub e ruído, tudo à vista. Sem menus escondidos entre você e o som.</p>
- <img width="1400" height="176" decoding="async" loading="lazy" class="shot rv" src="manual/img/c_osc.jpg" alt="Osciladores">
-</section>
+<main id="main">
 
-<section>
- <h2 class="rv">Um filtro de 24 dB.<br><span class="grad">Esculpido à mão.</span></h2>
- <p class="sub rv">Cutoff, ressonância e drive para abrir, fechar e sujar o som no ritmo da música.</p>
- <img width="1400" height="160" decoding="async" loading="lazy" class="shot rv" src="manual/img/c_mixfil.jpg" alt="Mixer e filtro">
-</section>
+  <!-- 1. Abertura: o aparelho se ergue com a rolagem -->
+  <section class="intro" id="topo" aria-labelledby="intro-title">
+    <div class="intro-sticky">
+      <div class="intro-copy" id="intro-copy">
+        <p class="lcd caption-4 kicker">AURA Synth Bass</p>
+        <h1 class="intro-title" id="intro-title">O grave que<br>você sente.</h1>
+        <p class="intro-sub">Um sintetizador de baixo para o palco e o estúdio. No Windows e no Mac, como programa ou plugin.</p>
+        <div class="actions">
+          <a class="btn btn-primary button-md" href="#baixar">Baixar grátis por 15 dias</a>
+          <button class="link button-md" type="button" data-demo>Testar agora<span aria-hidden="true">›</span></button>
+        </div>
+      </div>
+      <div class="intro-device" id="intro-device">
+        <div class="glow" aria-hidden="true"></div>
+        <img src="img/panel-1600.webp" srcset="img/panel-800.webp 800w, img/panel-1600.webp 1600w" sizes="(min-width: 1200px) 1100px, 92vw"
+             width="1600" height="1000" fetchpriority="high"
+             alt="Painel do AURA Synth Bass em grafite e madeira, com visor, knobs e teclado">
+      </div>
+    </div>
+  </section>
 
-<section class="light" style="margin-top:120px;padding-bottom:110px">
- <h2 class="rv">Movimento em cada nota.</h2>
- <p class="sub rv">LFO e envelopes para dar ataque, corpo e respiração ao som.</p>
- <img width="1400" height="130" decoding="async" loading="lazy" class="shot rv" src="manual/img/c_env.jpg" alt="LFO e envelopes" style="border-color:#d2d2d7;box-shadow:0 20px 60px rgba(0,0,0,.12)">
-</section>
+  <!-- 2. Por dentro: zoom guiado pelo painel -->
+  <section class="tour" id="por-dentro" aria-label="O AURA por dentro">
+    <div class="tour-sticky">
+      <div class="tour-stage" id="tour-stage">
+        <!-- Base do painel + quadros em alta resolução de cada parada, na mesma posição -->
+        <div class="tour-img" id="tour-img" role="img" aria-label="Painel do AURA Synth Bass, com zoom em cada parte">
+          <img class="tour-base" src="img/tour-base-800.webp" srcset="img/tour-base-800.webp 800w, img/tour-base.webp 1600w" sizes="(min-width: 900px) 1100px, 100vw" width="1600" height="1200" alt="" decoding="async">
+          <img class="tour-hd" data-src="img/tour-osc.webp" style="left:2%;top:3.5%;width:80%;height:20%" alt="" decoding="async">
+          <img class="tour-hd" data-src="img/tour-filtro.webp" style="left:52%;top:19%;width:46%;height:17.5%" alt="" decoding="async">
+          <img class="tour-hd" data-src="img/tour-movimento.webp" style="left:2%;top:33.5%;width:96%;height:14.5%" alt="" decoding="async">
+          <img class="tour-hd" data-src="img/tour-palco.webp" style="left:58%;top:0;width:42%;height:9.5%" alt="" decoding="async">
+        </div>
+      </div>
+      <ol class="tour-captions" id="tour-captions">
+        <li class="tour-cap" data-step="0">
+          <p class="lcd caption-4 kicker">Por dentro</p>
+          <h2 class="heading-3">Tudo à vista. Nada escondido em menus.</h2>
+        </li>
+        <li class="tour-cap" data-step="1">
+          <p class="lcd caption-4 kicker">01 · Osciladores</p>
+          <h2 class="heading-3">Três osciladores. Um grave que você sente.</h2>
+          <p class="body-3">Onda, oitava, detune, sub e ruído, cada um no seu knob.</p>
+        </li>
+        <li class="tour-cap" data-step="2">
+          <p class="lcd caption-4 kicker">02 · Filtro 24 dB</p>
+          <h2 class="heading-3">Abra, feche e suje o som no ritmo da música.</h2>
+          <p class="body-3">Cutoff, ressonância e drive em um filtro de 24 dB.</p>
+        </li>
+        <li class="tour-cap" data-step="3">
+          <p class="lcd caption-4 kicker">03 · Movimento</p>
+          <h2 class="heading-3">Ataque, corpo e respiração em cada nota.</h2>
+          <p class="body-3">LFO, envelope de pitch, de filtro e de volume.</p>
+        </li>
+        <li class="tour-cap" data-step="4">
+          <p class="lcd caption-4 kicker">04 · Palco</p>
+          <h2 class="heading-3">Deu ruim no show? Um toque resolve.</h2>
+          <p class="body-3">Botão de pânico, cadeado de tela e tela cheia, sempre no alto do painel.</p>
+        </li>
+        <li class="tour-cap" data-step="5">
+          <p class="lcd caption-4 kicker">05 · MIDI</p>
+          <h2 class="heading-3">Ligue o seu controlador e toque.</h2>
+          <p class="body-3">USB ou Bluetooth. Qualquer botão em qualquer knob, em segundos.</p>
+        </li>
+      </ol>
+      <div class="tour-progress" aria-hidden="true"><span id="tour-bar"></span></div>
+    </div>
+  </section>
 
-<section id="tudo">
- <h2 class="rv">Tudo o que um baixo <span class="grad">sintetizado precisa.</span></h2>
- <p class="sub rv">Som, palco, efeitos, MIDI e presets. Pronto para usar, sem curva de aprendizado.</p>
- <div class="feat rv">
-  <div><h3>Som de verdade</h3><p>Três osciladores, sub e ruído, filtro de 24 dB com ressonância e drive, e envelopes completos para volume e filtro.</p></div>
-  <div><h3>Pronto para o palco</h3><p>Botão de pânico, cadeado de tela, modo tela cheia, setlist com Program Change e preset de emergência.</p></div>
-  <div><h3>Efeitos e arpejador</h3><p>Distorção, fuzz, bitcrusher, chorus, phaser, delay, reverb e um arpejador sincronizado ao andamento.</p></div>
-  <div><h3>MIDI sem complicação</h3><p>USB e Bluetooth. Ligue qualquer botão do controlador a qualquer knob em segundos.</p></div>
-  <div><h3>Presets e nuvem</h3><p>Favoritos, categorias, importação e backup. Sincronize seus sons entre aparelhos pela conta na nuvem. Um preset pode trazer os próprios efeitos e ligá-los ao ser escolhido.</p></div>
-  <div><h3>24 timbres de fábrica</h3><p>Sub (Soft, Hard, 808), Drive (Soft, Heavy, Stage 2), Octave (Soft, Hard, Clean, Wild), Funk (Pluck, Slap), Pop, Rock, Lead (Mono, Soft), Pluck (Short, Warm), Chorus (Wide) e mais — prontos no visor.</p></div>
-  <div><h3>Para iniciantes</h3><p>Manual ilustrado em português que explica do zero o que cada controle faz.</p></div>
- </div>
-</section>
+  <!-- 3. Frase grande que acende palavra por palavra -->
+  <section class="statement" aria-label="Manifesto">
+    <p class="statement-text" id="statement">Liga, escolhe o timbre e toca. Sem curva de aprendizado entre você e o <em>som</em>.</p>
+  </section>
 
-<section id="testar">
- <h2 class="rv">Toque agora. <span class="grad">Sem instalar.</span></h2>
- <p class="sub rv">Abra o AURA aqui mesmo, no navegador, e experimente por 5 minutos. Use fones ou caixas e, se tiver, um teclado MIDI.</p>
- <div class="links rv"><button class="btn" id="demoBtn" type="button">Testar online por 5 minutos</button></div>
- <p class="fine rv">Funciona em computador, iPad e tablet. Para usar sem limite, baixe o teste de 15 dias.</p>
-</section>
+  <!-- 4. Dois acabamentos -->
+  <section class="finish" aria-labelledby="finish-title">
+    <div class="wrap">
+      <p class="lcd caption-4 kicker rv">Acabamento</p>
+      <h2 class="heading-2 rv" id="finish-title">Grafite para o palco.<br>Prateado para a luz forte.</h2>
+      <div class="finish-view rv">
+        <img class="finish-img is-shown" data-finish="grafite" src="img/panel-800.webp" srcset="img/panel-800.webp 800w, img/panel-1600.webp 1600w" sizes="(min-width: 1200px) 1100px, 92vw" width="1600" height="1000" loading="lazy" alt="AURA no acabamento grafite">
+        <img class="finish-img" data-finish="prateado" src="img/claro-800.webp" srcset="img/claro-800.webp 800w, img/claro-1400.webp 1400w" sizes="(min-width: 1200px) 1100px, 92vw" width="1400" height="875" loading="lazy" alt="AURA no acabamento prateado escovado">
+      </div>
+      <div class="finish-pick rv" role="radiogroup" aria-label="Escolher acabamento">
+        <button type="button" role="radio" aria-checked="true" data-pick="grafite"><span class="swatch swatch-grafite" aria-hidden="true"></span>Grafite</button>
+        <button type="button" role="radio" aria-checked="false" data-pick="prateado"><span class="swatch swatch-prateado" aria-hidden="true"></span>Prateado</button>
+      </div>
+      <p class="body-6 muted rv">Os dois têm exatamente as mesmas funções. Só a cor muda.</p>
+    </div>
+  </section>
 
-<section id="recursos">
- <h2 class="rv">Pronto para tocar ao vivo.</h2>
- <p class="sub rv">Pânico, cadeado de tela, setlist e MIDI. Pensado por quem toca.</p>
- <div class="tiles">
-  <div class="tile rv"><h3>Menu Ajustes</h3><p>Presets, efeitos, toque e MIDI em um só lugar.</p><img width="1080" height="1656" decoding="async" loading="lazy" src="manual/img/m_topo.jpg" alt="Menu Ajustes do AURA Synth Bass, com os grupos Presets e Som e aparência" style="max-height:380px;object-fit:contain"></div>
-  <div class="tile rv"><h3>Arpejador</h3><p>Padrões, divisão, swing e trava, sincronizados ao andamento.</p><img width="920" height="1280" decoding="async" loading="lazy" src="manual/img/s_arp.jpg" alt="Ajustes do arpejador: padrão, divisão, oitavas, swing, andamento e duração" style="max-height:380px;object-fit:contain"></div>
-  <div class="tile wide rv"><h3>Claro ou escuro.</h3><p>Prateado escovado para a luz forte, grafite para o palco. Os dois têm exatamente as mesmas funções: só a cor muda.</p><img width="1400" height="875" decoding="async" loading="lazy" class="shot" src="manual/img/t_claro.jpg" alt="Tema claro" style="margin-top:34px;padding:0;border-radius:16px"></div>
- </div>
-</section>
+  <!-- 5. Recursos em blocos -->
+  <section class="features" id="recursos" aria-labelledby="recursos-title">
+    <div class="wrap">
+      <h2 class="heading-2 rv" id="recursos-title">Tudo o que um baixo<br>sintetizado precisa.</h2>
+      <div class="bento">
+        <article class="tile tile-presets rv">
+          <p class="tile-num">24</p>
+          <h3 class="title-1">timbres de fábrica, prontos no visor</h3>
+          <p class="lcd caption-4 tile-lcd">Sub Soft · Sub 808 · Drive Heavy · Drive Stage 2 · Octave Wild · Funk Slap · Pop · Rock · Lead Mono · Pluck Warm · Chorus Wide</p>
+        </article>
+        <article class="tile tile-arp rv">
+          <div class="tile-text">
+            <h3 class="title-1">Arpejador</h3>
+            <p class="body-6 muted">Padrões, divisão, swing e trava, no andamento da música.</p>
+          </div>
+          <img src="img/s_arp.webp" width="720" height="1002" loading="lazy" alt="Tela do arpejador do AURA com padrão, divisão, oitavas, swing e andamento">
+        </article>
+        <article class="tile tile-menu rv">
+          <div class="tile-text">
+            <h3 class="title-1">Presets, setlist e nuvem</h3>
+            <p class="body-6 muted">Favoritos, backup e Program Change. Seus sons sincronizados entre aparelhos.</p>
+          </div>
+          <img src="img/m_topo.webp" width="720" height="1104" loading="lazy" alt="Menu Ajustes do AURA com presets, setlist, nuvem, efeitos e arpejador">
+        </article>
+        <article class="tile tile-fx rv">
+          <h3 class="title-1">Sete efeitos embutidos</h3>
+          <ul class="fx lcd caption-4">
+            <li>Distorção</li><li>Fuzz</li><li>Bitcrusher</li><li>Chorus</li><li>Phaser</li><li>Delay</li><li>Reverb</li>
+          </ul>
+        </article>
+        <article class="tile tile-manual rv">
+          <h3 class="title-1">Manual em português</h3>
+          <p class="body-6 muted">Ilustrado, do zero ao palco, com receitas de som.</p>
+          <a class="link button-sm" href="https://fervor.website/plugins/aurasynthbass/manual/">Ler o manual<span aria-hidden="true">›</span></a>
+        </article>
+        <article class="tile tile-formats rv">
+          <h3 class="title-1">Onde funciona</h3>
+          <dl class="specs lcd caption-4">
+            <div><dt>Formatos</dt><dd>App · VST3 · AU</dd></div>
+            <div><dt>Windows</dt><dd>10 ou 11 · 64 bits</dd></div>
+            <div><dt>macOS</dt><dd>10.15+ · Intel e Apple Silicon</dd></div>
+          </dl>
+        </article>
+      </div>
+    </div>
+  </section>
 
-<section>
- <h2 class="rv">Instale. Toque. <span class="grad">Em minutos.</span></h2>
- <div class="stats rv"><div>15<small>dias de teste grátis</small></div><div>3<small>aparelhos por licença</small></div><div>2<small>sistemas: Windows e Mac</small></div><div>3<small>formatos: App, VST3 e AU</small></div></div>
-</section>
+  <!-- 6. Tocar antes de baixar -->
+  <section class="try" aria-labelledby="try-title">
+    <div class="wrap try-inner">
+      <p class="lcd caption-4 kicker rv">Sem instalar</p>
+      <h2 class="heading-1 rv" id="try-title">Toque antes de baixar.</h2>
+      <p class="body-3 muted rv">Abra o AURA no navegador por 5 minutos. Use fones e, se tiver, um teclado MIDI.</p>
+      <button class="btn btn-primary button-md rv" type="button" data-demo>Testar agora</button>
+    </div>
+  </section>
 
-<section id="licenca">
- <h2 class="rv">Instalação e <span class="grad">licença.</span></h2>
- <p class="sub rv">Do download ao primeiro som em poucos minutos.</p>
- <div class="steps rv">
-  <div><span><b>Baixe e instale.</b> O instalador coloca o programa e os plugins no lugar certo.</span></div>
-  <div><span><b>Use por 15 dias</b> com todos os recursos, sem cadastro.</span></div>
-  <div><span><b>Ative com a chave</b> recebida por e-mail após a compra: cole no AURA e toque em Ativar.</span></div>
-  <div><span><b>Use em até 3 aparelhos seus.</b> Para trocar de computador, desative o antigo dentro do AURA e ative no novo.</span></div>
- </div>
- <p class="fine rv">Sem internet, o AURA continua funcionando por até 30 dias entre as confirmações da licença.</p>
-</section>
+  <!-- 7. Preço -->
+  <section class="price" id="preco" aria-labelledby="preco-title">
+    <div class="wrap price-inner">
+      <p class="lcd caption-4 kicker rv">Preço</p>
+      <h2 class="price-value rv" id="preco-title">R$ 50</h2>
+      <p class="title-1 rv">Licença completa. Tudo liberado.</p>
+      <ul class="price-list body-6 rv">
+        <li>24 timbres, efeitos, arpejador e manual</li>
+        <li>App, VST3 e AU para Windows e Mac</li>
+        <li>Uma chave vale para até 3 aparelhos seus</li>
+        <li>Garantia de 7 dias com reembolso integral</li>
+      </ul>
+      <a class="btn btn-primary button-md rv" href="#baixar">Baixar grátis por 15 dias</a>
+      <p class="caption-4 muted rv">Sem cartão. Compre só se gostar.</p>
+    </div>
+  </section>
 
-<section class="light" id="specs" style="margin-top:120px;padding-bottom:110px">
- <h2 class="rv">Especificações</h2>
- <div class="spec rv">
-  <div><b>Formatos</b><span>Aplicativo, VST3 (Windows e Mac) e Audio Unit (Mac)</span></div>
-  <div><b>Windows</b><span>Windows 10 ou 11, 64 bits</span></div>
-  <div><b>macOS</b><span>macOS 10.15 ou superior, Intel e Apple Silicon</span></div>
-  <div><b>Som</b><span>3 osciladores, sub, ruído, filtro de 24 dB, 2 envelopes, LFO</span></div>
-  <div><b>Efeitos</b><span>Distorção, fuzz, bitcrusher, chorus, phaser, delay e reverb</span></div>
-  <div><b>MIDI</b><span>USB e Bluetooth, com mapeamento fácil</span></div>
-  <div><b>Memória e espaço</b><span>4 GB de RAM e cerca de 400 MB livres</span></div>
-  <div><b>Internet</b><span>Só para ativar e, de tempos em tempos, confirmar a licença</span></div>
-  <div><b>Licença</b><span>Teste de 15 dias. Uma chave vale para até 3 aparelhos seus.</span></div>
- </div>
-</section>
+  <!-- 8. Dúvidas -->
+  <section class="faq" id="duvidas" aria-labelledby="faq-title">
+    <div class="wrap faq-inner">
+      <h2 class="heading-3 rv" id="faq-title">Dúvidas frequentes.</h2>
+      <dl class="faq-list">
+        <div class="rv"><dt class="title-2">Posso instalar em mais de um computador?</dt><dd class="body-6 muted">Sim. Cada chave vale para até 3 aparelhos seus. Para mudar de aparelho, desative um deles dentro do AURA e ative no novo.</dd></div>
+        <div class="rv"><dt class="title-2">O que acontece depois dos 15 dias?</dt><dd class="body-6 muted">O AURA pede a chave de ativação. Seus presets continuam salvos.</dd></div>
+        <div class="rv"><dt class="title-2">Preciso de internet para usar?</dt><dd class="body-6 muted">Só para ativar e confirmar a licença de tempos em tempos. Depois ele funciona offline por até 30 dias entre as confirmações.</dd></div>
+        <div class="rv"><dt class="title-2">Funciona com o meu teclado MIDI?</dt><dd class="body-6 muted">Com qualquer controlador MIDI USB compatível com o seu sistema, e por Bluetooth MIDI nos computadores que oferecem esse recurso.</dd></div>
+        <div class="rv"><dt class="title-2">Funciona no Reaper e em outras DAWs?</dt><dd class="body-6 muted">Sim, como plugin VST3 no Windows e no Mac, ou Audio Unit no Mac.</dd></div>
+        <div class="rv"><dt class="title-2">E se eu não gostar?</dt><dd class="body-6 muted">Você tem 7 dias de garantia: reembolso integral e a licença é desativada.</dd></div>
+      </dl>
+    </div>
+  </section>
 
-<section id="manual"><h2 class="rv">Do primeiro som <span class="grad">ao palco.</span></h2>
- <p class="sub rv">Manual completo em português, com telas numeradas, conceitos de síntese para quem nunca usou um sintetizador, receitas de som, o menu Ajustes explicado item por item e solução de problemas.</p>
- <div class="links rv"><a href="manual/">Ler online ›</a><a href="AURA-Synth-Bass-Manual.pdf">Baixar PDF ›</a></div></section>
+  <!-- 9. Baixar -->
+  <section class="download" id="baixar" aria-labelledby="baixar-title">
+    <div class="wrap download-inner">
+      <h2 class="heading-1 rv" id="baixar-title">Experimente por 15 dias.</h2>
+      <p class="body-3 muted rv">Todos os recursos liberados. Sem cartão.</p>
+      <div class="os rv">
+        <a class="os-card" data-os="win" href="https://github.com/thiagorgalvao-sketch/SynthBass/releases/latest/download/AURA-Synth-Bass-Windows.exe">
+          <span class="lcd caption-4 os-rec">Recomendado para você</span>
+          <span class="title-1">Windows</span>
+          <span class="caption-4 muted">10 ou 11 · 64 bits</span>
+          <span class="btn btn-primary button-sm">Baixar para Windows</span>
+        </a>
+        <a class="os-card" data-os="mac" href="https://github.com/thiagorgalvao-sketch/SynthBass/releases/latest/download/AURA-Synth-Bass-macOS.pkg">
+          <span class="lcd caption-4 os-rec">Recomendado para você</span>
+          <span class="title-1">macOS</span>
+          <span class="caption-4 muted">10.15 ou superior · Intel e Apple Silicon</span>
+          <span class="btn btn-primary button-sm">Baixar para Mac</span>
+        </a>
+      </div>
+      <p class="caption-4 muted mobile-note rv" id="mobile-note" hidden>O instalador é para Windows e Mac. Neste aparelho, você pode <button class="inline-link" type="button" data-demo>tocar o AURA no navegador</button>.</p>
+    </div>
+  </section>
 
-<section id="baixar"><h2 class="rv">Experimente por 15 dias.</h2>
- <p class="sub rv">Todos os recursos liberados. Sem cartão.</p>
- <p class="fine rv" id="mobnote" hidden>Neste aparelho (celular ou tablet) o instalador não funciona: ele é para Windows e Mac. Você pode <a href="#testar" data-demo style="color:#ffab2e">testar o AURA agora, online ›</a></p>
- <div class="dl rv">
-  <div class="card" data-os="win"><p class="recl">Recomendado para o seu computador</p><h3>Windows</h3><p>Windows 10 ou 11 · 64 bits</p><a class="btn" href="https://github.com/thiagorgalvao-sketch/SynthBass/releases/latest/download/AURA-Synth-Bass-Windows.exe">Baixar</a></div>
-  <div class="card" data-os="mac"><p class="recl">Recomendado para o seu computador</p><h3>macOS</h3><p>10.15 ou superior · Intel e Apple Silicon</p><a class="btn" href="https://github.com/thiagorgalvao-sketch/SynthBass/releases/latest/download/AURA-Synth-Bass-macOS.pkg">Baixar</a></div>
- </div>
- <p class="fine rv">Licença completa: <span style="color:#fff">em breve</span>. Garantia de 7 dias após a compra.</p>
- <p class="fine rv" style="max-width:640px;margin:10px auto 0">Se o Windows ou o Mac avisar que o instalador é de um desenvolvedor desconhecido, confirme que o arquivo veio desta página. Windows: “Mais informações” → “Executar assim mesmo”. Mac: botão direito no instalador → “Abrir”.</p>
-</section>
+  <!-- 10. Especificações e manual -->
+  <section class="specs-sec" id="especificacoes" aria-labelledby="specs-title">
+    <div class="wrap specs-inner">
+      <div class="specs-col">
+        <h2 class="heading-3 rv" id="specs-title">Especificações.</h2>
+        <dl class="spec-table rv">
+          <div><dt class="lcd caption-4">Formatos</dt><dd class="body-6">Aplicativo, VST3 (Windows e Mac) e Audio Unit (Mac)</dd></div>
+          <div><dt class="lcd caption-4">Windows</dt><dd class="body-6">Windows 10 ou 11, 64 bits</dd></div>
+          <div><dt class="lcd caption-4">macOS</dt><dd class="body-6">macOS 10.15 ou superior, Intel e Apple Silicon</dd></div>
+          <div><dt class="lcd caption-4">Som</dt><dd class="body-6">3 osciladores, sub, ruído, filtro de 24 dB, 2 envelopes e LFO</dd></div>
+          <div><dt class="lcd caption-4">Efeitos</dt><dd class="body-6">Distorção, fuzz, bitcrusher, chorus, phaser, delay e reverb</dd></div>
+          <div><dt class="lcd caption-4">MIDI</dt><dd class="body-6">USB e Bluetooth, com mapeamento fácil</dd></div>
+          <div><dt class="lcd caption-4">Memória</dt><dd class="body-6">4 GB de RAM e cerca de 400 MB livres</dd></div>
+          <div><dt class="lcd caption-4">Internet</dt><dd class="body-6">Só para ativar e, de tempos em tempos, confirmar a licença</dd></div>
+          <div><dt class="lcd caption-4">Licença</dt><dd class="body-6">Teste de 15 dias. Uma chave vale para até 3 aparelhos seus</dd></div>
+        </dl>
+      </div>
+      <aside class="manual-card rv" aria-labelledby="manual-title">
+        <p class="lcd caption-4 kicker">Manual online</p>
+        <h2 class="heading-5" id="manual-title">Do primeiro som ao palco.</h2>
+        <p class="body-6 muted">Manual completo em português, com telas numeradas, conceitos de síntese para quem nunca usou um sintetizador, receitas de som, o menu Ajustes explicado item por item e solução de problemas.</p>
+        <div class="manual-links">
+          <a class="btn btn-secondary button-sm" href="https://fervor.website/plugins/aurasynthbass/manual/">Ler online</a>
+          <a class="link button-sm" href="https://fervor.website/plugins/aurasynthbass/AURA-Synth-Bass-Manual.pdf">Baixar PDF<span aria-hidden="true">›</span></a>
+        </div>
+      </aside>
+    </div>
+  </section>
 
-<section id="faq">
- <h2 class="rv">Dúvidas frequentes.</h2>
- <div class="faq rv">
-  <details><summary>Posso instalar em mais de um computador?</summary><p>Sim. Cada chave vale para até 3 aparelhos seus. Para mudar de aparelho, desative um deles dentro do AURA e ative no novo.</p></details>
-  <details><summary>O que acontece depois dos 15 dias?</summary><p>O AURA pede a chave de ativação. Seus presets continuam salvos.</p></details>
-  <details><summary>Preciso de internet para usar?</summary><p>Só para ativar e confirmar a licença de tempos em tempos. Depois o AURA funciona offline por até 30 dias entre as confirmações.</p></details>
-  <details><summary>Funciona com o meu teclado MIDI?</summary><p>Com qualquer controlador MIDI USB compatível com o seu sistema, e também por Bluetooth MIDI em computadores que oferecem esse recurso.</p></details>
-  <details><summary>Funciona no Reaper e em outras DAWs?</summary><p>Sim, como plugin VST3 (Windows e Mac) ou Audio Unit (Mac).</p></details>
-  <details><summary>E se eu não gostar?</summary><p>Você tem 7 dias de garantia: reembolso integral e a licença é desativada.</p></details>
- </div>
-</section>
 </main>
-<a class="stk" id="stk" href="#baixar">Baixar teste grátis</a>
-<footer><a href="/plugins/" style="color:#ffab2e">Todos os plugins</a> · <a href="manual/" style="color:#ffab2e">Manual</a><br>© 2026 Thiago R. Galvão. Todos os direitos reservados.<br>Nomes de outros fabricantes citados pertencem a seus donos; não há afiliação.</footer>
-<script>if(!window.IntersectionObserver){document.documentElement.className=""}else{var io=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting){x.target.classList.add('on');io.unobserve(x.target)}})},{threshold:.12});document.querySelectorAll('.rv').forEach(function(n){io.observe(n)})}</script>
-<script>
-(function(){
-  var m=document.createElement('div');m.id='demoModal';m.setAttribute('role','dialog');m.setAttribute('aria-modal','true');m.setAttribute('aria-label','Demonstração do AURA Synth Bass');m.innerHTML='<header><span>AURA Synth Bass · demonstração de 5 minutos</span><button type="button" id="demoClose">Fechar</button></header>';document.body.appendChild(m);
-  var f=null,last=null;function inertAll(v){[].forEach.call(document.body.children,function(el){if(el!==m&&el.tagName!=='SCRIPT'){if(v)el.setAttribute('inert','');else el.removeAttribute('inert')}})}
-  function open(e){ if(e) e.preventDefault(); if(!f){ f=document.createElement('iframe'); f.allow='autoplay; midi; fullscreen'; f.title='AURA Synth Bass — demonstração'; f.src='https://thiagorgalvao-sketch.github.io/SynthBass/?demo=1'; m.appendChild(f); } last=document.activeElement;m.classList.add('on');inertAll(true);document.getElementById('demoClose').focus(); document.documentElement.style.overflow='hidden'; }
-  function close(){ m.classList.remove('on');inertAll(false);if(last&&last.focus)last.focus(); document.documentElement.style.overflow=''; if(f){ f.remove(); f=null; } }
-  document.getElementById('demoBtn').onclick=open;
-  [].forEach.call(document.querySelectorAll('[data-demo]'),function(a){a.onclick=open});
-  document.getElementById('demoClose').onclick=close;
-  addEventListener('keydown',function(e){ if(e.key==='Escape') close(); });
-  addEventListener('message',function(e){ if(e.origin==='https://thiagorgalvao-sketch.github.io' && e.data && e.data.aura==='close') close(); });
-})();
-</script>
-<script>
-(function(){
-  var ua=navigator.userAgent,pl=((navigator.userAgentData&&navigator.userAgentData.platform)||navigator.platform||'')+' '+ua,touch=/Android|iPhone|iPad|iPod/.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1);
-  var os=touch?'':/Win/.test(pl)?'win':/Mac/.test(pl)?'mac':'';
-  if(touch){var n=document.getElementById('mobnote');if(n)n.hidden=false}
-  if(os){var c=document.querySelector('.card[data-os="'+os+'"]');if(c)c.classList.add('rec')}
-  var mm=document.querySelector('.mm');if(mm)[].forEach.call(mm.querySelectorAll('a'),function(a){a.addEventListener('click',function(){mm.open=false})});
-  var stk=document.getElementById('stk'),vis={};
-  if(stk&&window.IntersectionObserver){var o=new IntersectionObserver(function(es){es.forEach(function(e){vis[e.target.id]=e.isIntersecting});stk.classList.toggle('on',!vis.topo&&!vis.baixar&&scrollY>200)});['topo','baixar'].forEach(function(i){var e=document.getElementById(i);if(e)o.observe(e)});addEventListener('scroll',function(){stk.classList.toggle('on',!vis.topo&&!vis.baixar&&scrollY>200)},{passive:true})}
-})();
-</script>
-</body></html>
+
+<footer class="footer">
+  <div class="wrap footer-inner caption-4 muted">
+    <a href="https://fervor.website/plugins/">Todos os plugins</a>
+    <a href="https://fervor.website/plugins/aurasynthbass/manual/">Manual</a>
+  </div>
+</footer>
+
+<!-- Barra fixa no celular -->
+<div class="dock" id="dock" aria-hidden="true">
+  <span class="dock-price"><span class="lcd caption-4 muted">AURA</span><b>R$ 50</b></span>
+  <a class="btn btn-primary button-sm" href="#baixar" tabindex="-1">Baixar grátis</a>
+</div>
+
+<!-- Demonstração em tela cheia -->
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Demonstração do AURA Synth Bass">
+  <header>
+    <span class="lcd caption-4">AURA · demonstração de 5 minutos</span>
+    <div class="sheet-actions">
+      <button class="btn button-sm sheet-rotate" id="sheet-rotate" type="button" aria-pressed="false">
+        <svg width="16" height="16" viewBox="0 0 256 256" aria-hidden="true"><path fill="currentColor" d="M232 128a104 104 0 0 1-178.6 72.4a8 8 0 1 1 11.3-11.3A88 88 0 1 0 50 72.6L40 82.7V56a8 8 0 0 0-16 0v48a8 8 0 0 0 8 8h48a8 8 0 0 0 0-16H51.3l10.6-10.7A104 104 0 0 1 232 128Z"/></svg>
+        <span id="sheet-rotate-label">Deitar</span>
+      </button>
+      <button class="btn button-sm" id="sheet-close" type="button">Fechar</button>
+    </div>
+  </header>
+  <div class="sheet-body" id="sheet-body">
+    <p class="sheet-loading lcd caption-4" id="sheet-loading">Ligando o AURA <span class="cursor" aria-hidden="true"></span></p>
+  </div>
+  <p class="sheet-tip lcd caption-4">Toque em Deitar ou gire o celular para tocar com mais teclas</p>
+</div>
+
+<script src="app.js?v=4" defer></script>
+</body>
+</html>
