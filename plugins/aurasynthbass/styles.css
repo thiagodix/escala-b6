@@ -1,6 +1,6 @@
 /* Fontes hospedadas no próprio site (licença OFL, ver fonts/) */
-@font-face { font-family: "Archivo"; src: url("fonts/Archivo-var-latin.woff") format("woff"); font-weight: 100 900; font-stretch: 62% 125%; font-style: normal; font-display: swap; }
-@font-face { font-family: "JetBrains Mono"; src: url("fonts/JetBrainsMono-Regular-latin.woff") format("woff"); font-weight: 400 500; font-style: normal; font-display: swap; }
+@font-face { font-family: "Archivo"; src: url("../assets/fonts/Archivo-var-latin.woff") format("woff"); font-weight: 100 900; font-stretch: 62% 125%; font-style: normal; font-display: swap; }
+@font-face { font-family: "JetBrains Mono"; src: url("../assets/fonts/JetBrainsMono-Regular-latin.woff") format("woff"); font-weight: 400 500; font-style: normal; font-display: swap; }
 /* AURA Synth Bass — padrão visual "hardware de palco".
    Cores, espaçamentos e tipografia ficam nas variáveis de :root. */
 

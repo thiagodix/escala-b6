@@ -25,4 +25,4 @@ def patch(path, cur):
     s = re.sub(r'(<body[^>]*>)', lambda m: m.group(1) + '<!--HD-->' + header(cur) + '<!--/HD-->', s, 1)
     s = s.replace('</body>', '<!--FT-->' + footer() + '<!--/FT--></body>', 1)
     p.write_text(s, encoding="utf-8")
-patch("index.html", "all"); patch("aurasynthbass/manual/index.html", "manual")
+patch("aurasynthbass/manual/index.html", "manual")
