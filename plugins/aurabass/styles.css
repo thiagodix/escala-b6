@@ -452,5 +452,4 @@ em { font-style: normal; color: var(--amber-500); }
 .shot-sec { padding: var(--section) 0; }
 .shot-sec .wrap { display: grid; gap: var(--s-300); justify-items: center; text-align: center; }
 .shot-sec img { width: 100%; max-width: 1100px; height: auto; border-radius: 16px; border: 1px solid rgba(242,237,230,.08); box-shadow: 0 30px 80px rgba(0,0,0,.6); }
-.specs-inner.solo { grid-template-columns: 1fr; max-width: 860px; margin-inline: auto; }
 @media (min-width: 1100px) { .bento-bass .tile:last-child { grid-column: span 2; } }
