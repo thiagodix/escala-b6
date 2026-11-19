@@ -326,6 +326,12 @@ with sync_playwright() as p:
     ok(r == [75, 75], 'player: retoma a música de onde parou', str(r))
     r = pg.evaluate("()=>{const l=nextL();const o0=l.songIds.slice();l.songIds=[S.songs[0].id];const old=S.songs.map(s=>s.vs);S.songs.forEach(s=>s.vs={url:'https://fervor.website/media/vs-teste.mp3',name:'vs'});S.tab='hoje';R();const b=document.querySelector('.hjb .offb2');const t=b&&b.textContent;S.songs.forEach((s,i)=>s.vs=old[i]);l.songIds=o0;S.tab='lists';R();return t}")
     ok(r == 'Baixar para offline', 'Hoje: botão Baixar para offline aparece quando há áudio', str(r))
+    r = pg.evaluate("""async()=>{const o=[S.band,getBl,S.lists.map(l=>l.songIds.slice()),S.songs.map(s=>s.vs),offSt];S.band=true;OFFRUN=0;const a=[];const l=nextL();const url='https://fervor.website/media/auto-teste.mp3';
+     S.songs.forEach(s=>s.vs=null);S.songs[0].vs={url,name:'vs'};S.lists.forEach(x=>{x.songIds=[]});l.songIds=[S.songs[0].id];getBl=async()=>new Blob(['abc']);offSt={};
+     await offAuto();a.push(!!(await idbG(url))&&!!offSt[l.id]);                                  // baixa sozinho, sem tocar em nada
+     const d=l.date;l.date='2000-01-01';OFFRUN=0;await offAuto();a.push(!offSt[l.id]&&!(await idbG(url)));   // culto que já passou: renova e limpa
+     l.date=d;S.band=o[0];getBl=o[1];S.lists.forEach((x,i)=>{x.songIds=o[2][i]});S.songs.forEach((s,i)=>s.vs=o[3][i]);offSt=o[4];try{await idbD(url)}catch(e){}return a}""")
+    ok(r == [True, True], 'offline automático: baixa os áudios dos próximos cultos sozinho e limpa os que passaram', str(r))
     r = pg.evaluate("""async()=>{const l=nextL(),o=[l.hBanda,l.hGain,l.passHora,l.passFim,l.date,l.hCrtv];l.hCrtv='';l.hBanda='07:00';l.hGain='07:30';l.passHora='07:45';l.passFim='08:10';l.date='2099-05-10';
      const w=document.createElement('div');w.innerHTML=tlV(l,td());const a=[w.querySelectorAll('.tll li').length,w.querySelector('.tlt').textContent,w.querySelectorAll('li.pas').length,w.querySelector('.tls').textContent];
      a.push(tlSt({k:'pas',s:465,e:490},0,400),tlSt({k:'pas',s:465,e:490},0,470),tlSt({k:'pas',s:465,e:490},0,500),tlSt({k:'pas',s:465},5,0),tlSt({k:'pas',s:465},-1,0));
