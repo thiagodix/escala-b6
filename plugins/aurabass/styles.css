@@ -142,7 +142,7 @@ em { font-style: normal; color: var(--amber-500); }
 @media (min-width: 1024px) { .intro-title { font-size: 96px; line-height: 96px; } }
 .intro-sub { color: var(--text-muted); font-size: 18px; line-height: 28px; max-width: 520px; }
 .intro-device {
-  position: relative; width: min(1100px, 100%); margin-top: var(--s-600);
+  position: relative; width: min(1100px, 100%, calc((100svh - 140px) * 1.6)); margin-top: var(--s-600);
   perspective: 1400px; will-change: transform;
 }
 .intro-device img {

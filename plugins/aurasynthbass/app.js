@@ -30,7 +30,11 @@
     introCopy.style.opacity = String(1 - clamp(p * 1.6, 0, 1));
     introCopy.style.transform = "translateY(" + (-p * 80).toFixed(1) + "px) scale(" + (1 - p * 0.06).toFixed(3) + ")";
     introImg.style.transform = "rotateX(" + (28 * (1 - p)).toFixed(2) + "deg) scale(" + (0.9 + p * 0.1).toFixed(3) + ")";
-    introDevice.style.transform = "translateY(" + (-p * vh * 0.38).toFixed(1) + "px)";
+    /* sobe o painel até ele caber inteiro na tela, também em janelas baixas */
+    var top0 = introDevice.offsetTop, h0 = introDevice.offsetHeight;
+    var need = top0 + h0 - (vh - 24);
+    var dy = Math.min(Math.max(vh * 0.38, need), Math.max(0, top0 - 96));
+    introDevice.style.transform = "translateY(" + (-p * dy).toFixed(1) + "px)";
   }
 
   /* ---------- 2. Por dentro: regiões do painel (frações da imagem 1600x1000) ---------- */
