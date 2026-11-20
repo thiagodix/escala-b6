@@ -4,8 +4,8 @@
 (function () {
   "use strict";
 
-  var DEMO_URL = "https://thiagorgalvao-sketch.github.io/SynthBass/?demo=1";
-  var DEMO_ORIGIN = "https://thiagorgalvao-sketch.github.io";
+  var DEMO_URL = "https://aurapluginsaudio.github.io/Synth/?demo=1";
+  var DEMO_ORIGIN = "https://aurapluginsaudio.github.io";
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   function clamp(v, a, b) { return Math.min(Math.max(v, a), b); }
