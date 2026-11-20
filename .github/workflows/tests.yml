@@ -6,7 +6,6 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
-  issues: write
 concurrency:
   group: testes
   cancel-in-progress: true
@@ -44,10 +43,3 @@ jobs:
           path: tools/tests/visual/atual/
           if-no-files-found: ignore
           retention-days: 14
-      - name: Avisa se algo falhou
-        if: failure()
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          F=$(grep '✘' /tmp/r.txt | head -10 | sed 's/^/- /')
-          gh issue create --repo "${{ github.repository }}" --title "⚠ Testes automáticos falharam ($(git log -1 --format=%s | cut -c1-60))" --body "$(printf 'O que falhou:\n%s\n\nVeja: %s/%s/actions/runs/%s' "$F" "${{ github.server_url }}" "${{ github.repository }}" "${{ github.run_id }}")"

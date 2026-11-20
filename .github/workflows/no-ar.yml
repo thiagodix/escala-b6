@@ -7,7 +7,6 @@ on:
 permissions:
   contents: read
   pages: write
-  issues: write
 concurrency:
   group: no-ar
   cancel-in-progress: true
@@ -36,5 +35,4 @@ jobs:
             gh api -X POST "repos/${{ github.repository }}/pages/builds" >/dev/null 2>&1 || echo "(não consegui pedir novo deploy)"
           done
           echo "### ✘ Versão $ESPERADA NÃO apareceu no site" >> "$GITHUB_STEP_SUMMARY"
-          gh issue create --repo "${{ github.repository }}" --title "⚠ Versão $ESPERADA não apareceu no site" --body "O site ainda mostra $(no_ar) depois de 3 tentativas de novo deploy. Veja ${{ github.server_url }}/${{ github.repository }}/actions e a aba Pages. Se travou em 'updating_pages', cancele e faça um commit vazio."
           exit 1

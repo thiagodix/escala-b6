@@ -15,7 +15,7 @@ Opções: `--sem-testes`, `--sem-numero`, `--so-montar` (não envia).
 ## Automático no GitHub
 - `tests.yml`: roda todos os testes (inclui a varredura de todas as telas e a conferência dos módulos) a cada envio; abre um aviso (issue) se falhar.
 - `no-ar.yml`: depois do envio, confere se `fervor.website/versao.json` mostra a versão nova; se não aparecer em 5 min, pede novo deploy (até 3 vezes) e abre um aviso se não resolver.
-- `sync.yml`: a cada 6 h atualiza agendas e `pub.json`; usa fila única e `pull --rebase` para não brigar com envios manuais.
+- (removido) `sync.yml`: não há mais dados públicos para atualizar, o app exige login. Os testes não abrem mais issues nem mandam e-mail; veja falhas na aba Actions.
 
 ## Dados
 - Ficam no Supabase (projeto hofrthndlstofytlapzk); scripts SQL em `servidor/`.
