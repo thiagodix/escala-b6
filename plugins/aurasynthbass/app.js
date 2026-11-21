@@ -4,8 +4,8 @@
 (function () {
   "use strict";
 
-  var DEMO_URL = "https://aurapluginsaudio.github.io/Synth/?demo=1";
-  var DEMO_ORIGIN = "https://aurapluginsaudio.github.io";
+  var DEMO_URL = "https://ledixplugins.github.io/Synth/?demo=1";
+  var DEMO_ORIGIN = "https://ledixplugins.github.io";
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   function clamp(v, a, b) { return Math.min(Math.max(v, a), b); }
