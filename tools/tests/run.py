@@ -31,13 +31,13 @@ _ruim = re.findall(r'\(\?<[=!]|static\s*\{|\.findLast\(|\.toSorted\(|\.toReverse
 ok(not _ruim, 'compatível com Safari 15 (iPad antigo): sem recursos novos demais', str(sorted(set(_ruim))[:5]))
 
 # 1) sintaxe do JavaScript das páginas
-for f in ['index.html', 'admin/index.html']:
+for f in ['index.html']:
     s = open(os.path.join(ROOT, f), encoding='utf-8').read()
     for i, sc in enumerate(re.findall(r'<script>([\s\S]*?)</script>', s)):
         t = tempfile.NamedTemporaryFile('w', suffix='.js', delete=False, encoding='utf-8'); t.write(sc); t.close()
         r = subprocess.run(['node', '--check', t.name], capture_output=True, text=True); os.unlink(t.name)
         ok(r.returncode == 0, f'sintaxe {f} bloco {i+1}', r.stderr[-300:])
-for f in ['app.js', 'admin/app.js', 'sw.js', 'tools/shim.js', 'tools/sbshim.js']:
+for f in ['app.js', 'sw.js', 'tools/shim.js', 'tools/sbshim.js', 'tools/role.js']:
     p = os.path.join(ROOT, f)
     if os.path.exists(p):
         r = subprocess.run(['node', '--check', p], capture_output=True, text=True); ok(r.returncode == 0, f'sintaxe {f}', r.stderr[-300:])
@@ -197,8 +197,8 @@ with sync_playwright() as p:
     c.route('**/*.supabase.co/**', lambda r: r.fulfill(status=200, content_type='application/json', body='[]'))
     c.add_init_script("if(!localStorage.getItem('__seeded')){localStorage.setItem('__seeded','1');localStorage.setItem('__stubdb',%s);localStorage.setItem('adm:rep.tour','1')}" % json.dumps(json.dumps(DB)))
     pg = c.new_page(); E = []; pg.on('pageerror', lambda x: E.append(str(x)[:200]))
-    pg.goto(B + '/admin/'); pg.wait_for_timeout(1500)
-    pg.fill('#b6e', 'adm@teste.local'); pg.fill('#b6p', 'senha123'); pg.click('#b6f button[type=submit]'); pg.wait_for_timeout(6000)
+    pg.goto(B + '/'); pg.wait_for_timeout(1500)
+    pg.fill('#fve', 'adm@teste.local'); pg.fill('#fvp', 'senha123'); pg.click('#fvf button[type=submit]'); pg.wait_for_timeout(9000)
     ok(pg.evaluate('!!window.__SYNCOK'), 'admin: login e sincronização')
     # 3b) publicar culto futuro: a visão da banda recebe as músicas
     r = pg.evaluate("""async()=>{const l=S.lists.filter(x=>x.songIds.length&&x.date).sort((p,q)=>p.date.localeCompare(q.date))[0];l.date='2099-01-01';delete l.pub;const id=l.id;
@@ -618,6 +618,32 @@ with sync_playwright() as p:
     pg.evaluate("(x)=>{const s=S.songs[0];s.title+=x;s.artist=(s.artist||'')+x;s.nota=x;const l=S.lists.find(l=>l.songIds.length);l.pregador=x;l.name=(l.name||'')+x;(l.cant=l.cant||{})[l.songIds[0]]=x;S.tab='lists';S.lv=l.id;S.lvm=1;R()}", XSS)
     pg.wait_for_timeout(300); pg.evaluate("S.tab='songs';S.sel=S.songs[0].id;R()"); pg.wait_for_timeout(300); pg.evaluate("S.tab='dash';R()"); pg.wait_for_timeout(300)
     ok(pg.evaluate('window.__x===undefined'), 'segurança: textos com código não são executados')
+    r = pg.evaluate("()=>[window.__FVROLE,!!window.__B6SB,!window.__B6SITE,!!document.getElementById('b6l')&&!document.getElementById('b6l').hidden,(localStorage.getItem('fv-role')||'').endsWith(':adm')||(window.__FVROLE=='adm')]")
+    ok(r == ['adm', True, True, False, True], 'login único: administrador entra direto no painel completo, sem segunda tela de login', str(r))
+    c2 = ctx_of(b)
+    c2.route('**/vendor/supabase.min.js', lambda r: r.fulfill(status=200, content_type='application/javascript', body=STUB))
+    c2.route(lambda u: 'cdn.jsdelivr.net' in u and 'supabase' in u, lambda r: r.fulfill(status=200, content_type='application/javascript', body=STUB, headers={'access-control-allow-origin': '*'}))
+    c2.route('**/vendor/manifest.json', lambda r: r.fulfill(status=200, content_type='application/json', body='{}'))
+    c2.route('**/*.supabase.co/**', lambda r: r.fulfill(status=200, content_type='application/json', body='[]'))
+    SES = json.dumps(json.dumps({'user': {'id': 'u1', 'email': 'adm@teste.local', 'user_metadata': {'pw_ok': True}}}))
+    DB2 = dict(DB, admins=[], membros=[{'id': 'm1', 'nome': 'Pessoa', 'funcoes': [], 'fixo': True, 'ativo': True, 'user_id': 'u1', 'email': 'adm@teste.local'}], config=[{'chave': 'login_banda', 'valor': True}])
+    c2.add_init_script("try{if(!localStorage.getItem('__seeded')){localStorage.setItem('__seeded','1');localStorage.setItem('__stubdb',%s);localStorage.setItem('fv-band-auth',%s);localStorage.setItem('fv-role','u1:adm');localStorage.setItem('rep.tour','1')}}catch(e){}" % (json.dumps(json.dumps(DB2)), SES))
+    pg2 = c2.new_page(); pg2.goto(B + '/', wait_until='commit'); pg2.wait_for_timeout(9000)
+    r = pg2.evaluate("()=>[window.__FVROLE,!!window.__B6SITE,!window.__B6SB]")
+    ok(r == ['mem', True, True], 'login único: quem deixou de ser administrador volta para a visão de integrante', str(r))
+    c2.close()
+    c2 = ctx_of(b)
+    c2.route('**/vendor/supabase.min.js', lambda r: r.fulfill(status=200, content_type='application/javascript', body=STUB))
+    c2.route(lambda u: 'cdn.jsdelivr.net' in u and 'supabase' in u, lambda r: r.fulfill(status=200, content_type='application/javascript', body=STUB, headers={'access-control-allow-origin': '*'}))
+    c2.route('**/vendor/manifest.json', lambda r: r.fulfill(status=200, content_type='application/json', body='{}'))
+    c2.route('**/*.supabase.co/**', lambda r: r.fulfill(status=200, content_type='application/json', body='[]'))
+    c2.add_init_script("try{if(!localStorage.getItem('__seeded')){localStorage.setItem('__seeded','1');localStorage.setItem('__stubdb',%s);localStorage.setItem('fv-band-auth',%s);localStorage.setItem('adm:rep.tour','1')}}catch(e){}" % (json.dumps(json.dumps(DB)), SES))
+    pg2 = c2.new_page(); pg2.goto(B + '/', wait_until='commit'); pg2.wait_for_timeout(11000)
+    ok(pg2.evaluate("window.__FVROLE") == 'adm' and pg2.evaluate("!!window.__B6SB"), 'login único: quem já tem sessão e é administrador passa a ver o painel completo')
+    c2.close()
+    pg.evaluate("()=>window.fvSair()"); pg.wait_for_timeout(4000)
+    r = pg.evaluate("()=>[!!document.querySelector('#fvf'),localStorage.getItem('fv-role'),localStorage.getItem('fv-band-auth')]")
+    ok(r[0] and not r[1] and not r[2], 'login único: sair volta para a tela de entrada e esquece o perfil', str(r))
     ok(not E, 'admin: sem erros de JavaScript', '; '.join(E[:3])); c.close()
     # 7) todos os botões de cada tela: executa o clique de cada tipo de botão e confere que nada dá erro
     c = band_ctx(b)

@@ -9,7 +9,7 @@
 ```
 python3 tools/release.py "O que mudou"
 ```
-Sobe o número da versão, monta, gera `index.html` / `admin/index.html` / `versao.json`, roda os testes (precisa dar "TUDO CERTO"), faz commit, sincroniza com o robô (`pull --rebase`), envia (com novas tentativas) e acompanha os testes e o deploy no GitHub.
+Sobe o número da versão, monta, gera `index.html` / `versao.json`, roda os testes (precisa dar "TUDO CERTO"), faz commit, sincroniza com o robô (`pull --rebase`), envia (com novas tentativas) e acompanha os testes e o deploy no GitHub.
 Opções: `--sem-testes`, `--sem-numero`, `--so-montar` (não envia).
 
 ## Automático no GitHub

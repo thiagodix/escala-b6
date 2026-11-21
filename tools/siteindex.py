@@ -9,13 +9,15 @@ HEAD=('<meta name="robots" content="noindex,nofollow,noarchive"><meta name="refe
       '<link rel="icon" type="image/svg+xml" href="favicon.svg"><link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png">'
       '<meta property="og:type" content="website"><meta property="og:site_name" content="Fervor"><meta property="og:title" content="Fervor"><meta property="og:description" content="Escala, repertórios e devocionais da banda. “Sejam fervorosos no espírito, servindo ao Senhor.” (Romanos 12:11)"><meta property="og:url" content="https://fervor.website/"><meta property="og:image" content="https://fervor.website/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Logo Fervor: letra F dentro de uma chama"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://fervor.website/og.png"><meta name="description" content="Escala, repertórios e devocionais da banda.">'
       '<meta name="apple-mobile-web-app-title" content="Escala B6">')
+SB=('<script src="vendor/supabase.min.js"></script>'
+    '<script>window.supabase||document.write(\'<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js" crossorigin="anonymous"><\\/script>\')</script>')
 STRIP={'SEED':'[]','EV2':'[]','PD':'[]','VMIMP':'{}'}
 def build(s):
     for k,v in STRIP.items():
         s,n=re.subn(r'(?m)^const '+k+r'=.*;[ \t]*$', 'const '+k+'='+v+';', s, count=1)
-    sh=open(os.path.join(here,'shim.js'),encoding='utf-8').read()
+    sh=''.join(open(os.path.join(here,f),encoding='utf-8').read()+'\n' for f in ('role.js','sbshim.js','shim.js'))
     i=s.find('<script');assert i>0
-    s=s[:i]+'<script>'+sh+'</script>\n'+s[i:]
+    s=s[:i]+SB+'\n<script>'+sh+'</script>\n'+s[i:]
     return s.replace('</head>',HEAD+'</head>',1)
 if __name__=='__main__':
     a,o=[x for x in sys.argv[1:] if not x.startswith('--')][:2]

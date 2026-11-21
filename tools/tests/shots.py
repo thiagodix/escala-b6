@@ -68,8 +68,8 @@ with sync_playwright() as p:
         c.route('**/cdn.jsdelivr.net/**supabase**', lambda r: r.fulfill(status=200, content_type='application/javascript', body=STUB))
         c.route('**/*.supabase.co/**', lambda r: r.fulfill(status=200, content_type='application/json', body='[]'))
         c.add_init_script("if(!localStorage.getItem('__seeded')){localStorage.setItem('__seeded','1');localStorage.setItem('__stubdb',%s);localStorage.setItem('adm:rep.tour','1')}" % json.dumps(json.dumps(DB)))
-        pg = c.new_page(); pg.goto(B + '/admin/'); pg.wait_for_timeout(1500)
-        pg.fill('#b6e', 'adm@teste.local'); pg.fill('#b6p', 'senha123'); pg.click('#b6f button[type=submit]'); pg.wait_for_timeout(5000)
+        pg = c.new_page(); pg.goto(B + '/'); pg.wait_for_timeout(1500)
+        pg.fill('#fve', 'adm@teste.local'); pg.fill('#fvp', 'senha123'); pg.click('#fvf button[type=submit]'); pg.wait_for_timeout(8000)
         pg.evaluate("document.querySelectorAll('dialog[open]').forEach(d=>d.close())")
         pg.screenshot(path=f'{OUT}/{vp}_adm_1_repertorios.png', full_page=False)
 

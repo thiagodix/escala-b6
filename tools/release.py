@@ -4,7 +4,7 @@
 #       python3 tools/release.py "texto" --sem-testes     (pula os testes — só em emergência)
 #       python3 tools/release.py "texto" --sem-numero     (não mexe no número da versão)
 #       python3 tools/release.py "texto" --so-montar      (monta e testa, mas não faz commit/push)
-# Passos: sobe VER nos módulos -> junta tools/src em tools/app.html -> gera index.html, admin/index.html e versao.json
+# Passos: sobe VER nos módulos -> junta tools/src em tools/app.html -> gera index.html e versao.json
 #         -> roda os testes -> commit -> sincroniza com o robô (pull --rebase) -> push (com novas tentativas)
 #         -> acompanha os testes e o deploy no GitHub (se o comando `gh` existir).
 import os, re, sys, glob, json, time, subprocess, datetime
@@ -40,7 +40,6 @@ def main():
     if '--sem-numero' not in flags: bump()
     print(sh(PY, 'tools/montar.py').stdout.strip())
     sh(PY, 'tools/siteindex.py', 'tools/app.html', 'index.html')
-    sh(PY, 'tools/adminindex.py', 'tools/app.html', 'admin/index.html')
     if '--sem-testes' not in flags:
         print('rodando testes (1–2 min)…')
         r = subprocess.run([PY, 'tools/tests/run.py'], text=True, capture_output=True)
@@ -49,7 +48,7 @@ def main():
         if r.returncode: sys.exit('✘ testes falharam — nada foi enviado')
     if '--so-montar' in flags: return
     ver = json.load(open('versao.json'))['v']
-    sh('git', 'add', '-A', 'tools', 'index.html', 'app.js', 'admin', 'versao.json', '.github', 'sw.js', 'servidor')
+    sh('git', 'add', '-A', 'tools', 'index.html', 'app.js', 'versao.json', '.github', 'sw.js', 'servidor')
     if sh('git', 'diff', '--cached', '--quiet', check=False).returncode == 0:
         sys.exit('nada para publicar')
     corpo = f'{msg} (VER {ver.split(" · ")[-1]})' if '--sem-numero' not in flags else msg

@@ -1,11 +1,13 @@
 /* Escala B6 · ponte do app com o Supabase (login + banco + arquivos), substitui o ambiente do Claude */
 (()=>{
+if(window.__FVROLE!=='adm')return;
+const RLS=window.localStorage;
 const SBURL='https://hofrthndlstofytlapzk.supabase.co',KEY='sb_publishable_Hmstttzx95SEN24Olsuk0g_AuPGnkX7',BUCKET='midias';
 /* dados locais separados da visão da banda (mesmo endereço do site) */
 try{const ls=window.localStorage,P='adm:';const W={getItem:k=>ls.getItem(P+k),setItem:(k,v)=>ls.setItem(P+k,v),removeItem:k=>ls.removeItem(P+k),clear:()=>{Object.keys(ls).filter(k=>k.startsWith(P)).forEach(k=>ls.removeItem(k))},key:i=>Object.keys(ls).filter(k=>k.startsWith(P))[i]?.slice(P.length)??null,get length(){return Object.keys(ls).filter(k=>k.startsWith(P)).length}};
  Object.defineProperty(window,'localStorage',{configurable:true,get:()=>W})}catch(e){}
 window.__B6SB=1;if(!window.supabase){const f=()=>{document.body.insertAdjacentHTML('beforeend','<div style="position:fixed;inset:0;z-index:2147483000;background:#070D18;color:#fff;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;font-family:system-ui"><div><b>Sem conexão com o servidor.</b><br><br>Verifique a internet e recarregue a página.</div></div>')};if(document.body)f();else document.addEventListener('DOMContentLoaded',f);return}
-const sb=window.supabase.createClient(SBURL,KEY,{auth:{persistSession:true,autoRefreshToken:true,storageKey:'b6-auth'}});
+const sb=window.supabase.createClient(SBURL,KEY,{auth:{persistSession:true,autoRefreshToken:true,storageKey:'fv-band-auth',storage:{getItem:k=>{try{return RLS.getItem(k)||sessionStorage.getItem(k)}catch(e){return null}},setItem:(k,v)=>{try{(RLS.getItem('fv-keep')!=='0'?RLS:sessionStorage).setItem(k,v)}catch(e){}},removeItem:k=>{try{RLS.removeItem(k);sessionStorage.removeItem(k)}catch(e){}}}}});
 window.__SB=sb;window.__B6SB=1;
 const css=`#b6l{position:fixed;inset:0;z-index:2147483000;background:radial-gradient(900px 420px at 50% -120px,rgba(0,205,211,.14),transparent 70%),#070D18;display:flex;align-items:center;justify-content:center;padding:16px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;color:#fff}
 #b6l form{width:100%;max-width:360px;background:#111E33;border:1px solid #2A3D5A;border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:12px}
@@ -17,18 +19,8 @@ const css=`#b6l{position:fixed;inset:0;z-index:2147483000;background:radial-grad
 let box=null;
 function ui(html){if(!box){const s=document.createElement('style');s.textContent=css;document.head.appendChild(s);box=document.createElement('div');box.id='b6l';document.body.appendChild(box)}box.innerHTML=html;box.hidden=false;const i=box.querySelector('input');if(i)setTimeout(()=>i.focus(),50)}
 const hide=()=>{if(box)box.hidden=true};
-const head='<div class="bd">B6</div><h1>Escala B6 · Administração</h1>';
+const head='<div class="bd">B6</div><h1>Fervor</h1>';
 let okRes;const ready=new Promise(r=>okRes=r);
-function loginForm(msg){ui(`<form id="b6f">${head}<p>Entre com o seu e-mail e senha.</p><input id="b6e" type="email" autocomplete="username" placeholder="E-mail" required><input id="b6p" type="password" autocomplete="current-password" placeholder="Senha" required><div class="er">${msg||''}</div><button type="submit">Entrar</button><button type="button" class="l" id="b6r">Esqueci minha senha</button></form>`);
- box.querySelector('#b6f').onsubmit=async e=>{e.preventDefault();const er=box.querySelector('.er');er.textContent='Entrando…';
-  const {error}=await sb.auth.signInWithPassword({email:box.querySelector('#b6e').value.trim(),password:box.querySelector('#b6p').value});
-  if(error){er.textContent=/invalid/i.test(error.message)?'E-mail ou senha incorretos.':'Não foi possível entrar: '+error.message;return}check()};
- box.querySelector('#b6r').onclick=()=>resetForm(box.querySelector('#b6e').value)}
-function resetForm(em){ui(`<form id="b6f">${head}<p>Vamos enviar um link para você criar uma nova senha.</p><input id="b6e" type="email" placeholder="E-mail" value="${(em||'').replace(/"/g,'')}" required><div class="er"></div><button type="submit">Enviar link</button><button type="button" class="l" id="b6v">Voltar</button></form>`);
- box.querySelector('#b6v').onclick=()=>loginForm();
- box.querySelector('#b6f').onsubmit=async e=>{e.preventDefault();const er=box.querySelector('.er');er.textContent='Enviando…';
-  const {error}=await sb.auth.resetPasswordForEmail(box.querySelector('#b6e').value.trim(),{redirectTo:location.origin+location.pathname});
-  er.className=error?'er':'ok';er.textContent=error?'Não foi possível enviar: '+error.message:'Se o e-mail estiver cadastrado, o link chega em alguns minutos. Confira também o spam.'}}
 function pwForm(title,after){ui(`<form id="b6f">${head}<p>${title}</p><input id="b6p" type="password" autocomplete="new-password" placeholder="Nova senha (mín. 8 caracteres)" minlength="8" required><input id="b6q" type="password" autocomplete="new-password" placeholder="Repita a nova senha" minlength="8" required><div class="er"></div><button type="submit">Salvar senha</button>${after?'<button type="button" class="l" id="b6v">Cancelar</button>':''}</form>`);
  if(after)box.querySelector('#b6v').onclick=()=>{hide();after()};
  box.querySelector('#b6f').onsubmit=async e=>{e.preventDefault();const a=box.querySelector('#b6p').value,b=box.querySelector('#b6q').value,er=box.querySelector('.er');
@@ -38,14 +30,14 @@ function pwForm(title,after){ui(`<form id="b6f">${head}<p>${title}</p><input id=
 const pwErr=e=>/same|different/i.test(e.message||'')?'A nova senha precisa ser diferente da atual.':/weak|short|least|characters/i.test(e.message||'')?'Senha fraca: use pelo menos 8 caracteres, misturando letras e números.':'Não foi possível salvar: '+e.message;
 function pwFirst(session){const nm=((session.user.email||'').split('@')[0]||'').replace(/</g,'');
  ui(`<form id="b6f">${head}<p><b style="color:#fff">Bem-vindo(a)!</b> Este é o seu primeiro acesso. Para proteger a conta, crie agora uma senha só sua, diferente da que você recebeu.</p><input id="b6p" type="password" autocomplete="new-password" placeholder="Nova senha (mín. 8 caracteres)" minlength="8" required><input id="b6q" type="password" autocomplete="new-password" placeholder="Repita a nova senha" minlength="8" required><p style="font-size:.78rem">Dica: use uma frase curta que só você saiba, com letras e números.</p><div class="er"></div><button type="submit">Salvar e entrar</button><button type="button" class="l" id="b6o">Sair</button></form>`);
- box.querySelector('#b6o').onclick=async()=>{try{localStorage.removeItem(OK)}catch(e){}await sb.auth.signOut();loginForm()};
+ box.querySelector('#b6o').onclick=out;
  box.querySelector('#b6f').onsubmit=async e=>{e.preventDefault();const a=box.querySelector('#b6p').value,b=box.querySelector('#b6q').value,er=box.querySelector('.er');
   if(a.length<8){er.textContent='Use pelo menos 8 caracteres.';return}if(a!==b){er.textContent='As senhas não conferem.';return}
   er.className='er';er.textContent='Salvando…';const {error}=await sb.auth.updateUser({password:a,data:{pw_ok:true}});
   if(error){er.textContent=pwErr(error);return}try{localStorage.setItem(OK,session.user.id)}catch(x){}hide();okRes(session);setTimeout(()=>{try{toast('Senha criada. Bem-vindo(a)!')}catch(x){}},800)}}
 async function mfaForm(msg){const {data}=await sb.auth.mfa.listFactors();const f=data&&data.totp&&data.totp.find(x=>x.status==='verified');if(!f){check();return}
  ui(`<form id="b6f">${head}<p>Digite o código de 6 dígitos do seu aplicativo autenticador.</p><input id="b6c" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000" required><div class="er">${msg||''}</div><button type="submit">Confirmar</button><button type="button" class="l" id="b6o">Sair</button></form>`);
- box.querySelector('#b6o').onclick=async()=>{await sb.auth.signOut();loginForm()};
+ box.querySelector('#b6o').onclick=out;
  box.querySelector('#b6f').onsubmit=async e=>{e.preventDefault();const er=box.querySelector('.er');er.textContent='Verificando…';
   const {error}=await sb.auth.mfa.challengeAndVerify({factorId:f.id,code:box.querySelector('#b6c').value.trim()});
   if(error){er.textContent='Código inválido. Confira o horário do celular e tente de novo.';return}check()}}
@@ -61,21 +53,25 @@ async function mfaOff(){const {data}=await sb.auth.mfa.listFactors();for(const x
 let recovering=false;
 sb.auth.onAuthStateChange((ev)=>{if(ev==='PASSWORD_RECOVERY'){recovering=true;pwForm('Crie a sua nova senha.')}});
 const OK='b6adm';
-function offSess(){try{const r=JSON.parse(localStorage.getItem('b6-auth')||'null');const u=r&&(r.user||(r.currentSession&&r.currentSession.user));return u&&localStorage.getItem(OK)===u.id?u:null}catch(e){return null}}
+const out=async()=>{try{await sb.auth.signOut()}catch(e){}try{localStorage.removeItem(OK);RLS.removeItem('fv-me');window.__FVSETROLE(null)}catch(e){}location.reload()};
+const toBand=(adm)=>{window.__FVSETROLE(window.__FVUID,adm);location.reload()};
+window.fvSair=out;
+function offSess(){try{const r=JSON.parse(RLS.getItem('fv-band-auth')||sessionStorage.getItem('fv-band-auth')||'null');const u=r&&(r.user||(r.currentSession&&r.currentSession.user));return u&&localStorage.getItem(OK)===u.id?u:null}catch(e){return null}}
 async function check(){if(recovering)return;
  if(!navigator.onLine){const u=offSess();if(u){hide();okRes({user:u});try{setTimeout(()=>setSt('Offline'),1500)}catch(e){}return}}
  let session=null;try{const r=await sb.auth.getSession();session=r.data.session}catch(e){}
- if(!session){const u=offSess();if(u&&!navigator.onLine){hide();okRes({user:u});return}loginForm();return}
+ if(!session){const u=offSess();if(u&&!navigator.onLine){hide();okRes({user:u});return}out();return}
+ window.__FVUID=session.user.id;
  try{const a=await sb.auth.mfa.getAuthenticatorAssuranceLevel();if(a.data&&a.data.nextLevel==='aal2'&&a.data.currentLevel!=='aal2'){mfaForm();return}}catch(e){}
- let adm=null;try{const {data,error}=await sb.rpc('is_admin');if(error)throw error;adm=data===true}catch(e){if(localStorage.getItem(OK)===session.user.id){hide();okRes(session);return}loginForm('Sem conexão com o servidor. Tente de novo.');return}
- if(!adm){try{localStorage.removeItem(OK)}catch(e){}await sb.auth.signOut();loginForm('Esta conta não tem acesso de administrador.');return}
+ let adm=null;try{const {data,error}=await sb.rpc('is_admin');if(error)throw error;adm=data===true}catch(e){if(localStorage.getItem(OK)===session.user.id){hide();okRes(session);return}ui(`<form>${head}<p>Sem conexão com o servidor. Verifique a internet e recarregue a página.</p></form>`);return}
+ if(!adm){try{localStorage.removeItem(OK)}catch(e){}toBand(false);return}
  if(!(session.user.user_metadata||{}).pw_ok){pwFirst(session);return}
  try{localStorage.setItem(OK,session.user.id)}catch(e){}hide();okRes(session)}
 window.b6Conta=async()=>{const {data:{session}}=await sb.auth.getSession();const em=session&&session.user.email||'';let mf=false;try{const r=await sb.auth.mfa.listFactors();mf=!!(r.data&&r.data.totp&&r.data.totp.some(x=>x.status==='verified'))}catch(e){}
  try{dlg.close()}catch(e){}
  ui(`<form>${head}<p>Conectado como <b style="color:#fff">${em.replace(/</g,'')}</b></p><button type="button" id="b6s">Trocar senha</button><button type="button" class="l" id="b6m">${mf?'Desativar verificação em duas etapas':'Ativar verificação em duas etapas'}</button><button type="button" class="l" id="b6o" style="color:#ff8a8a">Sair deste aparelho</button><button type="button" class="l" id="b6v">Voltar ao app</button></form>`);
  box.querySelector('#b6m').onclick=()=>mf?mfaOff():mfaOn();box.querySelector('#b6v').onclick=hide;box.querySelector('#b6s').onclick=()=>pwForm('Escolha a nova senha.',()=>{});
- box.querySelector('#b6o').onclick=async()=>{try{localStorage.removeItem(OK)}catch(e){}await sb.auth.signOut();try{Object.keys(window.localStorage).length}catch(e){}location.reload()}};
+ box.querySelector('#b6o').onclick=out};
 /* banco: mesmas operações que o app usava no Claude */
 const TB={team:'team',pub:'pub'};
 const row=(id,r)=>({id,exists:!!r,data:()=>r?{j:r.j,u:r.u,by:r.by}:undefined});
@@ -94,6 +90,6 @@ const assets={upload:async(b,o)=>{const ty=(o&&o.type)||b.type||'application/oct
   return{id,url:sb.storage.from(BUCKET).getPublicUrl(id).data.publicUrl,sizeBytes:b.size}},
  delete:async id=>{const {error}=await sb.storage.from(BUCKET).remove([String(id)]);if(error)throw error}};
 window.claude={use:async n=>{await ready;return n=='db'?db:n=='user'?user:n=='assets'?assets:null}};
-const go=()=>check().catch(e=>loginForm('Sem conexão com o servidor. Tente de novo.'));
+const go=()=>check().catch(e=>ui(`<form>${head}<p>Sem conexão com o servidor. Verifique a internet e recarregue a página.</p></form>`));
 if(document.body)go();else document.addEventListener('DOMContentLoaded',go);
 })();
