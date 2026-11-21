@@ -11,7 +11,6 @@ User-agent: TelegramBot
 Allow: /
 
 User-agent: *
-Allow: /plugins/
 Disallow: /
 
 Sitemap: https://fervor.website/sitemap.xml
