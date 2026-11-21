@@ -14,7 +14,6 @@ async function fvInit(){const c=FVC();if(!c)return;try{await window.claude.use('
   const cf=await c.from('config').select('chave,valor');(cf.data||[]).forEach(x=>FV_CFG[x.chave]=x.valor);
   if(ME_M){const d=await c.from('disponibilidade').select('culto_id,status,obs').eq('membro_id',ME_M.id);MY_DISP={};(d.data||[]).forEach(x=>MY_DISP[x.culto_id]=x)}
   if(!S.band)await dispAllLoad();
-  if(S.band&&ME_M&&!meG()){try{localStorage.setItem('rep.me',ME_M.nome)}catch(e){}}
  }catch(e){FV_ERR=String(e&&e.message||e)}
  pfBt();if(S.tab=='perf'||(S.band&&ME_M&&S.tab=='hoje')||(!S.band&&S.tab=='lists'))R()}
 async function dispAllLoad(){const c=window.__SB;if(!c)return;try{const r=await c.from('disponibilidade').select('culto_id,status,obs,atualizado_em,membros(nome)');if(r.error)throw r.error;const m={};(r.data||[]).forEach(x=>{(m[x.culto_id]=m[x.culto_id]||[]).push({nome:(x.membros||{}).nome||'?',status:x.status,obs:x.obs||''})});DISP_ALL=m}catch(e){DISP_ALL=null}}
@@ -118,7 +117,7 @@ function delConta(){if(!ME_M)return;if(!S.band&&!window.__SBB)return say('Admini
 async function delContaGo(){const c=FVC();if(!c)return;$('#dc_b').disabled=true;$('#dc_b').textContent='Excluindo…';let r;try{r=await c.functions.invoke('gerenciar-acesso',{body:{acao:'excluir_minha_conta'}})}catch(e){r={error:e}}
  let d=r&&r.data;if(r&&r.error){try{d=await r.error.context.json()}catch(e){d={erro:r.error.message||'falha'}}}
  if(!d||d.erro){$('#dc_b').disabled=false;$('#dc_b').textContent='Excluir minha conta';say('Não consegui excluir: '+((d&&d.erro)||'erro'));return}
- try{localStorage.removeItem('fv-me');localStorage.removeItem('rep.me');localStorage.removeItem('rep.band')}catch(e){}dlg.innerHTML='<h2>Conta excluída</h2><p>Seus dados pessoais foram apagados. Que Deus abençoe o seu caminho! <svg class="ico" viewBox="0 0 24 24"><path d="M12 3c.8 3.2 5 5.4 5 10.4A5 5 0 0 1 7 13.4c0-2.5 1.3-4.3 2.6-5.4.2 1.8 1 3 2.3 3.6-.6-3 .1-5.9.1-8.6zM12 21a2 2 0 0 1-2-2c0-1.3 1-2.2 2-3.2 1 1 2 1.9 2 3.2a2 2 0 0 1-2 2z"/></svg></p><div class="ac"><button class="pri" onclick="fvSair()">Concluir</button></div>'}
+ try{localStorage.removeItem('fv-me');localStorage.removeItem('rep.band')}catch(e){}dlg.innerHTML='<h2>Conta excluída</h2><p>Seus dados pessoais foram apagados. Que Deus abençoe o seu caminho! <svg class="ico" viewBox="0 0 24 24"><path d="M12 3c.8 3.2 5 5.4 5 10.4A5 5 0 0 1 7 13.4c0-2.5 1.3-4.3 2.6-5.4.2 1.8 1 3 2.3 3.6-.6-3 .1-5.9.1-8.6zM12 21a2 2 0 0 1-2-2c0-1.3 1-2.2 2-3.2 1 1 2 1.9 2 3.2a2 2 0 0 1-2 2z"/></svg></p><div class="ac"><button class="pri" onclick="fvSair()">Concluir</button></div>'}
 
 /* v405 · baixa músicas e repertórios atuais no mesmo formato do pub.json (para testes e cópia de segurança) */
 function expDados(){try{const o={};S.songs.forEach(x=>{o['s_'+x.id]={j:JSON.stringify(x)}});S.lists.forEach(x=>{o['l_'+x.id]={j:JSON.stringify(x)}});const b=new Blob([JSON.stringify(o)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='fervor-dados-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);toast('Dados baixados')}catch(e){say('Não consegui baixar: '+e.message)}}

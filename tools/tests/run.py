@@ -122,15 +122,15 @@ with sync_playwright() as p:
       const hm=mais&&mais.hidden;pick(S.songs[0].id);const ed=[...document.querySelectorAll('[onclick^="editSong"],[onclick^="delSong"]')].filter(e=>getComputedStyle(e).display!='none').length;const detail=!!document.querySelector('.hd');
       S.tab='lists';S.hide=false;R();return{cs,qb,btn,add,items,hm,ed,detail}}""")
     ok(r['qb'] != 'none' and r['btn'] and r['add'] == 'none' and r['items'] > 10 and r['hm'] and r['ed'] == 0 and r['detail'], 'banda: menu Músicas lista e abre qualquer música, sem opções de edição', str(r))
-    r = pg.evaluate("""()=>{const T=td(),l=S.lists.filter(x=>x.date&&x.date>=T).sort((a,b)=>a.date.localeCompare(b.date))[0];const o=[l.banda,ME_M,MY_DISP,window.__SBB,localStorage.getItem('rep.me')];l.banda={...(l.banda||{}),vm:'Ana Teste'};ME_M={id:'m1',nome:'Ana Teste'};MY_DISP={};window.__SBB={};try{localStorage.setItem('rep.me','Ana Teste')}catch(e){}
+    r = pg.evaluate("""()=>{const T=td(),l=S.lists.filter(x=>x.date&&x.date>=T).sort((a,b)=>a.date.localeCompare(b.date))[0];const o=[l.banda,ME_M,MY_DISP,window.__SBB];l.banda={...(l.banda||{}),vm:pubNm('Ana Teste')};ME_M={id:'m1',nome:'Ana Teste'};MY_DISP={};window.__SBB={};
      S.tab='hoje';R();const a=[],cf=()=>document.querySelector('.hjcf'),mo=()=>document.querySelector('.hjmo');
      a.push(!!cf(),!mo());MY_DISP[l.id]={status:'sim'};R();a.push(!cf(),!!mo(),/Presença confirmada/.test(document.querySelector('.hjhero').textContent));hjMais(l.id);a.push(d2.open&&d2.dataset.k=='sheet'&&/Vou servir/.test(d2.textContent));d2.close();
-     [l.banda,ME_M,MY_DISP,window.__SBB]=o.slice(0,4);if(o[4]==null)localStorage.removeItem('rep.me');else localStorage.setItem('rep.me',o[4]);S.tab='lists';R();return a}""")
+     [l.banda,ME_M,MY_DISP,window.__SBB]=o.slice(0,4);S.tab='lists';R();return a}""")
     ok(r == [True, True, True, True, True, True], 'banda: Confirmar presença no Hoje até confirmar; depois fica em Mais', str(r))
-    r = pg.evaluate("""async()=>{const T=td(),l=S.lists.filter(x=>x.date&&x.date>=T).sort((a,b)=>a.date.localeCompare(b.date))[0];const o=[l.banda,ME_M,MY_DISP,window.__SBB,window.__FVME,localStorage.getItem('rep.me')];l.banda={...(l.banda||{}),vm:pubNm('Ana Teste')};ME_M=null;MY_DISP={};try{localStorage.removeItem('rep.me')}catch(e){}
+    r = pg.evaluate("""async()=>{const T=td(),l=S.lists.filter(x=>x.date&&x.date>=T).sort((a,b)=>a.date.localeCompare(b.date))[0];const o=[l.banda,ME_M,MY_DISP,window.__SBB,window.__FVME];l.banda={...(l.banda||{}),vm:pubNm('Ana Teste')};ME_M=null;MY_DISP={};
      const q={select:()=>q,eq:()=>q,then:f=>f({data:[]})};window.__SBB={auth:{getUser:async()=>({data:{user:{id:'u',email:'a@b.c'}}})},from:()=>q};window.__FVME={id:'m1',nome:'Ana Teste'};
      S.tab='hoje';R();const a=[!document.querySelector('.hjcf')];await fvInit();a.push(!!document.querySelector('.hjcf'));
-     [l.banda,ME_M,MY_DISP,window.__SBB,window.__FVME]=o.slice(0,5);if(o[5]==null)localStorage.removeItem('rep.me');else localStorage.setItem('rep.me',o[5]);S.tab='lists';R();return a}""")
+     [l.banda,ME_M,MY_DISP,window.__SBB,window.__FVME]=o.slice(0,5);S.tab='lists';R();return a}""")
     ok(r == [True, True], 'banda: ao entrar na conta, o Confirmar presença aparece no Hoje sem precisar sair da tela', str(r))
     r = pg.evaluate("""()=>{const o=[ME_M,window.__SBB];ME_M={id:'m1',nome:'Ana Teste'};window.__SBB={};S.tab='hoje';R();const a=[!!document.querySelector('.hjcol > .hjbar'),!document.querySelector('.hjhero .hjb')];S.tab='perf';R();const d=document.querySelector('details.dmo2');a.push(!!d&&!d.open,!!d&&/Mais/.test(d.textContent));[ME_M,window.__SBB]=o;S.tab='lists';R();return a}""")
     ok(r == [True, True, True, True], 'um jeito só: barra de ações do Hoje fora do cartão e disponibilidade do Perfil em "Mais"', str(r))
@@ -138,10 +138,10 @@ with sync_playwright() as p:
      a.push(locU(u)==location.origin+'/media/46b9579c1e83de4b8b69c1b9d6cc915b.mp3',locU('https://x.supabase.co/storage/v1/object/public/midias/a.mp4')=='https://x.supabase.co/storage/v1/object/public/midias/a.mp4');
      const b=await getBl(u);a.push(b.size>100000);return a}""")
     ok(r == [True, True, True], 'baixar para offline: áudios do site são buscados no mesmo endereço do app (sem bloqueio entre domínios)', str(r))
-    r = pg.evaluate("""()=>{const _mm=ME_M;ME_M=null;const a=[];const l=S.lists.find(x=>x.banda&&Object.values(x.banda).some(Boolean));const kk=Object.keys(l.banda).find(k=>l.banda[k]),antes=l.banda[kk],nome='Fulano Lembrete Teste';l.banda[kk]=nome;const d0=l.date,z=n=>String(n).padStart(2,'0'),mais=k=>{const x=new Date(td()+'T12:00');x.setDate(x.getDate()+k);return x.getFullYear()+'-'+z(x.getMonth()+1)+'-'+z(x.getDate())};
-     l.date=mais(1);try{localStorage.setItem('rep.me',nome);localStorage.removeItem('rep.lemb');localStorage.removeItem('rep.cf')}catch(e){}
+    r = pg.evaluate("""()=>{const _mm=ME_M;ME_M=null;const a=[];const l=S.lists.find(x=>x.banda&&Object.values(x.banda).some(Boolean));const kk=Object.keys(l.banda).find(k=>l.banda[k]),antes=l.banda[kk],nome='Fulano Lembrete Teste';l.banda[kk]=pubNm(nome);const d0=l.date,z=n=>String(n).padStart(2,'0'),mais=k=>{const x=new Date(td()+'T12:00');x.setDate(x.getDate()+k);return x.getFullYear()+'-'+z(x.getMonth()+1)+'-'+z(x.getDate())};
+     l.date=mais(1);var _fm=window.__FVME;window.__FVME={id:'m9',nome};try{localStorage.removeItem('rep.lemb');localStorage.removeItem('rep.cf')}catch(e){}
      a.push(!!lembAlvo());const f=lembPres();a.push(f&&/Amanhã é culto/.test(document.querySelector('#tt').textContent));a.push(lembPres()===false);
-     cfS(l.id,'s');a.push(lembAlvo()===null);localStorage.removeItem('rep.cf');localStorage.removeItem('rep.lemb');l.date=mais(10);a.push(lembAlvo()===null);l.date=d0;l.banda[kk]=antes;localStorage.removeItem('rep.me');ME_M=_mm;return a}""")
+     cfS(l.id,'s');a.push(lembAlvo()===null);localStorage.removeItem('rep.cf');localStorage.removeItem('rep.lemb');l.date=mais(10);a.push(lembAlvo()===null);l.date=d0;l.banda[kk]=antes;ME_M=_mm;window.__FVME=_fm;return a}""")
     ok(r == [True]*5, 'lembrete de presença: avisa 1 vez por dia, some ao responder e só para culto de hoje/amanhã', str(r))
     ok(not E, 'banda: sem erros de JavaScript', '; '.join(E[:3])); c.close()
 
@@ -471,23 +471,20 @@ with sync_playwright() as p:
      CH.u=null;CH.anon=1;a.push(chErr({message:'P0001: Mensagem bloqueada pela moderação.'})=='Mensagem bloqueada pela moderação.');
      CH.msgs=o.msgs;CH.ex=o.ex;CH.v2=o.v2;CH.u=o.u;CH.anon=o.anon;S.tab=o.tab;R();return a}""")
     ok(r == [True]*8, 'chat completo: @música, reações, enquete, visto por, resposta citada, mensagens de erro', str(r))
-    r = pg.evaluate("""async()=>{const a=[],o={msgs:CH.msgs,fx:CH.fx,anon:CH.anon,u:CH.u,v2:CH.v2,fl:CH.fl,ferst:window.__FVREST,fetch:window.fetch,fila:localStorage.getItem('rep.chat.fila'),me:localStorage.getItem('rep.chat.me')};
-     CH.msgs=[];CH.fx=['Ana Teste'];CH.anon=1;CH.u=null;CH.v2=1;CH.fl=0;localStorage.setItem('rep.chat.me','Ana Teste');localStorage.removeItem('rep.chat.fila');
-     window.__FVREST={url:'https://x.test',key:'k'};const rows=[];let posts=0;
-     window.fetch=async(u,op)=>{op=op||{};u=String(u);if(op.method=='POST'&&/chat_mensagens/.test(u)){posts++;const b=JSON.parse(op.body);const row={id:50+posts,user_id:null,autor:b.autor,texto:b.texto,extra:b.extra||null,criado_em:new Date().toISOString()};rows.push(row);throw new TypeError('Failed to fetch')}
-       return{ok:true,text:async()=>JSON.stringify(rows.slice())}};
-     await chSendX({texto:'mensagem perdida'});                                                                                 // ack se perde depois do POST ter sido feito de verdade
+    r = pg.evaluate("""async()=>{const a=[],o={msgs:CH.msgs,u:CH.u,v2:CH.v2,fl:CH.fl,sbb:window.__SBB,me:ME_M,fila:localStorage.getItem('rep.chat.fila')};
+     CH.msgs=[];CH.u={id:'u1'};ME_M={id:'m1',nome:'Ana Teste'};CH.v2=1;CH.fl=0;localStorage.removeItem('rep.chat.fila');
+     const rows=[];let posts=0,falha=1;
+     window.__SBB={from:()=>({insert:row=>{posts++;const r={id:50+posts,user_id:'u1',autor:row.autor,texto:row.texto,extra:row.extra||null,criado_em:new Date().toISOString()};rows.push(r);return{select:()=>({single:async()=>{if(falha)throw new TypeError('Failed to fetch');return{data:r,error:null}}})}}})};
+     await chSendX({texto:'mensagem perdida'});                                                                                 // ack se perde depois do envio ter sido feito de verdade
      a.push(posts==1&&chFilaGet().length==1&&CH.msgs.some(m=>m.q&&m.texto=='mensagem perdida'));
      CH.msgs.push(Object.assign({},rows[0]));                                                                                    // a consulta periódica já teria trazido a linha real do servidor
      await chFila();
      a.push(posts==1&&chFilaGet().length==0&&CH.msgs.filter(m=>m.texto=='mensagem perdida').length==1);                         // não manda de novo nem duplica aviso
      CH.msgs=[];localStorage.removeItem('rep.chat.fila');posts=0;
-     window.fetch=async(u,op)=>{op=op||{};if(op.method=='POST'&&/chat_mensagens/.test(String(u))){posts++;throw new TypeError('Failed to fetch')}return{ok:true,text:async()=>'[]'}};
      chFilaSet([{k:'t1',p:{texto:'nunca vai',cid:'c1'},a:'Ana Teste',c:new Date().toISOString(),n:19}]);
-     const tt0=document.querySelector('#tt')?document.querySelector('#tt').textContent:'';
      await chFila();
      a.push(posts==1&&chFilaGet().length==0&&/não pôde ser enviada/.test(document.querySelector('#tt').textContent));           // desiste depois do limite de tentativas, sem ficar repetindo pra sempre
-     CH.msgs=o.msgs;CH.fx=o.fx;CH.anon=o.anon;CH.u=o.u;CH.v2=o.v2;CH.fl=o.fl;window.__FVREST=o.ferst;window.fetch=o.fetch;if(o.fila==null)localStorage.removeItem('rep.chat.fila');else localStorage.setItem('rep.chat.fila',o.fila);if(o.me==null)localStorage.removeItem('rep.chat.me');else localStorage.setItem('rep.chat.me',o.me);
+     CH.msgs=o.msgs;CH.u=o.u;CH.v2=o.v2;CH.fl=o.fl;window.__SBB=o.sbb;ME_M=o.me;if(o.fila==null)localStorage.removeItem('rep.chat.fila');else localStorage.setItem('rep.chat.fila',o.fila);
      const tt=document.querySelector('#tt');if(tt)tt.classList.remove('on','act');
      return a}""")
     ok(r == [True]*3, 'chat: mensagem não duplica nem reenvia para sempre se a confirmação do envio se perde (fila offline)', str(r))
@@ -650,6 +647,9 @@ with sync_playwright() as p:
     LAST7 = ['']; pg = c.new_page(); E7 = []; pg.on('pageerror', lambda x: E7.append(str(x)[:120] + ' [' + LAST7[0][:70] + ']')); pg.on('dialog', lambda d: d.dismiss())
     pg.goto(B + '/'); pg.wait_for_timeout(3000)
     pg.evaluate('window.fvSair=async()=>{}')  # o botão Sair recarregaria a página no meio da varredura
+    pg.wait_for_timeout(5000)
+    r = pg.evaluate("()=>[meG()==pubNm(__FVME.nome),!dlg.open,!/Quem é você/.test(document.body.innerText+dlg.innerText),(localStorage.getItem('rep.me')||'')=='']")
+    ok(r == [True, True, True, True], 'minha escala e chat: o Fervor já sabe quem é a pessoa logada, sem perguntar o nome', str(r))
     r = pg.evaluate("()=>{S.tab='perf';R();const b=[...document.querySelectorAll('button')].find(x=>x.textContent.trim()=='Sair');let c=0;window.fvSair=async()=>{c++};if(b)b.click();S.tab='hoje';R();return[!!b,c]}")
     ok(r == [True, 1], 'perfil: botão Sair desconecta a pessoa do Fervor', str(r))
     TELAS = {'hoje': "S.tab='hoje';R()", 'repertorios': "S.tab='lists';S.lvm=0;S.lv=null;R()",

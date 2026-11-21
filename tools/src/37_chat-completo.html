@@ -83,14 +83,13 @@ function chNet(e){const m=String(e&&e.message||e||'');return !navigator.onLine||
 function chExCid(p){const ex=p.extra?Object.assign({},p.extra):{};if(p.cid)ex._cid=p.cid;return Object.keys(ex).length?ex:null}
 async function chPost(p){const c=FVC();let d;
  if(CH.v2&&p.cid&&CH.msgs.some(m=>m.extra&&m.extra._cid===p.cid))throw{__dup:1,message:'duplicado'};
- if(CH.u){const row={texto:p.texto,membro_id:ME_M?ME_M.id:null,autor:chNome()};if(CH.v2){row.tipo=p.tipo||'txt';const ex=chExCid(p);if(ex)row.extra=ex;if(p.resp_id)row.resp_id=p.resp_id}
+ {const row={texto:p.texto,membro_id:ME_M?ME_M.id:null,autor:chNome()};if(CH.v2){row.tipo=p.tipo||'txt';const ex=chExCid(p);if(ex)row.extra=ex;if(p.resp_id)row.resp_id=p.resp_id}
   const r=await c.from('chat_mensagens').insert(row).select(CH.cols).single();if(r.error)throw r.error;d=r.data}
- else{const row={texto:p.texto,autor:chNome(),device:chDev()};if(CH.v2){row.tipo=p.tipo||'txt';const ex=chExCid(p);if(ex)row.extra=ex;if(p.resp_id)row.resp_id=p.resp_id}
-  const r=await chRest('chat_mensagens?select='+CH.cols,{method:'POST',headers:{Prefer:'return=representation'},body:JSON.stringify(row)});d=r&&r[0];if(!d)throw new Error('sem resposta');chMineAdd(d.id)}
+
  chAviso(d.id);return d}
 function chAviso(id){if(!CH.v2||!id)return;try{const R0=window.__FVREST,u=(R0?R0.url:'https://hofrthndlstofytlapzk.supabase.co')+'/functions/v1/chat-aviso',k=R0?R0.key:(typeof SBK!='undefined'?SBK:'');
  fetch(u,{method:'POST',headers:{'Content-Type':'application/json',apikey:k},body:JSON.stringify({id:id}),keepalive:true}).catch(()=>{})}catch(e){}}
-async function chSendX(p){if(!chEnabled())return say('O chat está desligado pela liderança.');if(!chOn())return say(CH.anon?'Escolha quem você é para escrever.':'Entre na sua conta para usar o chat.');
+async function chSendX(p){if(!chEnabled())return say('O chat está desligado pela liderança.');if(!chOn())return say('Entre na sua conta para usar o chat.');
  if(!CH.v2&&p.tipo&&p.tipo!='txt')return say('Esta função precisa do 20_chat_completo.sql rodado no Supabase.');
  const tmp={id:'t'+Date.now()+Math.random().toString(36).slice(2,5),autor:chNome(),texto:p.texto,tipo:p.tipo||'txt',extra:p.extra||null,resp_id:p.resp_id||null,criado_em:new Date().toISOString(),user_id:CH.u?CH.u.id:null,tmp:1};
  p.cid=p.cid||tmp.id;
@@ -142,7 +141,7 @@ if('serviceWorker' in navigator)navigator.serviceWorker.addEventListener('messag
 /* --- moderação e números (liderança) --- */
 async function chMod(){if(!chAdm())return say('Disponível para a liderança na página de administração.');dlg.innerHTML='<h2>Moderação do chat</h2><p class="mut">Carregando…</p>';dlg.showModal();
  let den=[],nu=null,fx0=null;try{fx0=(await chRpc('chat_membros',{})||[]).map(x=>x.nome)}catch(e){}try{den=await chRpc('chat_denuncias_lista',{})||[]}catch(e){}try{nu=await chRpc('chat_numeros',{})}catch(e){}
- const bl=(FV_CFG.chat_bloqueio||[]),si=(FV_CFG.chat_silenciados||[]).map(nz),fx=fx0&&fx0.length?fx0:CH.fx&&CH.fx.length?CH.fx:[...new Set(CH.msgs.filter(m=>!m.user_id).map(m=>m.autor))];
+ const bl=(FV_CFG.chat_bloqueio||[]),si=(FV_CFG.chat_silenciados||[]).map(nz),fx=fx0&&fx0.length?fx0:[...new Set(CH.msgs.filter(m=>!m.user_id).map(m=>m.autor))];
  dlg.innerHTML=`<h2>Moderação do chat</h2>
  ${nu?`<h3>Números</h3><div class="chnu"><div><b>${nu.m7}</b><small>mensagens em 7 dias</small></div><div><b>${nu.p7}</b><small>pessoas falaram em 7 dias</small></div><div><b>${nu.lendo}</b><small>abriram o chat em 7 dias</small></div><div><b>${nu.avisos}</b><small>aparelhos com aviso ligado</small></div><div><b>${nu.resp==null?'—':nu.resp+' min'}</b><small>tempo médio de resposta</small></div><div><b>${nu.reac}</b><small>reações em 30 dias</small></div></div>${(nu.top||[]).length?`<p class="mut">Mais ativos (30 dias): ${nu.top.map(x=>esc(x[0])+' ('+x[1]+')').join(', ')}</p>`:''}`:'<p class="mut">Números indisponíveis (rode o 20_chat_completo.sql).</p>'}
  <h3>Denúncias</h3>${den.length?den.map(d=>`<div class="chdn"><p><b>${esc(d.autor)}:</b> ${esc(String(d.texto).slice(0,160))}</p><small class="mut">${d.qtd} denúncia(s) de ${esc(d.por)}${d.motivos?' · '+esc(d.motivos):''}</small><div class="ac" style="justify-content:flex-start"><button class="sm dan" onclick="chModDel(${d.id})">Apagar mensagem</button><button class="sm" onclick="chModOk(${d.id})">Manter</button></div></div>`).join(''):'<p class="mut">Nenhuma denúncia. 🙌</p>'}
@@ -158,10 +157,10 @@ function chBody(m){if(m.tipo=='audio'){const x=m.extra||{};return x.url?`<audio 
  if(m.tipo=='enquete')return chPoll_(m);return`<div class="chtx">${chTxt(m.texto)}</div>`}
 function chQuote(m){if(!m.resp_id&&!(m.extra&&m.extra.rq))return'';const o=CH.msgs.find(x=>x.id===m.resp_id),a=o?o.autor:(m.extra&&m.extra.rq&&m.extra.rq.a)||'',t=o?chPlain(o):(m.extra&&m.extra.rq&&m.extra.rq.t)||'Mensagem apagada';
  return`<button type="button" class="chq" onclick="event.stopPropagation();chGoto(${m.resp_id||0})"><b>${esc(a)}</b><span>${esc(String(t).slice(0,120))}</span></button>`}
-vChat=function(){const av=chAvLoc(),hd=`<div class="dbh"><div><h1>Chat B6 (Lugar do Encontro)</h1><p class="mut">${CH.anon&&chEu()?'Você escreve como <b>'+esc(chEu())+'</b> · <a href="#" onclick="chWho(-1);return false">trocar</a>':'Conversa de toda a banda.'}</p></div>${chOn()?`<div class="chtb">${CH.v2?`<button type="button" class="sm" onclick="${av?'chAvOff()':'chAvOn()'}" title="Avisos no celular">${av?'🔔 Avisos ligados':'🔕 Ativar avisos'}</button>`:''}${chAdm()?`<button type="button" class="sm" onclick="chMod()">🛡️ Moderação${CH.ex.d?` <i class="chdb">${CH.ex.d}</i>`:''}</button>`:''}</div>`:''}</div>`;
+vChat=function(){const av=chAvLoc(),hd=`<div class="dbh"><div><h1>Chat B6 (Lugar do Encontro)</h1><p class="mut">Conversa de toda a banda.</p></div>${chOn()?`<div class="chtb">${CH.v2?`<button type="button" class="sm" onclick="${av?'chAvOff()':'chAvOn()'}" title="Avisos no celular">${av?'🔔 Avisos ligados':'🔕 Ativar avisos'}</button>`:''}${chAdm()?`<button type="button" class="sm" onclick="chMod()">🛡️ Moderação${CH.ex.d?` <i class="chdb">${CH.ex.d}</i>`:''}</button>`:''}</div>`:''}</div>`;
  if(!chEnabled())return`<div class="dbw chw">${hd}<div class="dbc"><p class="mut">O chat está desligado no momento. A liderança pode ligar em Ajustes &rsaquo; Acesso da banda.</p></div></div>`;
- if(!CH.u&&!CH.anon)return`<div class="dbw chw">${hd}<div class="dbc"><p class="mut">Conectando ao chat…</p></div></div>`;
- if(!chOn()){const N=CH.fx||[];return`<div class="dbw chw">${hd}<div class="dbc"><h3 style="margin:0 0 6px">Quem é você?</h3><p class="mut" style="margin:0 0 10px">Toque no seu nome (integrantes da banda fixa) para entrar na conversa.</p><div class="chwho">${N.map((n,i)=>`<button type="button" class="sm" onclick="chWho(${i})">${esc(n)}</button>`).join('')||'<span class="mut">'+(CH.fx?'Nenhum integrante da banda fixa encontrado. A liderança confere em Acesso da banda se os nomes estão marcados como “Banda fixa” e “Ativo”.':'Carregando a lista…')+'</span>'}</div></div></div>`}
+ if(!CH.u)return`<div class="dbw chw">${hd}<div class="dbc"><p class="mut">Conectando ao chat…</p></div></div>`;
+ if(!chOn())return`<div class="dbw chw">${hd}<div class="dbc"><p class="mut">Entre na sua conta para usar o chat.</p></div></div>`;
  let h='',dy='',pa='';const L=CH.msgs,f=CH.ex.f;
  for(const m of L){const d=chDay(m.criado_em);if(d!=dy){dy=d;pa='';h+=`<div class="chd">${esc(d)}</div>`}const me=chMe(m),ak=(me?'\u0001':'')+m.autor,seq=ak==pa;pa=ak;
   const vs=me&&!m.tmp&&CH.v2&&chRR()?chVistos(m).length:0,num=typeof m.id=='number',mm=!me&&chMencionaMe(m);
