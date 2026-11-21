@@ -650,6 +650,8 @@ with sync_playwright() as p:
     LAST7 = ['']; pg = c.new_page(); E7 = []; pg.on('pageerror', lambda x: E7.append(str(x)[:120] + ' [' + LAST7[0][:70] + ']')); pg.on('dialog', lambda d: d.dismiss())
     pg.goto(B + '/'); pg.wait_for_timeout(3000)
     pg.evaluate('window.fvSair=async()=>{}')  # o botão Sair recarregaria a página no meio da varredura
+    r = pg.evaluate("()=>{S.tab='perf';R();const b=[...document.querySelectorAll('button')].find(x=>x.textContent.trim()=='Sair');let c=0;window.fvSair=async()=>{c++};if(b)b.click();S.tab='hoje';R();return[!!b,c]}")
+    ok(r == [True, 1], 'perfil: botão Sair desconecta a pessoa do Fervor', str(r))
     TELAS = {'hoje': "S.tab='hoje';R()", 'repertorios': "S.tab='lists';S.lvm=0;S.lv=null;R()",
              'repertorio aberto': "const l=[...S.lists].filter(x=>x.songIds.length).sort((a,b)=>b.date.localeCompare(a.date))[0];S.tab='lists';S.lv=l.id;S.lvm=1;R()",
              'musicas': "S.tab='songs';S.hide=false;S.sel=null;R()", 'musica aberta': "S.tab='songs';S.sel=(S.songs.find(x=>x.vmap&&x.vmap.length)||S.songs[0]).id;S.hide=true;R()",
