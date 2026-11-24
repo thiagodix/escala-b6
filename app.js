@@ -1990,7 +1990,7 @@ function rn1(){if(S.mig.rn1)return;S.lists.forEach(l=>{const n=(l.name||'').trim
 function rn2(){if(S.mig.rn2)return;S.lists.forEach(l=>{const n=(l.name||'').trim();if(/^Domingo:\s*/i.test(n))l.name=n.replace(/^Domingo:\s*/i,'')});S.mig.rn2=1}
 const VMIMP={};
 const VMML={'PODEROSO DEUS ETERNO':'majestade','MESSIAS':'maranata','SOU GRATO POR SEU AMOR':'santo pra sempre','DIGNO É O SENHOR':'*'};function vm1(){if(S.mig.vm1)return;const M={};Object.keys(VMIMP).forEach(k=>M[nz(k)]=[VMIMP[k],VMML[k]]);S.songs.forEach(s=>{const e=M[nz(s.title)];if(!e||(s.vmap||[]).length)return;const md=s.medleys||[],ok=e[1]?(e[1]=='*'?md.length>0:md.some(x=>nz(x).includes(e[1]))):!md.length;if(ok)s.vmap=e[0].map(r=>{if(!r[0])return{t:''};const h=VH.test(r[0])?1:0;return{t:r[0],h,v:h?'':r[1]}})});S.mig.vm1=1}
-const VER='24/11/2026 · 420';
+const VER='24/11/2026 · 421';
 
 const td=()=>new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);
 const asc2=s=>String(s||'').replace(/♭/g,'b').replace(/♯/g,'#').replace(/→/g,'>').replace(/←/g,'<').replace(/[^\x20-\x7E\u00A0-\u00FF\u2013\u2014\u2018-\u201D\u2022\u2026]/g,'');
@@ -2285,14 +2285,15 @@ async function nsPick(x){if(!x)return;const r=$('#nsr');if(r)r.innerHTML=`<div c
  else{DT='cifra';NSM=`Não consegui trazer a cifra automaticamente agora. <a href="${esc(x.link)}" target="_blank" rel="noopener">Abra a cifra</a>, copie o texto e cole no campo abaixo.`}
  sfR();dlg.scrollTop=0}
 function nsManual(nm){const v=(($('#nsq')||{}).value||'').trim(),lk=NS.yt||NS.sp||'',t=nm?NS.t:(!/^https?:/i.test(v)&&v?TC(v.toUpperCase()):NS.t),a=NS.a;editSong(null,1);if(t)D.title=t;if(a)D.artist=a;if(lk)D.link=lk;sfR();setTimeout(()=>{const e=$('.etit');if(e)e.focus()},60)}
+function vAuto(cif){const L=String(cif||'').split('\n').filter(x=>x.trim()&&!isCL(x)).map(x=>x.trim().replace(/^\[.*\]$/,m=>m.slice(1,-1)));let V=vparse(L.join('\n'),[]);V=V.filter((x,i)=>!x.h||(V[i+1]&&V[i+1].t&&!V[i+1].h));return V}
 function cifImp(o,quiet){if(S.band)return;const c=cfClean(o.cifra);if(c.n.replace(/\s/g,'').length<20)return say('Não encontrei a cifra nesse texto.');
  if(!(dlg.open&&dlg.querySelector('.ecf')))editSong(null,1);
  const K=/^[A-G][#b]?m?$/,tom=K.test(String(o.tom||'').trim())?String(o.tom).trim():c.m?c.m[1]:'';let n=c.n,tr='';
  if(!(D.title||'').trim()&&o.titulo)D.title=TC(String(o.titulo).trim().toUpperCase()).slice(0,120);if(!(D.artist||'').trim()&&o.artista)D.artist=String(o.artista).trim().slice(0,120);
  if(/^https:\/\/[^\s"'<>]+$/.test(o.link||''))D.cc=o.link;if(!(+D.bpm)&&+o.bpm>=30&&+o.bpm<=260)D.bpm=+o.bpm;
  if(tom){if(!K.test((D.key||'').trim()))D.key=tom;else{const d=md(pk(D.key).pc-pk(tom).pc);if(d){n=trc(n,d,D.key);tr=' (transposta de '+tom+' para '+D.key+')'}}}
- D.cifra=n;const P=cfParts(n),old=(D.parts||[]).some(q=>q.chords||q.lyric);if(P.length&&!old)D.parts=P;DT=P.length&&!old?'blocos':'cifra';sfR();dlg.scrollTop=0;
- if(quiet)return;toast('Cifra importada'+tr+(P.length&&!old?' · '+P.length+' blocos':''));if(P.length&&old)setTimeout(()=>ask('Cifra importada'+tr+'. Substituir os blocos atuais pelos '+P.length+' gerados da cifra?',()=>{D.parts=P;DT='blocos';sfR()},'Substituir'),400)}
+ D.cifra=n;let vm=0;if(!(D.vmap||[]).length){const V=vAuto(n);if(V.length){D.vmap=V;vm=V.filter(x=>x.t&&!x.h).length}}const P=cfParts(n),old=(D.parts||[]).some(q=>q.chords||q.lyric);if(P.length&&!old)D.parts=P;DT=P.length&&!old?'blocos':'cifra';sfR();dlg.scrollTop=0;
+ if(quiet)return;toast('Cifra importada'+tr+(P.length&&!old?' · '+P.length+' blocos':'')+(vm?' · mapa vocal criado':''));if(P.length&&old)setTimeout(()=>ask('Cifra importada'+tr+'. Substituir os blocos atuais pelos '+P.length+' gerados da cifra?',()=>{D.parts=P;DT='blocos';sfR()},'Substituir'),400)}
 function cbHash(h){const m=/^#importar=(.+)$/.exec(h||'');if(!m||S.band)return;let d=null;try{d=JSON.parse(decodeURIComponent(m[1]))}catch(e){}if(!d||d.fv!==1||typeof d.cifra!='string')return say('Não consegui ler a cifra enviada.');cifImp(d)}
 /* ===== 6. ensaio com VS */
 var VAB={a:null,b:null};
@@ -3074,3 +3075,5 @@ function hjGr(){const m=(typeof ME_M!=='undefined'&&ME_M)||window.__FVME;let n=m
 function em2(k,t,p,b){const I={cal:'<rect x="10" y="14" width="44" height="40" rx="8"/><path d="M10 26h44M22 8v10M42 8v10M24 38h6M34 38h6M24 46h6"/>',note:'<path d="M26 46V14l26-6v32"/><circle cx="19" cy="46" r="7"/><circle cx="45" cy="40" r="7"/>',list:'<path d="M12 18h30M12 32h30M12 46h18"/><path d="M52 20v24"/><circle cx="46" cy="44" r="6"/>'};return`<div class="em2"><svg viewBox="0 0 64 64" aria-hidden="true">${I[k]||I.note}</svg><b>${t}</b><p>${p}</p>${b?`<div class="ac">${b}</div>`:''}</div>`}
 function pfQuick(){return`<div class="pfq"><button type="button" onclick="cfgD()">Ajustes</button><button type="button" onclick="hlpD()">Ajuda</button>${S.band?'':`<button type="button" onclick="tab('dash')">Painel</button>`}</div>`}
 document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('button.pri,#add,#tbb button,.tabs button,.hjb button')&&navigator.vibrate){try{navigator.vibrate(8)}catch(_){}}},true);
+function goHome(){document.querySelectorAll('dialog[open]').forEach(d=>{try{d.close()}catch(e){}});try{if(typeof FS!=='undefined'&&FS)fsApply(false)}catch(e){}S.q='';tab('hoje');window.scrollTo(0,0)}
+{const l=document.querySelector('header .lg');if(l){l.addEventListener('click',goHome);l.addEventListener('keydown',e=>{if(e.key==='Enter')goHome()})}}

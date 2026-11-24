@@ -23,12 +23,13 @@ async function nsPick(x){if(!x)return;const r=$('#nsr');if(r)r.innerHTML=`<div c
  else{DT='cifra';NSM=`Não consegui trazer a cifra automaticamente agora. <a href="${esc(x.link)}" target="_blank" rel="noopener">Abra a cifra</a>, copie o texto e cole no campo abaixo.`}
  sfR();dlg.scrollTop=0}
 function nsManual(nm){const v=(($('#nsq')||{}).value||'').trim(),lk=NS.yt||NS.sp||'',t=nm?NS.t:(!/^https?:/i.test(v)&&v?TC(v.toUpperCase()):NS.t),a=NS.a;editSong(null,1);if(t)D.title=t;if(a)D.artist=a;if(lk)D.link=lk;sfR();setTimeout(()=>{const e=$('.etit');if(e)e.focus()},60)}
+function vAuto(cif){const L=String(cif||'').split('\n').filter(x=>x.trim()&&!isCL(x)).map(x=>x.trim().replace(/^\[.*\]$/,m=>m.slice(1,-1)));let V=vparse(L.join('\n'),[]);V=V.filter((x,i)=>!x.h||(V[i+1]&&V[i+1].t&&!V[i+1].h));return V}
 function cifImp(o,quiet){if(S.band)return;const c=cfClean(o.cifra);if(c.n.replace(/\s/g,'').length<20)return say('Não encontrei a cifra nesse texto.');
  if(!(dlg.open&&dlg.querySelector('.ecf')))editSong(null,1);
  const K=/^[A-G][#b]?m?$/,tom=K.test(String(o.tom||'').trim())?String(o.tom).trim():c.m?c.m[1]:'';let n=c.n,tr='';
  if(!(D.title||'').trim()&&o.titulo)D.title=TC(String(o.titulo).trim().toUpperCase()).slice(0,120);if(!(D.artist||'').trim()&&o.artista)D.artist=String(o.artista).trim().slice(0,120);
  if(/^https:\/\/[^\s"'<>]+$/.test(o.link||''))D.cc=o.link;if(!(+D.bpm)&&+o.bpm>=30&&+o.bpm<=260)D.bpm=+o.bpm;
  if(tom){if(!K.test((D.key||'').trim()))D.key=tom;else{const d=md(pk(D.key).pc-pk(tom).pc);if(d){n=trc(n,d,D.key);tr=' (transposta de '+tom+' para '+D.key+')'}}}
- D.cifra=n;const P=cfParts(n),old=(D.parts||[]).some(q=>q.chords||q.lyric);if(P.length&&!old)D.parts=P;DT=P.length&&!old?'blocos':'cifra';sfR();dlg.scrollTop=0;
- if(quiet)return;toast('Cifra importada'+tr+(P.length&&!old?' · '+P.length+' blocos':''));if(P.length&&old)setTimeout(()=>ask('Cifra importada'+tr+'. Substituir os blocos atuais pelos '+P.length+' gerados da cifra?',()=>{D.parts=P;DT='blocos';sfR()},'Substituir'),400)}
+ D.cifra=n;let vm=0;if(!(D.vmap||[]).length){const V=vAuto(n);if(V.length){D.vmap=V;vm=V.filter(x=>x.t&&!x.h).length}}const P=cfParts(n),old=(D.parts||[]).some(q=>q.chords||q.lyric);if(P.length&&!old)D.parts=P;DT=P.length&&!old?'blocos':'cifra';sfR();dlg.scrollTop=0;
+ if(quiet)return;toast('Cifra importada'+tr+(P.length&&!old?' · '+P.length+' blocos':'')+(vm?' · mapa vocal criado':''));if(P.length&&old)setTimeout(()=>ask('Cifra importada'+tr+'. Substituir os blocos atuais pelos '+P.length+' gerados da cifra?',()=>{D.parts=P;DT='blocos';sfR()},'Substituir'),400)}
 function cbHash(h){const m=/^#importar=(.+)$/.exec(h||'');if(!m||S.band)return;let d=null;try{d=JSON.parse(decodeURIComponent(m[1]))}catch(e){}if(!d||d.fv!==1||typeof d.cifra!='string')return say('Não consegui ler a cifra enviada.');cifImp(d)}
