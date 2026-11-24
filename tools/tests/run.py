@@ -451,7 +451,7 @@ with sync_playwright() as p:
      const now=Date.now(),mk=(i,u,t)=>({id:i,user_id:u,autor:'Fulano '+u,texto:t,criado_em:new Date(now-i*1000).toISOString()});const base=[mk(1,'u2','Oi, banda! 🙌'),mk(2,'u1','Olá <b>x</b> https://fervor.website')];
      const del=[],hs={};const q={select:()=>q,order:()=>q,limit:()=>q,lt:()=>q,eq:()=>q,delete:()=>{del.push(1);return q},insert:r=>({select:()=>({single:()=>Promise.resolve({data:{id:50,user_id:'u1',autor:'Eu',texto:r.texto,criado_em:new Date().toISOString(),membro_id:r.membro_id}})})}),then:f=>f({data:base.slice().reverse()})};
      window.__SBB={from:()=>q,channel:()=>{const ch={on:(t,f,cb)=>{hs[f.event]=cb;return ch},subscribe:()=>ch};return ch},removeChannel(){},auth:{getUser:async()=>({data:{user:{id:'u1',user_metadata:{full_name:'Eu'}}}})}};ME_M=null;CH.u=null;CH.anon=0;CH.start=0;CH.msgs=[];CH.sub=null;CH.seen=0;localStorage.removeItem('rep.chat.seen');
-     S.tab='hoje';R();chInit();await new Promise(r=>setTimeout(r,200));a.push(document.body.classList.contains('chon')&&getComputedStyle(document.querySelector('#chb')).display!='none'&&CH.msgs.length==2&&!document.querySelector('#chbd').hidden&&document.querySelector('#chbd').textContent=='1');   // 1 não lida (a do Fulano u2)
+     S.tab='hoje';R();chInit();await new Promise(r=>setTimeout(r,200));a.push(document.body.classList.contains('chon')&&getComputedStyle(document.querySelector('#tbb .tch')).display!='none'&&CH.msgs.length==2&&!document.querySelector('#chbd').hidden&&document.querySelector('#chbd').textContent=='1');   // 1 não lida (a do Fulano u2)
      S.tab='chat';R();a.push(document.querySelectorAll('.chb').length==2&&document.querySelectorAll('.chb.me').length==1&&!document.querySelector('.chtx b')&&!!document.querySelector('.chtx a[href^="https://fervor"]')&&document.querySelector('#chbd').hidden);  // texto escapado, link e "minha"
      document.querySelector('#chi').value='Bom dia 😀';await chSend();a.push(CH.msgs.some(x=>x.id===50)&&!CH.msgs.some(x=>x.tmp)&&/Bom dia 😀/.test(document.querySelector('.chm').textContent));  // envia com emoji
      hs.INSERT({new:mk(60,'u3','Chegou agora')});a.push(CH.msgs.some(x=>x.id===60)&&/Chegou agora/.test(document.querySelector('.chm').textContent));   // tempo real
@@ -500,7 +500,7 @@ with sync_playwright() as p:
     ok(r == [True]*6, 'chat: cor por pessoa (roxo/rosa para elas, azul/verde para eles, verde só para Thiago Galvão)', str(r))
     r = pg.evaluate("""()=>{const a=[],B=document.body,on=B.classList.contains('chon'),off=B.classList.contains('choff');
      a.push(document.querySelector('.tabs button').dataset.t=='chat'&&document.querySelector('#tbb button').dataset.t=='chat'&&document.querySelector('header .hb').id=='chb');   // Chat em primeiro em todos os menus
-     B.classList.remove('chon','choff');a.push(getComputedStyle(document.getElementById('chb')).display!='none');                          // aparece sem esperar nada carregar
+     B.classList.remove('chon','choff');a.push(getComputedStyle(document.querySelector('#tbb .tch')).display!='none');                          // aparece sem esperar nada carregar
      B.classList.add('choff');a.push(getComputedStyle(document.getElementById('chb')).display=='none');                                   // some só se a liderança desligar
      B.classList.toggle('chon',on);B.classList.toggle('choff',off);return a}""")
     ok(r == [True]*3, 'chat: botão fixo e em primeiro no topo, nas abas e na barra de baixo, sem esperar carregar', str(r))

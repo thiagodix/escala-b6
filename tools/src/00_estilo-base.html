@@ -325,13 +325,13 @@ body.band .lt .hl,body.band .lfb,body.band .lfp,body.band .vsl .chip[onclick],bo
 #tbb{display:none}
 #fab{display:none}
 @media(max-width:700px){
- body.tbon header .tabs,body:not(.band) header .tabs,body:not(.band) header .plus,body:not(.band) #cfgb{display:none!important}
+ body.tbon header .tabs,body:not(.band) header .tabs{display:none!important}
  header .lg{width:auto!important}
  body.tbon #tbb{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:8;background:rgba(18,18,20,.92);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-top:1px solid #38383A;padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px))}
  #tbb button{flex:1;border:0;background:transparent;color:#A6A6AD;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.7rem;padding:4px 0;min-height:48px}
  #tbb button.on{color:#00CDD3}
  #tbb svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
- body.tbon #fab{display:flex;position:fixed;right:16px;bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:8;width:56px;height:56px;border-radius:50%;border:0;background:#00CDD3;color:#000;font-size:2rem;font-weight:300;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(0,0,0,.5)}
+ body.tbon #fab{display:none;position:fixed;right:16px;bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:8;width:56px;height:56px;border-radius:50%;border:0;background:#00CDD3;color:#000;font-size:2rem;font-weight:300;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(0,0,0,.5)}
  body.tbon #m{padding-bottom:140px}
  body.tbon #tt{bottom:calc(140px + env(safe-area-inset-bottom,0px))}
  dialog{margin:auto 0 0!important;width:100vw!important;max-width:100vw!important;max-height:92vh;border-radius:18px 18px 0 0!important;border-bottom:0!important;padding:0 14px calc(14px + env(safe-area-inset-bottom,0px))!important;--dpt:30px;overscroll-behavior:contain}
