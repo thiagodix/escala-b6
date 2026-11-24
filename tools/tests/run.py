@@ -510,7 +510,7 @@ with sync_playwright() as p:
      return a}""")
     ok(r == [True]*6, 'chat: cor por pessoa (roxo/rosa para elas, azul/verde para eles, verde só para Thiago Galvão)', str(r))
     r = pg.evaluate("""()=>{const a=[],B=document.body,on=B.classList.contains('chon'),off=B.classList.contains('choff');
-     a.push(document.querySelector('.tabs button').dataset.t=='chat'&&document.querySelector('#tbb button').dataset.t=='chat'&&document.querySelector('header .hb').id=='chb');   // Chat em primeiro em todos os menus
+     a.push(document.querySelector('.tabs button').dataset.t=='hoje'&&document.querySelector('#tbb button').dataset.t=='hoje'&&document.querySelector('header .hb').id=='chb');   // Hoje em primeiro em todos os menus
      B.classList.remove('chon','choff');a.push(getComputedStyle(document.querySelector('#tbb .tch')).display!='none');                          // aparece sem esperar nada carregar
      B.classList.add('choff');a.push(getComputedStyle(document.getElementById('chb')).display=='none');                                   // some só se a liderança desligar
      B.classList.toggle('chon',on);B.classList.toggle('choff',off);return a}""")

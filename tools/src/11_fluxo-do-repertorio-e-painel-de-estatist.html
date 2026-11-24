@@ -61,7 +61,7 @@ function espPut(k,x){S.esp=S.esp||{dev:[],jej:[],lnk:[],rec:[],mus:[]};x.u=Date.
 function espDel(k,id,nm){const x=espA(k).find(y=>y.id==id);espPut(k,{id,del:1});if(x)toastA('Excluído','Desfazer',()=>espPut(k,x));else toast('Excluído')}
 /* visto/feito: só neste aparelho */
 const espLs=(k,v)=>{try{if(v===undefined)return JSON.parse(localStorage.getItem('rep.esp.'+k)||'{}');localStorage.setItem('rep.esp.'+k,JSON.stringify(v))}catch(e){return{}}};
-function devFeito(id){const m=espLs('feito');if(m[id])delete m[id];else m[id]=Date.now();espLs('feito',m);R();if(m[id])toast('Devocional concluído 🙏')}
+function devFeito(id){const m=espLs('feito');if(m[id])delete m[id];else m[id]=Date.now();espLs('feito',m);R();if(m[id])toast('Devocional concluído')}
 const ddm=d=>d?d.slice(8,10)+'/'+d.slice(5,7):'';
 const addD=(d,n)=>{const x=new Date(d+'T12:00');x.setDate(x.getDate()+n);return x.toISOString().slice(0,10)};
 function devAtual(){const T=td(),A=espA('dev').filter(x=>x.d&&x.d<=T).sort((a,b)=>b.d.localeCompare(a.d));return A[0]||null}
