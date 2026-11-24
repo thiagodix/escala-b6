@@ -1992,7 +1992,7 @@ function rn1(){if(S.mig.rn1)return;S.lists.forEach(l=>{const n=(l.name||'').trim
 function rn2(){if(S.mig.rn2)return;S.lists.forEach(l=>{const n=(l.name||'').trim();if(/^Domingo:\s*/i.test(n))l.name=n.replace(/^Domingo:\s*/i,'')});S.mig.rn2=1}
 const VMIMP={};
 const VMML={'PODEROSO DEUS ETERNO':'majestade','MESSIAS':'maranata','SOU GRATO POR SEU AMOR':'santo pra sempre','DIGNO É O SENHOR':'*'};function vm1(){if(S.mig.vm1)return;const M={};Object.keys(VMIMP).forEach(k=>M[nz(k)]=[VMIMP[k],VMML[k]]);S.songs.forEach(s=>{const e=M[nz(s.title)];if(!e||(s.vmap||[]).length)return;const md=s.medleys||[],ok=e[1]?(e[1]=='*'?md.length>0:md.some(x=>nz(x).includes(e[1]))):!md.length;if(ok)s.vmap=e[0].map(r=>{if(!r[0])return{t:''};const h=VH.test(r[0])?1:0;return{t:r[0],h,v:h?'':r[1]}})});S.mig.vm1=1}
-const VER='24/11/2026 · 423';
+const VER='24/11/2026 · 424';
 
 const td=()=>new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);
 const asc2=s=>String(s||'').replace(/♭/g,'b').replace(/♯/g,'#').replace(/→/g,'>').replace(/←/g,'<').replace(/[^\x20-\x7E\u00A0-\u00FF\u2013\u2014\u2018-\u201D\u2022\u2026]/g,'');
@@ -2092,7 +2092,7 @@ const dqSave=()=>{try{localStorage.setItem('rep.dq',JSON.stringify([...DQ]))}cat
 const TCL=[],TCM={};TCL.forEach(x=>TCM[nz(x)]=x);
 const TCS=new Set(['a','o','as','os','e','de','da','do','das','dos','em','no','na','nos','nas','ao','aos','à','às','por','pra','pro','com','um','uma']);
 function TC(t){t=String(t??'');if(!t||!/[A-ZÀ-Ý]/.test(t)||t!==t.toLocaleUpperCase('pt-BR'))return t;const d=TCM[nz(t)];if(d)return d;let first=true;
- return t.toLocaleLowerCase('pt-BR').split(/(\s+)/).map(w=>{if(/^\s+$/.test(w))return w;const lead=(w.match(/^[(“"'¡¿]+/)||[''])[0],core=w.slice(lead.length);let o;
+ return t.toLocaleLowerCase('pt-BR').split(/(\s+|\/)/).map(w=>{if(w=='/'){first=true;return w}if(/^\s+$/.test(w))return w;const lead=(w.match(/^[(“"'¡¿]+/)||[''])[0],core=w.slice(lead.length);let o;
   if(!first&&!lead&&TCS.has(core.replace(/[,.;:!?)]+$/,'')))o=w;else o=lead+core.split('-').map(x=>x?x[0].toLocaleUpperCase('pt-BR')+x.slice(1):x).join('-');first=/[:/(]$/.test(w);return o}).join('')}
 const UPT=x=>String(x??'').toLocaleUpperCase('pt-BR');
 function cleanData(songs,lists){const map={};
@@ -3080,7 +3080,8 @@ document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('but
 function goHome(){document.querySelectorAll('dialog[open]').forEach(d=>{try{d.close()}catch(e){}});try{if(typeof FS!=='undefined'&&FS)fsApply(false)}catch(e){}S.q='';tab('hoje');window.scrollTo(0,0)}
 {const l=document.querySelector('header .lg');if(l){l.addEventListener('click',goHome);l.addEventListener('keydown',e=>{if(e.key==='Enter')goHome()})}}
 /* varreduras únicas e silenciosas: mapa vocal (só letra) das músicas com cifra e mapa em branco; etiquetas Horizontal/Vertical em branco */
-function vmSweep(){if(S.band||window.__B6SITE||!S.songs||!S.songs.length||vmSweep.b)return;S.mig=S.mig||{};if(S.mig.vm1&&S.mig.tg1)return;vmSweep.b=1;let ch=0;try{if(!S.mig.vm1){S.songs.forEach(s=>{if((s.vmap||[]).length||!(s.cifra||'').trim())return;const V=vAuto(s.cifra);if(V.some(x=>x.t&&!x.h)){s.vmap=V;ch++}});S.mig.vm1=1;ch++}
+function vmSweep(){if(S.band||window.__B6SITE||!S.songs||!S.songs.length||vmSweep.b)return;S.mig=S.mig||{};if(S.mig.vm1&&S.mig.tg1&&S.mig.sl1)return;vmSweep.b=1;let ch=0;try{if(!S.mig.vm1){S.songs.forEach(s=>{if((s.vmap||[]).length||!(s.cifra||'').trim())return;const V=vAuto(s.cifra);if(V.some(x=>x.t&&!x.h)){s.vmap=V;ch++}});S.mig.vm1=1;ch++}
 if(!S.mig.tg1){S.songs.forEach(s=>{const T=Array.isArray(s.tags)?s.tags:[];if(!T.some(x=>nz(x)=='horizontal'||nz(x)=='vertical')){s.tags=T.concat(['Horizontal','Vertical']);ch++}});S.mig.tg1=1;ch++}
+if(!S.mig.sl1){const U=x=>typeof x=='string'?x.replace(/(\/\s*)([a-zà-ÿ])/g,(m,a,c)=>a+c.toLocaleUpperCase('pt-BR')):x;S.songs.forEach(s=>{const t=U(s.title);if(t!==s.title){s.title=t;ch++}if(Array.isArray(s.medleys)){const m=s.medleys.map(U);if(m.some((x,i)=>x!==s.medleys[i])){s.medleys=m;ch++}}});S.mig.sl1=1;ch++}
 if(ch)save()}finally{vmSweep.b=0}}
-{const _R=R;let t=0;R=function(){const r=_R.apply(this,arguments);if(!t&&!S.band&&S.songs&&S.songs.length&&!(S.mig&&S.mig.vm1&&S.mig.tg1)){t=1;setTimeout(()=>{try{vmSweep()}catch(e){}},6000)}return r}}
+{const _R=R;let t=0;R=function(){const r=_R.apply(this,arguments);if(!t&&!S.band&&S.songs&&S.songs.length&&!(S.mig&&S.mig.vm1&&S.mig.tg1&&S.mig.sl1)){t=1;setTimeout(()=>{try{vmSweep()}catch(e){}},6000)}return r}}
