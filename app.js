@@ -1748,7 +1748,7 @@ function slotR(){const e=$('#slt');if(!e||!P)return;const SL=SLOTS(P),SM=Object.
 function slPick(v){P.slot=P.slot==v?null:v;slotR();const i=dlg.querySelector('[data-p="mu"] input[placeholder^="Buscar"]');if(P.slot&&i){if(MOB())i.scrollIntoView({block:'center',behavior:'smooth'});i.focus({preventScroll:MOB()})}}
 function slGo(id){const i=P.songIds.indexOf(id),li=dlg.querySelector(`#sl li[data-i="${i}"]`);if(li){li.scrollIntoView({block:'center',behavior:'smooth'});li.classList.add('dgo');setTimeout(()=>li.classList.remove('dgo'),1200)}}
 {const _la=la;la=function(id){if(P.songIds.length>=100||P.songIds.includes(id))return _la(id);const SL=SLOTS(P),used=new Set(P.songIds.map(i=>oo(P,i))),t=P.slot&&!used.has(P.slot)?P.slot:SL.find(v=>!used.has(v));P.slot=null;
- if(!t)return _la(id);P.ord=P.ord||{};P.ord[id]=t;const ti=SL.indexOf(t),at=P.songIds.findIndex(i=>{const k=SL.indexOf(oo(P,i));return k>ti});if(at<0)P.songIds.push(id);else P.songIds.splice(at,0,id);pkR();slR();toast(`Adicionada como ${SLN[t]}`)}}
+ if(!t)return _la(id);P.ord=P.ord||{};P.ord[id]=t;const ti=SL.indexOf(t),at=P.songIds.findIndex(i=>{const k=SL.indexOf(oo(P,i));return k>ti});if(at<0)P.songIds.push(id);else P.songIds.splice(at,0,id);pkR();slR()}}
 {const _s=slR;slR=function(){_s.apply(this,arguments);try{slotR()}catch(e){console.warn(e)}}}
 {const _g=ltG;ltG=function(x){_g(x);if(x=='mu'&&P&&$('#sl'))slR()}}
 
@@ -1992,7 +1992,7 @@ function rn1(){if(S.mig.rn1)return;S.lists.forEach(l=>{const n=(l.name||'').trim
 function rn2(){if(S.mig.rn2)return;S.lists.forEach(l=>{const n=(l.name||'').trim();if(/^Domingo:\s*/i.test(n))l.name=n.replace(/^Domingo:\s*/i,'')});S.mig.rn2=1}
 const VMIMP={};
 const VMML={'PODEROSO DEUS ETERNO':'majestade','MESSIAS':'maranata','SOU GRATO POR SEU AMOR':'santo pra sempre','DIGNO É O SENHOR':'*'};function vm1(){if(S.mig.vm1)return;const M={};Object.keys(VMIMP).forEach(k=>M[nz(k)]=[VMIMP[k],VMML[k]]);S.songs.forEach(s=>{const e=M[nz(s.title)];if(!e||(s.vmap||[]).length)return;const md=s.medleys||[],ok=e[1]?(e[1]=='*'?md.length>0:md.some(x=>nz(x).includes(e[1]))):!md.length;if(ok)s.vmap=e[0].map(r=>{if(!r[0])return{t:''};const h=VH.test(r[0])?1:0;return{t:r[0],h,v:h?'':r[1]}})});S.mig.vm1=1}
-const VER='24/11/2026 · 422';
+const VER='24/11/2026 · 423';
 
 const td=()=>new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);
 const asc2=s=>String(s||'').replace(/♭/g,'b').replace(/♯/g,'#').replace(/→/g,'>').replace(/←/g,'<').replace(/[^\x20-\x7E\u00A0-\u00FF\u2013\u2014\u2018-\u201D\u2022\u2026]/g,'');
@@ -2295,7 +2295,7 @@ function cifImp(o,quiet){if(S.band)return;const c=cfClean(o.cifra);if(c.n.replac
  if(/^https:\/\/[^\s"'<>]+$/.test(o.link||''))D.cc=o.link;if(!(+D.bpm)&&+o.bpm>=30&&+o.bpm<=260)D.bpm=+o.bpm;
  if(tom){if(!K.test((D.key||'').trim()))D.key=tom;else{const d=md(pk(D.key).pc-pk(tom).pc);if(d){n=trc(n,d,D.key);tr=' (transposta de '+tom+' para '+D.key+')'}}}
  D.cifra=n;let vm=0;if(!(D.vmap||[]).length){const V=vAuto(n);if(V.length){D.vmap=V;vm=V.filter(x=>x.t&&!x.h).length}}const P=cfParts(n),old=(D.parts||[]).some(q=>q.chords||q.lyric);if(P.length&&!old)D.parts=P;DT=P.length&&!old?'blocos':'cifra';sfR();dlg.scrollTop=0;
- if(quiet)return;toast('Cifra importada'+tr+(P.length&&!old?' · '+P.length+' blocos':'')+(vm?' · mapa vocal criado':''));if(P.length&&old)setTimeout(()=>ask('Cifra importada'+tr+'. Substituir os blocos atuais pelos '+P.length+' gerados da cifra?',()=>{D.parts=P;DT='blocos';sfR()},'Substituir'),400)}
+ if(quiet)return;toast('Cifra importada'+tr+(P.length&&!old?' · '+P.length+' blocos':''));if(P.length&&old)setTimeout(()=>ask('Cifra importada'+tr+'. Substituir os blocos atuais pelos '+P.length+' gerados da cifra?',()=>{D.parts=P;DT='blocos';sfR()},'Substituir'),400)}
 function cbHash(h){const m=/^#importar=(.+)$/.exec(h||'');if(!m||S.band)return;let d=null;try{d=JSON.parse(decodeURIComponent(m[1]))}catch(e){}if(!d||d.fv!==1||typeof d.cifra!='string')return say('Não consegui ler a cifra enviada.');cifImp(d)}
 /* ===== 6. ensaio com VS */
 var VAB={a:null,b:null};
@@ -3079,6 +3079,8 @@ function pfQuick(){return`<div class="pfq"><button type="button" onclick="cfgD()
 document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('button.pri,#add,#tbb button,.tabs button,.hjb button')&&navigator.vibrate){try{navigator.vibrate(8)}catch(_){}}},true);
 function goHome(){document.querySelectorAll('dialog[open]').forEach(d=>{try{d.close()}catch(e){}});try{if(typeof FS!=='undefined'&&FS)fsApply(false)}catch(e){}S.q='';tab('hoje');window.scrollTo(0,0)}
 {const l=document.querySelector('header .lg');if(l){l.addEventListener('click',goHome);l.addEventListener('keydown',e=>{if(e.key==='Enter')goHome()})}}
-/* varredura única: preenche o mapa vocal (só letra) das músicas com cifra e mapa em branco; mapas já preenchidos não mudam */
-function vmSweep(){if(S.band||window.__B6SITE||!S.songs||!S.songs.length||vmSweep.b)return;if(S.mig&&S.mig.vm1)return;vmSweep.b=1;let n=0;try{S.songs.forEach(s=>{if((s.vmap||[]).length||!(s.cifra||'').trim())return;const V=vAuto(s.cifra);if(V.some(x=>x.t&&!x.h)){s.vmap=V;n++}});S.mig=S.mig||{};S.mig.vm1=1;save();if(n)toast(n+' mapa'+(n>1?'s vocais criados':' vocal criado')+' a partir das cifras')}finally{vmSweep.b=0}}
-{const _R=R;let t=0;R=function(){const r=_R.apply(this,arguments);if(!t&&!S.band&&S.songs&&S.songs.length&&!(S.mig&&S.mig.vm1)){t=1;setTimeout(()=>{try{vmSweep()}catch(e){}},6000)}return r}}
+/* varreduras únicas e silenciosas: mapa vocal (só letra) das músicas com cifra e mapa em branco; etiquetas Horizontal/Vertical em branco */
+function vmSweep(){if(S.band||window.__B6SITE||!S.songs||!S.songs.length||vmSweep.b)return;S.mig=S.mig||{};if(S.mig.vm1&&S.mig.tg1)return;vmSweep.b=1;let ch=0;try{if(!S.mig.vm1){S.songs.forEach(s=>{if((s.vmap||[]).length||!(s.cifra||'').trim())return;const V=vAuto(s.cifra);if(V.some(x=>x.t&&!x.h)){s.vmap=V;ch++}});S.mig.vm1=1;ch++}
+if(!S.mig.tg1){S.songs.forEach(s=>{const T=Array.isArray(s.tags)?s.tags:[];if(!T.some(x=>nz(x)=='horizontal'||nz(x)=='vertical')){s.tags=T.concat(['Horizontal','Vertical']);ch++}});S.mig.tg1=1;ch++}
+if(ch)save()}finally{vmSweep.b=0}}
+{const _R=R;let t=0;R=function(){const r=_R.apply(this,arguments);if(!t&&!S.band&&S.songs&&S.songs.length&&!(S.mig&&S.mig.vm1&&S.mig.tg1)){t=1;setTimeout(()=>{try{vmSweep()}catch(e){}},6000)}return r}}

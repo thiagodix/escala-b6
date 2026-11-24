@@ -150,7 +150,7 @@ function slotR(){const e=$('#slt');if(!e||!P)return;const SL=SLOTS(P),SM=Object.
 function slPick(v){P.slot=P.slot==v?null:v;slotR();const i=dlg.querySelector('[data-p="mu"] input[placeholder^="Buscar"]');if(P.slot&&i){if(MOB())i.scrollIntoView({block:'center',behavior:'smooth'});i.focus({preventScroll:MOB()})}}
 function slGo(id){const i=P.songIds.indexOf(id),li=dlg.querySelector(`#sl li[data-i="${i}"]`);if(li){li.scrollIntoView({block:'center',behavior:'smooth'});li.classList.add('dgo');setTimeout(()=>li.classList.remove('dgo'),1200)}}
 {const _la=la;la=function(id){if(P.songIds.length>=100||P.songIds.includes(id))return _la(id);const SL=SLOTS(P),used=new Set(P.songIds.map(i=>oo(P,i))),t=P.slot&&!used.has(P.slot)?P.slot:SL.find(v=>!used.has(v));P.slot=null;
- if(!t)return _la(id);P.ord=P.ord||{};P.ord[id]=t;const ti=SL.indexOf(t),at=P.songIds.findIndex(i=>{const k=SL.indexOf(oo(P,i));return k>ti});if(at<0)P.songIds.push(id);else P.songIds.splice(at,0,id);pkR();slR();toast(`Adicionada como ${SLN[t]}`)}}
+ if(!t)return _la(id);P.ord=P.ord||{};P.ord[id]=t;const ti=SL.indexOf(t),at=P.songIds.findIndex(i=>{const k=SL.indexOf(oo(P,i));return k>ti});if(at<0)P.songIds.push(id);else P.songIds.splice(at,0,id);pkR();slR()}}
 {const _s=slR;slR=function(){_s.apply(this,arguments);try{slotR()}catch(e){console.warn(e)}}}
 {const _g=ltG;ltG=function(x){_g(x);if(x=='mu'&&P&&$('#sl'))slR()}}
 

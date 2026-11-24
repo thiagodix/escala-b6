@@ -5,6 +5,8 @@ function pfQuick(){return`<div class="pfq"><button type="button" onclick="cfgD()
 document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('button.pri,#add,#tbb button,.tabs button,.hjb button')&&navigator.vibrate){try{navigator.vibrate(8)}catch(_){}}},true);
 function goHome(){document.querySelectorAll('dialog[open]').forEach(d=>{try{d.close()}catch(e){}});try{if(typeof FS!=='undefined'&&FS)fsApply(false)}catch(e){}S.q='';tab('hoje');window.scrollTo(0,0)}
 {const l=document.querySelector('header .lg');if(l){l.addEventListener('click',goHome);l.addEventListener('keydown',e=>{if(e.key==='Enter')goHome()})}}
-/* varredura única: preenche o mapa vocal (só letra) das músicas com cifra e mapa em branco; mapas já preenchidos não mudam */
-function vmSweep(){if(S.band||window.__B6SITE||!S.songs||!S.songs.length||vmSweep.b)return;if(S.mig&&S.mig.vm1)return;vmSweep.b=1;let n=0;try{S.songs.forEach(s=>{if((s.vmap||[]).length||!(s.cifra||'').trim())return;const V=vAuto(s.cifra);if(V.some(x=>x.t&&!x.h)){s.vmap=V;n++}});S.mig=S.mig||{};S.mig.vm1=1;save();if(n)toast(n+' mapa'+(n>1?'s vocais criados':' vocal criado')+' a partir das cifras')}finally{vmSweep.b=0}}
-{const _R=R;let t=0;R=function(){const r=_R.apply(this,arguments);if(!t&&!S.band&&S.songs&&S.songs.length&&!(S.mig&&S.mig.vm1)){t=1;setTimeout(()=>{try{vmSweep()}catch(e){}},6000)}return r}}
+/* varreduras únicas e silenciosas: mapa vocal (só letra) das músicas com cifra e mapa em branco; etiquetas Horizontal/Vertical em branco */
+function vmSweep(){if(S.band||window.__B6SITE||!S.songs||!S.songs.length||vmSweep.b)return;S.mig=S.mig||{};if(S.mig.vm1&&S.mig.tg1)return;vmSweep.b=1;let ch=0;try{if(!S.mig.vm1){S.songs.forEach(s=>{if((s.vmap||[]).length||!(s.cifra||'').trim())return;const V=vAuto(s.cifra);if(V.some(x=>x.t&&!x.h)){s.vmap=V;ch++}});S.mig.vm1=1;ch++}
+if(!S.mig.tg1){S.songs.forEach(s=>{const T=Array.isArray(s.tags)?s.tags:[];if(!T.some(x=>nz(x)=='horizontal'||nz(x)=='vertical')){s.tags=T.concat(['Horizontal','Vertical']);ch++}});S.mig.tg1=1;ch++}
+if(ch)save()}finally{vmSweep.b=0}}
+{const _R=R;let t=0;R=function(){const r=_R.apply(this,arguments);if(!t&&!S.band&&S.songs&&S.songs.length&&!(S.mig&&S.mig.vm1&&S.mig.tg1)){t=1;setTimeout(()=>{try{vmSweep()}catch(e){}},6000)}return r}}
