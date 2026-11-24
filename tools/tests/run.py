@@ -211,6 +211,11 @@ with sync_playwright() as p:
     n0 = pg.evaluate('S.songs.length')
     r = pg.evaluate("()=>{S.tab='songs';R();document.querySelector('header .lg').dispatchEvent(new MouseEvent('click',{bubbles:true}));return S.tab}")
     ok(r == 'hoje', 'clicar no logo leva sempre para a home (Hoje)', str(r))
+    r = pg.evaluate("""()=>{const a=[];a.push(SLOTS({name:'Musical',songIds:[]}).length==0,SLOTS({name:'Culto de Domingo',songIds:[]}).length==6);
+      const A=S.songs.find(x=>x.cifra&&x.cifra.length>40);const bak=A.vmap;A.vmap=[];S.mig={};vmSweep.b=0;vmSweep();a.push((A.vmap||[]).length>0&&!A.vmap.some(x=>x.t&&!x.h&&isCL(x.t)));
+      const B=S.songs.find(x=>(x.vmap||[]).length&&x.id!=A.id);if(B){const j=JSON.stringify(B.vmap);S.mig={};vmSweep.b=0;vmSweep();a.push(JSON.stringify(B.vmap)==j)}
+      A.vmap=bak;return a}""")
+    ok(all(r), 'culto Musical sem estrutura fixa; varredura do mapa vocal preenche só os vazios', str(r))
     pg.evaluate("editSong()"); pg.fill('#nsq', 'cancao de teste'); pg.click('#dlg button:has-text("Buscar")'); pg.wait_for_timeout(800)
     pg.click('#nsr .cbi >> nth=0'); pg.wait_for_timeout(1200)
     d = pg.evaluate("({t:D.title,k:D.key,bpm:D.bpm,n:D.parts.filter(q=>q.chords).length,cc:D.cc})")

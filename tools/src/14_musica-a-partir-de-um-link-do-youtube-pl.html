@@ -141,9 +141,11 @@ function dashDec(c){const{SM,T,ALL,L,st,sAll,cnt,pos,slots,cat}=c,DD=(d,n)=>{con
 
 /* estrutura padrão do repertório: 4 principais, ceia (se houver), pós-break e pós-palavra */
 const isCeia=l=>/ceia/.test(nz(l&&l.name))||!!(l&&l.songIds.some(i=>oo(l,i)=='Ceia do Senhor'));
-const SLOTS=l=>['1','2','3','4',...(isCeia(l)?['Ceia do Senhor']:[]),'Pós-Break','Pós-Palavra'];
+const isMus=l=>/musical/.test(nz(l&&l.name));
+const SLOTS=l=>isMus(l)?[]:['1','2','3','4',...(isCeia(l)?['Ceia do Senhor']:[]),'Pós-Break','Pós-Palavra'];
 const SLN={'1':'1ª música','2':'2ª música','3':'3ª música','4':'4ª música','Ceia do Senhor':'Ceia do Senhor','Pós-Break':'Pós-Break','Pós-Palavra':'Pós-Palavra'};
 function slotR(){const e=$('#slt');if(!e||!P)return;const SL=SLOTS(P),SM=Object.fromEntries(S.songs.map(s=>[s.id,s]));if(P.slot&&!SL.includes(P.slot))P.slot=null;
+ if(isMus(P)){e.innerHTML='<div class="slth">Culto musical · adicione quantas músicas quiser, na ordem que preferir</div>';return}
  e.innerHTML=`<div class="slth">Estrutura do culto${isCeia(P)?' · com Ceia':''}<button type="button" class="ehp" title="Toda música adicionada ocupa a próxima posição vazia: 1ª a 4ª música${isCeia(P)?', Ceia do Senhor':''}, Pós-Break e Pós-Palavra. Toque numa posição vazia para escolher a música dela. Em eventos de Ceia aparece a posição da música da Ceia." aria-label="Ajuda" onclick="say(this.title)">?</button></div><div class="slg">${SL.map(v=>{const ids=P.songIds.filter(i=>SM[i]&&oo(P,i)==v);if(ids.length)return ids.map(i=>`<button type="button" class="slb${v=='Ceia do Senhor'?' cx':''}" onclick="slGo('${i}')"><small>${esc(SLN[v])}</small><span>${esc(SM[i].title)}</span></button>`).join('');return`<button type="button" class="slb e${P.slot==v?' on':''}" onclick="slPick(${ja(v)})"><small>${esc(SLN[v])}</small><span>${P.slot==v?'Escolha na lista ao lado':'+ Escolher música'}</span></button>`}).join('')}</div>`}
 function slPick(v){P.slot=P.slot==v?null:v;slotR();const i=dlg.querySelector('[data-p="mu"] input[placeholder^="Buscar"]');if(P.slot&&i){if(MOB())i.scrollIntoView({block:'center',behavior:'smooth'});i.focus({preventScroll:MOB()})}}
 function slGo(id){const i=P.songIds.indexOf(id),li=dlg.querySelector(`#sl li[data-i="${i}"]`);if(li){li.scrollIntoView({block:'center',behavior:'smooth'});li.classList.add('dgo');setTimeout(()=>li.classList.remove('dgo'),1200)}}
