@@ -26,7 +26,7 @@ function chTxt(t){return esc(t).replace(/https?:\/\/[^\s<]+/g,u=>{const m=u.matc
 function chLow(){const e=document.documentElement;return e.scrollHeight-window.scrollY-window.innerHeight<160}
 function chDown(){CH.newb=0;const b=$('.chnw');if(b)b.remove();window.scrollTo({top:document.documentElement.scrollHeight,behavior:'smooth'})}
 async function chLoad(older){if(CH.ld)return;CH.ld=1;try{const all=await chRows(older);const rows=all.slice().reverse();CH.more=all.length>=60;CH.err='';CH.ok=1;
-  if(older){CH.stick=0;CH.msgs=rows.concat(CH.msgs)}else{const tmp=CH.msgs.filter(x=>x.tmp);CH.msgs=rows.concat(tmp);CH.stick=1;if(!CH.seen&&!chSeenGet()&&!CH.msgs.some(x=>chMe(x)))chSeenSet(Math.max(0,chLastId()-3))}}catch(e){CH.err=String(e&&e.message||e);CH.ok=0}CH.ld=0;
+  if(older){CH.stick=0;CH.msgs=rows.concat(CH.msgs)}else{const tmp=CH.msgs.filter(x=>x.tmp);CH.msgs=rows.concat(tmp);CH.stick=1;if(!CH.seen&&!chSeenGet())chSeenSet(chLastId())}}catch(e){CH.err=String(e&&e.message||e);CH.ok=0}CH.ld=0;
  if(S.tab=='chat')chR();chBadge()}
 async function chPoll(force){if(!CH.u||CH.live||CH.ld||CH.pl||document.hidden||CH.start||!chEnabled())return;CH.pn=(CH.pn||0)+1;const on=S.tab=='chat';if(!on&&!force&&CH.pn%6)return;
  const full=on&&CH.pn%6==0,last=chLastId();CH.pl=1;

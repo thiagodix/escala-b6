@@ -1990,7 +1990,7 @@ function rn1(){if(S.mig.rn1)return;S.lists.forEach(l=>{const n=(l.name||'').trim
 function rn2(){if(S.mig.rn2)return;S.lists.forEach(l=>{const n=(l.name||'').trim();if(/^Domingo:\s*/i.test(n))l.name=n.replace(/^Domingo:\s*/i,'')});S.mig.rn2=1}
 const VMIMP={};
 const VMML={'PODEROSO DEUS ETERNO':'majestade','MESSIAS':'maranata','SOU GRATO POR SEU AMOR':'santo pra sempre','DIGNO É O SENHOR':'*'};function vm1(){if(S.mig.vm1)return;const M={};Object.keys(VMIMP).forEach(k=>M[nz(k)]=[VMIMP[k],VMML[k]]);S.songs.forEach(s=>{const e=M[nz(s.title)];if(!e||(s.vmap||[]).length)return;const md=s.medleys||[],ok=e[1]?(e[1]=='*'?md.length>0:md.some(x=>nz(x).includes(e[1]))):!md.length;if(ok)s.vmap=e[0].map(r=>{if(!r[0])return{t:''};const h=VH.test(r[0])?1:0;return{t:r[0],h,v:h?'':r[1]}})});S.mig.vm1=1}
-const VER='24/11/2026 · 419';
+const VER='24/11/2026 · 420';
 
 const td=()=>new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);
 const asc2=s=>String(s||'').replace(/♭/g,'b').replace(/♯/g,'#').replace(/→/g,'>').replace(/←/g,'<').replace(/[^\x20-\x7E\u00A0-\u00FF\u2013\u2014\u2018-\u201D\u2022\u2026]/g,'');
@@ -2637,7 +2637,7 @@ function chTxt(t){return esc(t).replace(/https?:\/\/[^\s<]+/g,u=>{const m=u.matc
 function chLow(){const e=document.documentElement;return e.scrollHeight-window.scrollY-window.innerHeight<160}
 function chDown(){CH.newb=0;const b=$('.chnw');if(b)b.remove();window.scrollTo({top:document.documentElement.scrollHeight,behavior:'smooth'})}
 async function chLoad(older){if(CH.ld)return;CH.ld=1;try{const all=await chRows(older);const rows=all.slice().reverse();CH.more=all.length>=60;CH.err='';CH.ok=1;
-  if(older){CH.stick=0;CH.msgs=rows.concat(CH.msgs)}else{const tmp=CH.msgs.filter(x=>x.tmp);CH.msgs=rows.concat(tmp);CH.stick=1;if(!CH.seen&&!chSeenGet()&&!CH.msgs.some(x=>chMe(x)))chSeenSet(Math.max(0,chLastId()-3))}}catch(e){CH.err=String(e&&e.message||e);CH.ok=0}CH.ld=0;
+  if(older){CH.stick=0;CH.msgs=rows.concat(CH.msgs)}else{const tmp=CH.msgs.filter(x=>x.tmp);CH.msgs=rows.concat(tmp);CH.stick=1;if(!CH.seen&&!chSeenGet())chSeenSet(chLastId())}}catch(e){CH.err=String(e&&e.message||e);CH.ok=0}CH.ld=0;
  if(S.tab=='chat')chR();chBadge()}
 async function chPoll(force){if(!CH.u||CH.live||CH.ld||CH.pl||document.hidden||CH.start||!chEnabled())return;CH.pn=(CH.pn||0)+1;const on=S.tab=='chat';if(!on&&!force&&CH.pn%6)return;
  const full=on&&CH.pn%6==0,last=chLastId();CH.pl=1;
