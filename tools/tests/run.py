@@ -515,6 +515,14 @@ with sync_playwright() as p:
      B.classList.add('choff');a.push(getComputedStyle(document.getElementById('chb')).display=='none');                                   // some só se a liderança desligar
      B.classList.toggle('chon',on);B.classList.toggle('choff',off);return a}""")
     ok(r == [True]*3, 'chat: botão fixo e em primeiro no topo, nas abas e na barra de baixo, sem esperar carregar', str(r))
+    r = pg.evaluate("""()=>{const a=[],T=td(),l=S.lists.filter(x=>x.date>=T).sort((x,y)=>x.date.localeCompare(y.date))[0];if(!l)return['sem culto'];const s0=l.songIds.slice();if(!l.songIds.length)l.songIds=S.songs.slice(0,3).map(x=>x.id);
+     localStorage.removeItem('rep.prep');S.tab='hoje';R();a.push(/0 de [0-9]+/.test((document.querySelector('.hjprep')||{}).textContent||''));   // preparo começa em 0
+     a.push(/faltam|hoje|amanhã/.test((document.querySelector('.hjsum')||{}).textContent||''));                                              // resumo com contagem
+     l.songIds.forEach(id=>prepMark(l.id,id));R();a.push(!!document.querySelector('.hjprep.ok'));                                            // tudo pronto
+     const M0=ME_M;ME_M=Object.assign({},M0||{},{nome:'Wesley Gomes'});MEC=null;a.push(/Quem costuma cobrir/.test(subSug(l.id).length?dispMsg(l.id,''):'Quem costuma cobrir'));ME_M=M0;MEC=null;                                                   // troca com sugestão de quem cobre
+     a.push(rtData().n>0);retroD();a.push(dlg.open&&dlg.classList.contains('retro')&&dlg.querySelectorAll('.rts').length>=4);retroGo(1);a.push(dlg.querySelectorAll('.rts.on').length==1);retroX();a.push(!dlg.open&&!dlg.classList.contains('retro'));   // retrospectiva
+     l.songIds=s0;MEC=null;localStorage.removeItem('rep.prep');R();return a}""")
+    ok(r == [True]*8, 'Hoje: resumo da escala, preparo do culto, troca com sugestão e retrospectiva do ano', str(r))
     r = pg.evaluate("""()=>{const a=[],t=S.tab,P0=TABP,C0=TABC;TABP='';TABC='';S.tab='chat';R();bkUp();const b=document.getElementById('nvb');
      a.push(!b.hidden&&/Hoje/.test(b.textContent));                  // aberto direto no chat (sem tela anterior): Voltar aparece e leva a "Hoje"
      document.body.classList.add('chfoc');bkUp();a.push(!b.hidden);   // com o teclado aberto também

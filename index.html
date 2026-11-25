@@ -1021,6 +1021,30 @@ body .hjc .hjti,body.tbon .hjh{font-size:1.7rem}
 body:not([data-tab="lists"]):not([data-tab="songs"]) header #add{display:none}
 body.tbon nav#tbb button{flex-direction:column;gap:1px;border-radius:14px;min-height:52px;margin:0;padding:5px 0 4px}body.tbon nav#tbb button.on{flex-grow:1}body.tbon nav#tbb button>span,body.tbon nav#tbb button.on>span{max-width:100%;opacity:1;margin:0;font-size:.64rem;font-weight:600;letter-spacing:.01em;text-overflow:ellipsis}
 body dialog.hasback>h2{font-size:1.05rem;line-height:1.25;min-height:44px;display:flex;align-items:center;padding-left:96px;padding-right:12px;margin:0 0 6px}
+.hjsum{margin:2px 0 14px;color:var(--tx2,#A6A6AD);font-size:.98rem;line-height:1.4}.hjsum b{color:var(--ac,#00CDD3);font-weight:700}
+.hjprep{margin:14px 0 4px;padding:12px 14px;border-radius:16px;background:rgba(0,205,211,.08);border:1px solid rgba(0,205,211,.22)}.hjprep.ok{background:rgba(48,209,88,.1);border-color:rgba(48,209,88,.3)}
+.hjpt{display:flex;justify-content:space-between;align-items:center;font-size:.9rem;font-weight:600;gap:8px}.hjpt span{display:inline-flex;align-items:center;gap:6px}.hjprep.ok .hjpt span{color:#30D158}
+.hjpb{height:6px;border-radius:3px;background:rgba(255,255,255,.1);margin:8px 0 10px;overflow:hidden}.hjpb i{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,#00CDD3,#30D158);transition:width .6s var(--ease,ease)}.hjprep.ok .hjpb{margin-bottom:0}
+.hjpe{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 16px;border-radius:20px;border:0;background:#00CDD3;color:#00262A;font-weight:700;font-size:.92rem}
+.hjrt{display:flex;align-items:center;gap:12px;margin:0 0 14px;padding:12px 8px 12px 14px;border-radius:18px;cursor:pointer;background:linear-gradient(135deg,rgba(191,90,242,.28),rgba(0,205,211,.22));border:1px solid rgba(255,255,255,.12);animation:fvIn .5s var(--ease,ease) both}
+.hjpf{background:rgba(255,255,255,.06)}.hjrti{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:rgba(255,255,255,.14)}.hjrti .ico{width:22px;height:22px}
+.hjrtx{flex:1;min-width:0;display:flex;flex-direction:column}.hjrtx small{color:var(--tx2,#A6A6AD);font-size:.82rem}.hjrtc{flex:none;width:36px;height:36px;border:0;border-radius:18px;background:transparent;color:var(--tx2,#A6A6AD);display:grid;place-items:center}
+body.fvwow .hjh,body.fvwow .hjsum,body.fvwow .hjrt,body.fvwow .hjhero,body.fvwow .hjs,body.fvwow .hjb{animation:fvIn .7s var(--ease,ease) both}
+body.fvwow .hjsum{animation-delay:.12s}body.fvwow .hjrt{animation-delay:.2s}body.fvwow .hjhero{animation-delay:.28s;box-shadow:0 0 0 1px rgba(0,205,211,.35),0 18px 50px rgba(0,205,211,.18)}body.fvwow .hjs{animation-delay:.4s}
+@media (prefers-reduced-motion:reduce){body.fvwow .hjh,body.fvwow .hjsum,body.fvwow .hjrt,body.fvwow .hjhero,body.fvwow .hjs,body.fvwow .hjb,.hjrt{animation:none}}
+dialog.retro{width:100vw;max-width:none;height:100dvh;max-height:none;margin:0;padding:0;border:0;border-radius:0;background:radial-gradient(120% 80% at 20% 0%,#3a1458 0%,#0b1f2e 55%,#050507 100%);color:#fff}
+.rtw{position:relative;height:100%;display:flex;flex-direction:column;justify-content:center;padding:48px 28px calc(28px + env(safe-area-inset-bottom,0px));cursor:pointer;user-select:none}
+.rtbar{position:absolute;top:calc(12px + env(safe-area-inset-top,0px));left:16px;right:60px;display:flex;gap:4px}.rtbar i{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.25);overflow:hidden}.rtbar i b{display:block;height:100%;width:0;background:#fff;transition:width .4s}.rtbar i.on b{width:100%}
+.rtx{position:absolute;top:calc(4px + env(safe-area-inset-top,0px));right:8px;width:44px;height:44px;border:0;background:transparent;color:#fff;display:grid;place-items:center}.rtx .ico{width:24px;height:24px}
+.rtp{position:absolute;left:0;top:60px;bottom:0;width:28%;border:0;background:transparent}
+.rts{display:none;text-align:left}.rts.on{display:block;animation:fvIn .5s var(--ease,ease) both}.rtk{display:block;text-transform:uppercase;letter-spacing:.12em;font-size:.8rem;font-weight:700;color:#00CDD3;margin-bottom:10px}
+.rtbig{display:block;font-size:clamp(4.5rem,24vw,8rem);line-height:1;font-weight:800;letter-spacing:-.04em;background:linear-gradient(135deg,#fff,#00CDD3 60%,#BF5AF2);-webkit-background-clip:text;background-clip:text;color:transparent}
+.rtmid{display:block;font-size:clamp(1.8rem,8vw,2.6rem);line-height:1.15;font-weight:800;margin:0 0 6px}.rts p{font-size:1.15rem;margin:10px 0 0;color:rgba(255,255,255,.85)}.rts .rtsm{font-size:.95rem;color:rgba(255,255,255,.6)}
+.rtol{list-style:none;padding:0;margin:18px 0 0;counter-reset:r}.rtol li{counter-increment:r;display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.12);font-size:1.1rem}.rtol li::before{content:counter(r);width:28px;color:#00CDD3;font-weight:800}.rtol li span{flex:1}.rtol li small{color:rgba(255,255,255,.6)}.rtpp li{font-size:1.4rem;font-weight:700}
+.rtac{display:flex;gap:10px;margin-top:28px;position:relative;z-index:2}.rtac button{min-height:48px;padding:0 22px;border-radius:24px;font-weight:700}
+.eqau{display:flex;align-items:center;gap:12px;padding:12px 14px;margin:0 0 12px;border-radius:14px;background:rgba(0,205,211,.08);border:1px solid rgba(0,205,211,.22)}.eqau span{flex:1;display:flex;flex-direction:column}.eqau small{color:var(--tx2,#A6A6AD);font-size:.82rem}
+dialog.retro .dbar{display:none}
+.rtol.rtsg{counter-reset:r 1}
 </style></head><body>
 <header><button type="button" id="nvb" class="nvb" hidden onclick="bkGo()" aria-label="Voltar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg><span></span></button><svg class="lg" height="30" viewBox="0 0 720 160" preserveAspectRatio="xMinYMid slice" role="link" tabindex="0" style="cursor:pointer" aria-label="Escala B6 — ir para o início"><g transform="scale(.3125)"><circle cx="256" cy="256" r="256" fill="#000"/><circle cx="256" cy="256" r="226" fill="none" stroke="#fff" stroke-width="14"/><text x="256" y="338" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="232" font-weight="800" letter-spacing="-6" fill="#fff">B6</text></g><text x="190" y="112" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Arial,sans-serif" font-size="92" font-weight="700" letter-spacing="-2" fill="currentColor">Escala</text></svg><span id="hti" aria-hidden="true"></span><div class="tabs"><button data-t="hoje" onclick="tab('hoje')">Hoje</button> <button data-t="chat" class="tch" onclick="tab('chat')">Chat<i class="chbg" hidden></i></button> <button data-t="lists" onclick="tab('lists')">Repertórios</button> <button data-t="songs" onclick="tab('songs')">Músicas</button> <button data-t="dash" onclick="tab('dash')">Painel</button> <button data-t="esp" onclick="tab('esp')">Espiritual</button></div>
 <input id="q" placeholder="Buscar por artista ou nome da música" oninput="qin(this.value)">
@@ -1191,6 +1215,6 @@ const user={isOwner:async()=>false,canEdit:async()=>false,id:async()=>(window.__
 window.__B6SITE=1;window.claude={use:async n=>{await ready;return n=='db'?db:n=='user'?user:null}};})();
 
 </script>
-<script src="app.js?v=425"></script></body></html>
+<script src="app.js?v=426"></script></body></html>
 
 </body></html>
