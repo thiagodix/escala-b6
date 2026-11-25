@@ -38,7 +38,7 @@ async function chPoll(force){if(!CH.u||CH.live||CH.ld||CH.pl||document.hidden||C
   CH.ok=1;CH.err='';fresh=fresh.filter(x=>!chMe(x));
   if(!chg)return;
   if(on){if(chLow())CH.stick=1;else if(fresh.length)CH.newb=1;chSeenSet(chLastId());chR()}
-  else{chBadge();const m=fresh[fresh.length-1];if(m&&!FS)toastA('💬 '+m.autor+': '+String(m.texto).slice(0,60),'Abrir',()=>tab('chat'),6000)}}catch(e){}finally{CH.pl=0}}
+  else chBadge()}catch(e){}finally{CH.pl=0}}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&CH.u)setTimeout(()=>chPoll(1),300)});
 window.addEventListener('scroll',()=>{if(CH.newb&&S.tab=='chat'&&chLow()){CH.newb=0;const b=$('.chnw');if(b)b.remove()}},{passive:true});
 document.addEventListener('focusin',e=>{if(e.target&&e.target.id=='chi')document.body.classList.add('chfoc')});

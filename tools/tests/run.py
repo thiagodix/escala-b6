@@ -124,14 +124,14 @@ with sync_playwright() as p:
     ok(r['qb'] != 'none' and r['btn'] and r['add'] == 'none' and r['items'] > 10 and r['hm'] and r['ed'] == 0 and r['detail'], 'banda: menu Músicas lista e abre qualquer música, sem opções de edição', str(r))
     r = pg.evaluate("""()=>{const T=td(),l=S.lists.filter(x=>x.date&&x.date>=T).sort((a,b)=>a.date.localeCompare(b.date))[0];const o=[l.banda,ME_M,MY_DISP,window.__SBB];l.banda={...(l.banda||{}),vm:pubNm('Ana Teste')};ME_M={id:'m1',nome:'Ana Teste'};MY_DISP={};window.__SBB={};
      S.tab='hoje';R();const a=[],cf=()=>document.querySelector('.hjcf'),mo=()=>document.querySelector('.hjmo');
-     a.push(!!cf(),!mo());MY_DISP[l.id]={status:'sim'};R();a.push(!cf(),!!mo(),/Presença confirmada/.test(document.querySelector('.hjhero').textContent));hjMais(l.id);a.push(d2.open&&d2.dataset.k=='sheet'&&/Vou servir/.test(d2.textContent));d2.close();
+     a.push(!cf(),!!mo());MY_DISP[l.id]={status:'nao'};R();a.push(!cf(),!!mo(),/não pode/.test(document.querySelector('.hjhero').textContent));hjMais(l.id);a.push(d2.open&&d2.dataset.k=='sheet'&&/Não vou poder servir/.test(d2.textContent)&&!/Vou servir/.test(d2.textContent));d2.close();
      [l.banda,ME_M,MY_DISP,window.__SBB]=o.slice(0,4);S.tab='lists';R();return a}""")
-    ok(r == [True, True, True, True, True, True], 'banda: Confirmar presença no Hoje até confirmar; depois fica em Mais', str(r))
+    ok(r == [True, True, True, True, True, True], 'banda: sem pedido de confirmação de presença no Hoje; avisar que não pode fica em Mais', str(r))
     r = pg.evaluate("""async()=>{const T=td(),l=S.lists.filter(x=>x.date&&x.date>=T).sort((a,b)=>a.date.localeCompare(b.date))[0];const o=[l.banda,ME_M,MY_DISP,window.__SBB,window.__FVME];l.banda={...(l.banda||{}),vm:pubNm('Ana Teste')};ME_M=null;MY_DISP={};
      const q={select:()=>q,eq:()=>q,then:f=>f({data:[]})};window.__SBB={auth:{getUser:async()=>({data:{user:{id:'u',email:'a@b.c'}}})},from:()=>q};window.__FVME={id:'m1',nome:'Ana Teste'};
-     S.tab='hoje';R();const a=[!document.querySelector('.hjcf')];await fvInit();a.push(!!document.querySelector('.hjcf'));
+     S.tab='hoje';R();const a=[!document.querySelector('.hjmo')];await fvInit();a.push(!!document.querySelector('.hjmo')&&!document.querySelector('.hjcf'));
      [l.banda,ME_M,MY_DISP,window.__SBB,window.__FVME]=o.slice(0,5);S.tab='lists';R();return a}""")
-    ok(r == [True, True], 'banda: ao entrar na conta, o Confirmar presença aparece no Hoje sem precisar sair da tela', str(r))
+    ok(r == [True, True], 'banda: ao entrar na conta, o Mais (avisar que não pode) aparece no Hoje sem pedir confirmação', str(r))
     r = pg.evaluate("""()=>{const o=[ME_M,window.__SBB];ME_M={id:'m1',nome:'Ana Teste'};window.__SBB={};S.tab='hoje';R();const a=[!!document.querySelector('.hjcol > .hjbar'),!document.querySelector('.hjhero .hjb')];S.tab='perf';R();const d=document.querySelector('details.dmo2');a.push(!!d&&!d.open,!!d&&/Mais/.test(d.textContent));[ME_M,window.__SBB]=o;S.tab='lists';R();return a}""")
     ok(r == [True, True, True, True], 'um jeito só: barra de ações do Hoje fora do cartão e disponibilidade do Perfil em "Mais"', str(r))
     r = pg.evaluate("""async()=>{const a=[],u='https://thiagorgalvao-sketch.github.io/escala-b6/media/46b9579c1e83de4b8b69c1b9d6cc915b.mp3';
@@ -140,9 +140,9 @@ with sync_playwright() as p:
     ok(r == [True, True, True], 'baixar para offline: áudios do site são buscados no mesmo endereço do app (sem bloqueio entre domínios)', str(r))
     r = pg.evaluate("""()=>{const _mm=ME_M;ME_M=null;const a=[];const l=S.lists.find(x=>x.banda&&Object.values(x.banda).some(Boolean));const kk=Object.keys(l.banda).find(k=>l.banda[k]),antes=l.banda[kk],nome='Fulano Lembrete Teste';l.banda[kk]=pubNm(nome);const d0=l.date,z=n=>String(n).padStart(2,'0'),mais=k=>{const x=new Date(td()+'T12:00');x.setDate(x.getDate()+k);return x.getFullYear()+'-'+z(x.getMonth()+1)+'-'+z(x.getDate())};
      l.date=mais(1);var _fm=window.__FVME;window.__FVME={id:'m9',nome};try{localStorage.removeItem('rep.lemb');localStorage.removeItem('rep.cf')}catch(e){}
-     a.push(!!lembAlvo());const f=lembPres();a.push(f&&/Amanhã é culto/.test(document.querySelector('#tt').textContent));a.push(lembPres()===false);
+     a.push(!!lembAlvo());const f=lembPres();a.push(f===false);a.push(lembPres()===false);
      cfS(l.id,'s');a.push(lembAlvo()===null);localStorage.removeItem('rep.cf');localStorage.removeItem('rep.lemb');l.date=mais(10);a.push(lembAlvo()===null);l.date=d0;l.banda[kk]=antes;ME_M=_mm;window.__FVME=_fm;return a}""")
-    ok(r == [True]*5, 'lembrete de presença: avisa 1 vez por dia, some ao responder e só para culto de hoje/amanhã', str(r))
+    ok(r == [True]*5, 'lembrete de presença: desligado (a equipe é fixa e recebe a escala com antecedência)', str(r))
     ok(not E, 'banda: sem erros de JavaScript', '; '.join(E[:3])); c.close()
 
     # 2a) acesso fechado: sem login a página mostra só a tela de entrada e nenhum dado; com a senha certa entra
@@ -510,19 +510,20 @@ with sync_playwright() as p:
      return a}""")
     ok(r == [True]*6, 'chat: cor por pessoa (roxo/rosa para elas, azul/verde para eles, verde só para Thiago Galvão)', str(r))
     r = pg.evaluate("""()=>{const a=[],B=document.body,on=B.classList.contains('chon'),off=B.classList.contains('choff');
-     a.push(document.querySelector('.tabs button').dataset.t=='hoje'&&document.querySelector('#tbb button').dataset.t=='hoje'&&document.querySelector('header .hb').id=='chb');   // Hoje em primeiro em todos os menus
+     a.push(document.querySelector('.tabs button').dataset.t=='hoje'&&document.querySelector('#tbb button').dataset.t=='hoje'&&getComputedStyle(document.getElementById('chb')).display=='none');   // Hoje em primeiro; chat só na barra de abas
      B.classList.remove('chon','choff');a.push(getComputedStyle(document.querySelector('#tbb .tch')).display!='none');                          // aparece sem esperar nada carregar
      B.classList.add('choff');a.push(getComputedStyle(document.getElementById('chb')).display=='none');                                   // some só se a liderança desligar
      B.classList.toggle('chon',on);B.classList.toggle('choff',off);return a}""")
     ok(r == [True]*3, 'chat: botão fixo e em primeiro no topo, nas abas e na barra de baixo, sem esperar carregar', str(r))
     r = pg.evaluate("""()=>{const a=[],T=td(),l=S.lists.filter(x=>x.date>=T).sort((x,y)=>x.date.localeCompare(y.date))[0];if(!l)return['sem culto'];const s0=l.songIds.slice();if(!l.songIds.length)l.songIds=S.songs.slice(0,3).map(x=>x.id);
      localStorage.removeItem('rep.prep');S.tab='hoje';R();a.push(/0 de [0-9]+/.test((document.querySelector('.hjprep')||{}).textContent||''));   // preparo começa em 0
-     a.push(/faltam|hoje|amanhã/.test((document.querySelector('.hjsum')||{}).textContent||''));                                              // resumo com contagem
+     a.push(!document.querySelector('.hjsum,.hjcf,.hjpf'));                                                                            // sem excesso: nada de resumo repetido, confirmação ou aviso de perfil
+     {const n0=l.name;l.name='Musical';const p=lPend(l);l.name=n0;a.push(!p.some(x=>/4 músicas|Pós-Palavra/.test(x)))}                       // Musical: uma música já basta
      l.songIds.forEach(id=>prepMark(l.id,id));R();a.push(!!document.querySelector('.hjprep.ok'));                                            // tudo pronto
      const M0=ME_M;ME_M=Object.assign({},M0||{},{nome:'Wesley Gomes'});MEC=null;a.push(/Quem costuma cobrir/.test(subSug(l.id).length?dispMsg(l.id,''):'Quem costuma cobrir'));ME_M=M0;MEC=null;                                                   // troca com sugestão de quem cobre
      a.push(rtData().n>0);retroD();a.push(dlg.open&&dlg.classList.contains('retro')&&dlg.querySelectorAll('.rts').length>=4);retroGo(1);a.push(dlg.querySelectorAll('.rts.on').length==1);retroX();a.push(!dlg.open&&!dlg.classList.contains('retro'));   // retrospectiva
      l.songIds=s0;MEC=null;localStorage.removeItem('rep.prep');R();return a}""")
-    ok(r == [True]*8, 'Hoje: resumo da escala, preparo do culto, troca com sugestão e retrospectiva do ano', str(r))
+    ok(r == [True]*9, 'Hoje enxuto: preparo do culto, troca com sugestão, retrospectiva e culto Musical sem estrutura obrigatória', str(r))
     r = pg.evaluate("""()=>{const a=[],t=S.tab,P0=TABP,C0=TABC;TABP='';TABC='';S.tab='chat';R();bkUp();const b=document.getElementById('nvb');
      a.push(!b.hidden&&/Hoje/.test(b.textContent));                  // aberto direto no chat (sem tela anterior): Voltar aparece e leva a "Hoje"
      document.body.classList.add('chfoc');bkUp();a.push(!b.hidden);   // com o teclado aberto também
