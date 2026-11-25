@@ -1745,7 +1745,7 @@ const isMus=l=>/musical/.test(nz(l&&l.name));
 const SLOTS=l=>isMus(l)?[]:['1','2','3','4',...(isCeia(l)?['Ceia do Senhor']:[]),'Pós-Break','Pós-Palavra'];
 const SLN={'1':'1ª música','2':'2ª música','3':'3ª música','4':'4ª música','Ceia do Senhor':'Ceia do Senhor','Pós-Break':'Pós-Break','Pós-Palavra':'Pós-Palavra'};
 function slotR(){const e=$('#slt');if(!e||!P)return;const SL=SLOTS(P),SM=Object.fromEntries(S.songs.map(s=>[s.id,s]));if(P.slot&&!SL.includes(P.slot))P.slot=null;
- if(isMus(P)){e.innerHTML='<div class="slth">Culto musical · adicione quantas músicas quiser, na ordem que preferir</div>';return}
+ if(isMus(P)){e.innerHTML='<div class="slth">Culto Musical · a banda faz só a abertura, com 1 ou 2 músicas. Sem break e sem pós-palavra</div>';return}
  e.innerHTML=`<div class="slth">Estrutura do culto${isCeia(P)?' · com Ceia':''}<button type="button" class="ehp" title="Toda música adicionada ocupa a próxima posição vazia: 1ª a 4ª música${isCeia(P)?', Ceia do Senhor':''}, Pós-Break e Pós-Palavra. Toque numa posição vazia para escolher a música dela. Em eventos de Ceia aparece a posição da música da Ceia." aria-label="Ajuda" onclick="say(this.title)">?</button></div><div class="slg">${SL.map(v=>{const ids=P.songIds.filter(i=>SM[i]&&oo(P,i)==v);if(ids.length)return ids.map(i=>`<button type="button" class="slb${v=='Ceia do Senhor'?' cx':''}" onclick="slGo('${i}')"><small>${esc(SLN[v])}</small><span>${esc(SM[i].title)}</span></button>`).join('');return`<button type="button" class="slb e${P.slot==v?' on':''}" onclick="slPick(${ja(v)})"><small>${esc(SLN[v])}</small><span>${P.slot==v?'Escolha na lista ao lado':'+ Escolher música'}</span></button>`}).join('')}</div>`}
 function slPick(v){P.slot=P.slot==v?null:v;slotR();const i=dlg.querySelector('[data-p="mu"] input[placeholder^="Buscar"]');if(P.slot&&i){if(MOB())i.scrollIntoView({block:'center',behavior:'smooth'});i.focus({preventScroll:MOB()})}}
 function slGo(id){const i=P.songIds.indexOf(id),li=dlg.querySelector(`#sl li[data-i="${i}"]`);if(li){li.scrollIntoView({block:'center',behavior:'smooth'});li.classList.add('dgo');setTimeout(()=>li.classList.remove('dgo'),1200)}}
@@ -1759,7 +1759,7 @@ function slGo(id){const i=P.songIds.indexOf(id),li=dlg.querySelector(`#sl li[dat
 const RK=o=>!o||/^\d+$/.test(o)?0:o=='Ceia do Senhor'?1:o=='Pós-Break'?2:o=='Pós-Palavra'?3:4;
 const RTM=['Oração','Avisos','Oferta','Palavra','Ceia do Senhor','Break','Apelo','Batismo','Momento livre','Encerramento'];
 function rotSongs(l){return l.songIds.filter(i=>S.songs.some(s=>s.id==i)).map((id,i)=>[id,i]).sort((a,b)=>RK(oo(l,a[0]))-RK(oo(l,b[0]))||a[1]-b[1]).map(x=>x[0])}
-function rotDef(l,ss){const M=[],last=f=>{let a='';ss.forEach(i=>{if(f(RK(oo(l,i))))a=i});return a};if(isCeia(l))M.push({m:'Ceia do Senhor',n:'',a:last(r=>r<1)});if(ss.some(i=>RK(oo(l,i))==2))M.push({m:'Break',n:'',a:last(r=>r<2)});if(ss.length)M.push({m:'Palavra',n:'',a:last(r=>r<3)});return M}
+function rotDef(l,ss){if(isMus(l))return[];const M=[],last=f=>{let a='';ss.forEach(i=>{if(f(RK(oo(l,i))))a=i});return a};if(isCeia(l))M.push({m:'Ceia do Senhor',n:'',a:last(r=>r<1)});if(ss.some(i=>RK(oo(l,i))==2))M.push({m:'Break',n:'',a:last(r=>r<2)});if(ss.length)M.push({m:'Palavra',n:'',a:last(r=>r<3)});return M}
 function rotSeq(l){const ss=rotSongs(l),M=Array.isArray(l.rot)?l.rot:rotDef(l,ss),set=new Set(ss),q=[];const ms=a=>M.forEach((m,i)=>{if(m.a==a)q.push({k:'m',i,m})});
  ms('');ss.forEach(id=>{q.push({k:'s',id});ms(id)});M.forEach((m,i)=>{if(m.a&&!set.has(m.a))q.push({k:'m',i,m})});return q}
 function trI(l,a,b){const A=S.songs.find(x=>x.id==a),B=S.songs.find(x=>x.id==b);if(!A||!B)return null;const ka=stK(l,A),kb=stK(l,B),d=stInt(ka,kb),ba=+A.bpm||0,bb=+B.bpm||0,n=((l.tr||{})[a]||'').trim();
@@ -1994,7 +1994,7 @@ function rn1(){if(S.mig.rn1)return;S.lists.forEach(l=>{const n=(l.name||'').trim
 function rn2(){if(S.mig.rn2)return;S.lists.forEach(l=>{const n=(l.name||'').trim();if(/^Domingo:\s*/i.test(n))l.name=n.replace(/^Domingo:\s*/i,'')});S.mig.rn2=1}
 const VMIMP={};
 const VMML={'PODEROSO DEUS ETERNO':'majestade','MESSIAS':'maranata','SOU GRATO POR SEU AMOR':'santo pra sempre','DIGNO É O SENHOR':'*'};function vm1(){if(S.mig.vm1)return;const M={};Object.keys(VMIMP).forEach(k=>M[nz(k)]=[VMIMP[k],VMML[k]]);S.songs.forEach(s=>{const e=M[nz(s.title)];if(!e||(s.vmap||[]).length)return;const md=s.medleys||[],ok=e[1]?(e[1]=='*'?md.length>0:md.some(x=>nz(x).includes(e[1]))):!md.length;if(ok)s.vmap=e[0].map(r=>{if(!r[0])return{t:''};const h=VH.test(r[0])?1:0;return{t:r[0],h,v:h?'':r[1]}})});S.mig.vm1=1}
-const VER='25/11/2026 · 427';
+const VER='25/11/2026 · 428';
 
 const td=()=>new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);
 const asc2=s=>String(s||'').replace(/♭/g,'b').replace(/♯/g,'#').replace(/→/g,'>').replace(/←/g,'<').replace(/[^\x20-\x7E\u00A0-\u00FF\u2013\u2014\u2018-\u201D\u2022\u2026]/g,'');
