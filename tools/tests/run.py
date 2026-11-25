@@ -522,8 +522,11 @@ with sync_playwright() as p:
      l.songIds.forEach(id=>prepMark(l.id,id));R();a.push(!!document.querySelector('.hjprep.ok'));                                            // tudo pronto
      const M0=ME_M;ME_M=Object.assign({},M0||{},{nome:'Wesley Gomes'});MEC=null;a.push(/Quem costuma cobrir/.test(subSug(l.id).length?dispMsg(l.id,''):'Quem costuma cobrir'));ME_M=M0;MEC=null;                                                   // troca com sugestão de quem cobre
      a.push(rtData().n>0);retroD();a.push(dlg.open&&dlg.classList.contains('retro')&&dlg.querySelectorAll('.rts').length>=4);retroGo(1);a.push(dlg.querySelectorAll('.rts.on').length==1);retroX();a.push(!dlg.open&&!dlg.classList.contains('retro'));   // retrospectiva
+     {const d0=l.date;l.date=T;R();a.push(!!document.querySelector('.hjlive')&&!document.querySelector('.hjprep')&&![...document.querySelectorAll('.hjbar button')].some(b=>/Modo palco/.test(b.textContent)));l.date=d0}   // dia do culto: só o botão grande do palco
+     {const P0=window.P;P={...JSON.parse(JSON.stringify(l)),id:'zz',songIds:[],date:'2099-01-01'};a.push(sugPlan().length>=4);P.name='Musical';a.push(sugPlan().length<=2);P=P0}   // repertório sugerido
+     a.push(/Painel/.test(dashAct()));                                                                                                          // painel: o que pede ação
      l.songIds=s0;MEC=null;localStorage.removeItem('rep.prep');R();return a}""")
-    ok(r == [True]*9, 'Hoje enxuto: preparo do culto, troca com sugestão, retrospectiva e culto Musical sem estrutura obrigatória', str(r))
+    ok(r == [True]*13, 'Hoje enxuto: preparo do culto, troca com sugestão, retrospectiva e culto Musical sem estrutura obrigatória', str(r))
     r = pg.evaluate("""()=>{const a=[],t=S.tab,P0=TABP,C0=TABC;TABP='';TABC='';S.tab='chat';R();bkUp();const b=document.getElementById('nvb');
      a.push(!b.hidden&&/Hoje/.test(b.textContent));                  // aberto direto no chat (sem tela anterior): Voltar aparece e leva a "Hoje"
      document.body.classList.add('chfoc');bkUp();a.push(!b.hidden);   // com o teclado aberto também

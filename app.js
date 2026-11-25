@@ -1925,7 +1925,7 @@ const WD=['DOM','SEG','TER','QUA','QUI','SEX','SÁB'];
 /* tour */
 const tHoje=()=>{S.tab='hoje';R()},tCulto=()=>{const n=nextL();if(n){S.tab='lists';S.lv=n.id;S.lvm=1;R()}};
 const TOUR=[['#tbb,.tabs','Navegação','<b>Hoje</b> é a página inicial, com o seu próximo culto. Em <b>Repertórios</b> ficam todos os cultos e em <b>Espiritual</b> o devocional e o jejum. Em <b>Músicas</b> você busca qualquer música e vê a cifra, os blocos e o mapa vocal (a banda só visualiza). Quem administra também edita e tem o <b>Painel</b>, pelo perfil.',tHoje],
- ['.hjhero','Hoje','Seu próximo culto em destaque: data, sua função e a <b>passagem de som</b> em grande, com contagem regressiva e a linha do tempo do dia (banda pronta, gain, passagem). <b>Repertório</b> abre o culto e <b>Modo palco</b> abre as músicas em tela cheia, na visão em que você está. Os áudios dos próximos cultos são baixados sozinhos no aparelho, para abrir sem internet. <b>Seu preparo</b> mostra quantas músicas você já ouviu ou abriu, e <b>Ensaiar agora</b> toca o repertório na ordem.',tHoje],
+ ['.hjhero','Hoje','Seu próximo culto em destaque: data, sua função e a <b>passagem de som</b> em grande, com contagem regressiva e a linha do tempo do dia (banda pronta, gain, passagem). <b>Repertório</b> abre o culto e <b>Modo palco</b> abre as músicas em tela cheia, na visão em que você está. Os áudios dos próximos cultos são baixados sozinhos no aparelho, para abrir sem internet. <b>Seu preparo</b> mostra quantas músicas você já ouviu ou abriu, e <b>Ensaiar agora</b> toca o repertório (com faixas separadas, o seu instrumento começa mais baixo para você tocar junto). No dia do culto, o Hoje mostra só o botão <b>Abrir no palco</b>.',tHoje],
  ['.hjl','Repertório do dia','As músicas na ordem, com o tom. Toque no nome para ver a cifra; o <b>▶</b> toca a música.',tHoje],
  ['.lvh','O culto','Local, data, pregador, ensaio e passagem de som.',tCulto],
  ['.pdx','Pendências','O que ainda falta neste culto. Toque numa pendência para resolver direto na aba certa.'],
@@ -1994,7 +1994,7 @@ function rn1(){if(S.mig.rn1)return;S.lists.forEach(l=>{const n=(l.name||'').trim
 function rn2(){if(S.mig.rn2)return;S.lists.forEach(l=>{const n=(l.name||'').trim();if(/^Domingo:\s*/i.test(n))l.name=n.replace(/^Domingo:\s*/i,'')});S.mig.rn2=1}
 const VMIMP={};
 const VMML={'PODEROSO DEUS ETERNO':'majestade','MESSIAS':'maranata','SOU GRATO POR SEU AMOR':'santo pra sempre','DIGNO É O SENHOR':'*'};function vm1(){if(S.mig.vm1)return;const M={};Object.keys(VMIMP).forEach(k=>M[nz(k)]=[VMIMP[k],VMML[k]]);S.songs.forEach(s=>{const e=M[nz(s.title)];if(!e||(s.vmap||[]).length)return;const md=s.medleys||[],ok=e[1]?(e[1]=='*'?md.length>0:md.some(x=>nz(x).includes(e[1]))):!md.length;if(ok)s.vmap=e[0].map(r=>{if(!r[0])return{t:''};const h=VH.test(r[0])?1:0;return{t:r[0],h,v:h?'':r[1]}})});S.mig.vm1=1}
-const VER='25/11/2026 · 428';
+const VER='25/11/2026 · 429';
 
 const td=()=>new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);
 const asc2=s=>String(s||'').replace(/♭/g,'b').replace(/♯/g,'#').replace(/→/g,'>').replace(/←/g,'<').replace(/[^\x20-\x7E\u00A0-\u00FF\u2013\u2014\u2018-\u201D\u2022\u2026]/g,'');
@@ -3098,9 +3098,10 @@ function hjSum(l){if(!l||!l.date)return'';const T=td(),n=dd(l.date,T),wd=new Dat
 /* ---- preparo: músicas que a pessoa já abriu ou ouviu ---- */
 function prepGet(lid){const m=uLs('prep')||{};return m[lid]||[]}
 function prepMark(lid,sid){if(!lid||!sid)return;const m=uLs('prep')||{},a=m[lid]||[];if(a.includes(sid))return;a.push(sid);m[lid]=a;const ks=Object.keys(m);if(ks.length>40)delete m[ks[0]];uLs('prep',m)}
-function prepCard(l,ss){if(!ss.length)return'';const p=prepGet(l.id),n=ss.filter(s=>p.includes(s.id)).length,t=ss.length,ok=n>=t,pc=Math.round(n/t*100);
+function prepCard(l,ss){if(!ss.length||l.date==td())return'';const p=prepGet(l.id),n=ss.filter(s=>p.includes(s.id)).length,t=ss.length,ok=n>=t,pc=Math.round(n/t*100);
  return`<div class="hjprep${ok?' ok':''}"><div class="hjpt"><span>${ok?UI.ck+' Tudo pronto para o culto':'Seu preparo'}</span><b>${n} de ${t}</b></div><div class="hjpb" role="progressbar" aria-valuemin="0" aria-valuemax="${t}" aria-valuenow="${n}" aria-label="Músicas preparadas"><i style="width:${pc}%"></i></div>${ok?'':`<button type="button" class="hjpe" onclick="ensaiar('${l.id}')">${UI.hp} Ensaiar agora</button>`}</div>`}
 function ensaiar(lid){const l=S.lists.find(x=>x.id==lid);if(!l)return;hap&&hap(10);const p=prepGet(lid),ss=l.songIds.map(id=>S.songs.find(x=>x.id==id)).filter(Boolean),nx=ss.find(s=>!p.includes(s.id))||ss[0];
+ const mk=mineK(l);if(nx&&mk.length&&stGet(nx,'o')){S.tab='songs';S.vw='mapa';S.vwA='';S.sel=nx.id;S.ctx=lid;S.hide=true;R();scrollTo(0,0);fxmOpen(nx.id,'o');mineLow(mk);return}
  let q=[];try{q=typeof audQ=='function'?audQ(l):[]}catch(e){}
  if(q.length&&typeof ouvir=='function'){ss.forEach(s=>prepMark(lid,s.id));ouvir(lid)}
  if(nx){S.tab='songs';S.vw='mapa';S.vwA='';S.sel=nx.id;S.ctx=lid;S.hide=true;R();scrollTo(0,0)}}
@@ -3113,7 +3114,7 @@ function rtData(){const Y=String(rtYear()),T=td(),me=S.band?meG():(meG()||''),al
  const sc={},kc={},pc={},fc={};L.forEach(l=>{(l.songIds||[]).forEach(id=>{sc[id]=(sc[id]||0)+1;const s=S.songs.find(x=>x.id==id);if(s){const k=(l.keys||{})[id]||s.key;if(k)kc[k]=(kc[k]||0)+1}});const b=l.banda||{};Object.keys(b).forEach(k=>{const v=(b[k]||'').trim();if(!v||(typeof isEx=='function'&&isEx(v)))return;if(pers&&nz(v).trim()==nz(me).trim()){const r=BR.find(x=>x[0]==k);if(r)fc[r[1]]=(fc[r[1]]||0)+1;return}pc[v]=(pc[v]||0)+1})});
  const top=o=>Object.entries(o).sort((a,b)=>b[1]-a[1]);
  return{Y,pers,n:L.length,songs:top(sc).map(([id,c])=>({s:S.songs.find(x=>x.id==id),c})).filter(x=>x.s),key:(top(kc)[0]||[])[0]||'',ppl:top(pc).slice(0,3),fn:top(fc).slice(0,2).map(x=>x[0]),first:L.slice().sort((a,b)=>a.date.localeCompare(b.date))[0]}}
-function rtCard(){if(!rtSeason()||uLs('rtx')==rtYear())return'';const d=rtData();if(d.n<1)return'';
+function rtCard(){if(!rtSeason()||uLs('rtx')==rtYear())return'';{const n=nextL();if(n&&n.date==td())return''}const d=rtData();if(d.n<1)return'';
  return`<div class="hjrt" role="button" tabindex="0" onclick="retroD()"><span class="hjrti">${UI.sp}</span><span class="hjrtx"><b>Seu ano no Fervor ${d.Y}</b><small>${d.pers?'Veja os cultos, as músicas e as pessoas do seu ano':'Veja o ano da banda em números'}</small></span><button type="button" class="hjrtc" aria-label="Ocultar" onclick="event.stopPropagation();uLs('rtx',rtYear());R()">${UI.x}</button></div>`}
 let RT=null;
 function retroD(){const d=rtData();if(!d.n)return toast('Ainda não há cultos neste ano');const ttl=d.songs[0],fd2=x=>x?new Date(x.date+'T00:00').toLocaleDateString('pt-BR',{day:'numeric',month:'long'}):'';
@@ -3146,3 +3147,29 @@ function eqCand(k){if(!P)return'';const used=new Set(Object.values(P.banda||{}).
  return(Object.entries(c).sort((a,b)=>b[1]-a[1])[0]||[])[0]||''}
 function eqAuto(){if(!P)return;P.banda=P.banda||{};let n=0;BR.forEach(([k])=>{if((P.banda[k]||'').trim())return;const v=eqCand(k);if(!v)return;P.banda[k]=v;n++;const i=document.querySelector('input[list="db_'+k+'"]');if(i)i.value=v});if(!n)return toast('Não encontrei ninguém disponível para as vagas');hap&&hap(10);slR()}
 {const _p=perW;perW=function(){_p.apply(this,arguments);const e=$('#eqw');if(!e||!P)return;const vz=BR.filter(([k])=>!((P.banda||{})[k]||'').trim()).length;if(vz)e.insertAdjacentHTML('beforeend',`<div class="eqau"><span><b>${vz} ${vz==1?'vaga':'vagas'} na equipe</b><small>Preenche com quem mais serviu nessa função e não avisou que não pode.</small></span><button type="button" class="sm pri" onclick="eqAuto()">Preencher</button></div>`)}}
+
+/* ---- ensaio da minha parte: no player de faixas separadas, o meu instrumento começa mais baixo ---- */
+function mineK(l){if(!S.band)return[];const M={vm:'vocal',vf:'vocal',so:'vocal',co:'vocal',te:'vocal',bt:'bateria',bx:'baixo',tc:'teclado',gt:'guitarra',vi:'guitarra'};let c=[];try{c=myCodes(l)}catch(e){}return[...new Set(c.map(x=>M[x]).filter(Boolean))]}
+function mineLow(ks,n){n=n||0;if(typeof FXA=='undefined'||!FXA.length){if(n<40)setTimeout(()=>mineLow(ks,n+1),250);return}let ok=0;FXA.forEach(t=>{if(ks.includes(t.k)){t.vol=.15;ok=1}});if(ok){try{fxmMix();fxmRenderRows()}catch(e){}}}
+/* ---- modo culto: no dia, um botão grande para abrir no palco ---- */
+{const _h=vHoje;vHoje=function(){let h=_h.apply(this,arguments);try{const T=td(),l=myNxL(T)||nextL();if(l&&l.date==T&&l.songIds.length){h=h.replace(`<button onclick="stage('${l.id}')">Modo palco</button>`,'').replace('<div class="hjc hjhero">',`<button type="button" class="hjlive" onclick="stage('${l.id}')"><span>${IC2&&ICN?ICN.play:''}</span><b>Abrir no palco</b><small>${esc(l.turno||'Hoje')}${l.place?' · '+esc(l.place):''}</small></button><div class="hjc hjhero">`)}
+ if(S.band&&l)h=h.replace('<div class="hjc hjhero">',chgB(l)+'<div class="hjc hjhero">')}catch(e){}return h}}
+/* ---- repertório sugerido em um toque ---- */
+function sugPlan(){if(!P)return[];const T=P.date||td(),lim=new Date(new Date(T+'T00:00')-28*864e5).toISOString().slice(0,10),st={};
+ S.lists.filter(x=>x.date&&x.id!=P.id&&x.date<T).forEach(x=>x.songIds.forEach(id=>{const o=st[id]||(st[id]={id,n:0,l:''});o.n++;if(x.date>o.l)o.l=x.date}));
+ const C=Object.values(st).filter(o=>o.l<lim&&!P.songIds.includes(o.id)&&S.songs.some(s=>s.id==o.id)).sort((a,b)=>b.n-a.n||a.l.localeCompare(b.l)),SM=Object.fromEntries(S.songs.map(s=>[s.id,s])),used=new Set(),take=f=>{const o=C.find(o=>!used.has(o.id)&&f(SM[o.id]));if(o){used.add(o.id);return o.id}return C.find(o=>!used.has(o.id))&&(()=>{const z=C.find(o=>!used.has(o.id));used.add(z.id);return z.id})()};
+ const H=s=>fty(s)=='H',V=s=>fty(s)=='V',A=s=>isAb(s);
+ const plan=isMus(P)?[take(A),take(H)]:[take(A),take(H),take(V),take(V),...(isCeia(P)?[take(V)]:[]),take(H),take(V)];return plan.filter(Boolean)}
+function sugKey(id){const b=P.banda||{},ld=[b.vm,b.vf].map(v=>nz(v||'').trim()).filter(Boolean);if(!ld.length)return'';const c={};S.lists.filter(x=>x.id!=P.id&&x.songIds.includes(id)&&[(x.banda||{}).vm,(x.banda||{}).vf].some(v=>ld.includes(nz(v||'').trim()))).forEach(x=>{const k=(x.keys||{})[id];if(k)c[k]=(c[k]||0)+1});return(Object.entries(c).sort((a,b)=>b[1]-a[1])[0]||[])[0]||''}
+function sugAuto(){if(!P)return;const ids=sugPlan();if(!ids.length)return toast('Ainda não há histórico suficiente para sugerir');hap&&hap(10);P.keys=P.keys||{};ids.forEach(id=>{la(id);const k=sugKey(id),s=S.songs.find(x=>x.id==id);if(k&&s&&k!=s.key)P.keys[id]=k});try{pkR();slR()}catch(e){}}
+{const _f=flR;flR=function(){_f.apply(this,arguments);const e=$('#flw');if(!e||!P||P.songIds.length)return;e.insertAdjacentHTML('afterbegin',`<div class="eqau sgau"><span><b>Repertório sugerido</b><small>Monta o culto com músicas que não tocaram nas últimas 4 semanas, na ordem do fluxo e no tom que quem ministra costuma cantar. Depois é só trocar o que quiser.</small></span><button type="button" class="sm pri" onclick="sugAuto()">Sugerir</button></div>`)}}
+/* ---- publicar de uma vez: depois de publicar, os próximos passos num lugar só ---- */
+let PUBNX='';
+{const _p=pubL;pubL=async function(id){PUBNX=id;try{return await _p.apply(this,arguments)}finally{PUBNX=''}}}
+{const _d=pubDlg;pubDlg=function(id){if(PUBNX!=id)return _d.apply(this,arguments);PUBNX='';const l=S.lists.find(x=>x.id==id);if(!l)return;const n=l.songIds.length,ap=(l.apv||{}).st;
+ dlg.innerHTML=`<h2>Publicado para a banda</h2><p class="mut" style="margin:0 0 14px">${UI.ck} O time já vê ${n} ${n==1?'música':'músicas'} deste culto.</p><div class="pbn">${ap!='ok'&&typeof apvSend=='function'?`<button type="button" class="pri" onclick="dlg.close();apvSend('${id}')">Enviar para aprovação da liderança</button>`:''}<button type="button" onclick="dlg.close();shL('${id}')">Mandar no WhatsApp da banda</button><button type="button" onclick="pubDlg0('${id}')">Link e opções da visão da banda</button><button type="button" onclick="dlg.close()">Pronto</button></div>`;try{dlg.showModal()}catch(e){}};window.pubDlg0=id=>_d(id)}
+/* ---- painel: primeiro o que pede ação ---- */
+function dashAct(){const T=td(),L=S.lists.filter(l=>l.date&&l.date>=T).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,6),it=[],tab=t=>/música|Pós-Palavra|Ceia|canta/i.test(t)?'mu':/ensaio/i.test(t)?'en':/passagem/i.test(t)?'ev':/paleta/i.test(t)?'pa':'eq';
+ L.forEach(l=>{if(it.length>=3)return;let p=[];try{p=lPend(l)}catch(e){}if(!p.length)return;const d=new Date(l.date+'T00:00').toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit'}).replace('.','');it.push(`<button type="button" class="dact" onclick="editList('${l.id}');ltG('${tab(p[0])}')"><span><b>${esc(d.charAt(0).toUpperCase()+d.slice(1))} · ${esc(l.name||'')}</b><small>Falta: ${esc(p.slice(0,2).join(', '))}${p.length>2?' e mais '+(p.length-2):''}</small></span><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>`)});
+ return`<div class="dacw"><h1>Painel</h1>${it.length?`<p class="mut">Precisa de ação</p>${it.join('')}`:`<div class="dact ok"><span><b>${UI.ck} Tudo em dia</b><small>Os próximos cultos estão completos.</small></span></div>`}</div>`}
+{const _v=vDash;vDash=function(){const h=_v.apply(this,arguments);return dashAct()+`<details class="dmore"><summary>Números e histórico</summary>${h}</details>`}}
