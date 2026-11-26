@@ -518,7 +518,7 @@ with sync_playwright() as p:
     r = pg.evaluate("""()=>{const a=[],T=td(),l=S.lists.filter(x=>x.date>=T).sort((x,y)=>x.date.localeCompare(y.date))[0];if(!l)return['sem culto'];const s0=l.songIds.slice();if(!l.songIds.length)l.songIds=S.songs.slice(0,3).map(x=>x.id);
      localStorage.removeItem('rep.prep');S.tab='hoje';R();a.push(/0 de [0-9]+/.test((document.querySelector('.hjprep')||{}).textContent||''));   // preparo começa em 0
      a.push(!document.querySelector('.hjsum,.hjcf,.hjpf'));                                                                            // sem excesso: nada de resumo repetido, confirmação ou aviso de perfil
-     {const n0=l.name;l.name='Musical';const p=lPend(l),rd=rotDef(l,l.songIds);l.name=n0;a.push(!p.some(x=>/4 músicas|Pós-Palavra/.test(x))&&!rd.length)}                       // Musical: uma música já basta
+     {const n0=l.name;l.name='Musical';const p=lPend(l),rd=rotDef(l,l.songIds),pc0=l.ppc;l.ppc=[S.songs[0].id];const pv=ppcV(l,1);l.ppc=pc0;if(!l.ppc)delete l.ppc;l.name=n0;a.push(pv==='');a.push(!p.some(x=>/4 músicas|Pós-Palavra/.test(x))&&!rd.length)}                       // Musical: uma música já basta
      l.songIds.forEach(id=>prepMark(l.id,id));R();a.push(!!document.querySelector('.hjprep.ok'));                                            // tudo pronto
      const M0=ME_M;ME_M=Object.assign({},M0||{},{nome:'Wesley Gomes'});MEC=null;a.push(/Quem costuma cobrir/.test(subSug(l.id).length?dispMsg(l.id,''):'Quem costuma cobrir'));ME_M=M0;MEC=null;                                                   // troca com sugestão de quem cobre
      a.push(rtData().n>0);retroD();a.push(dlg.open&&dlg.classList.contains('retro')&&dlg.querySelectorAll('.rts').length>=4);retroGo(1);a.push(dlg.querySelectorAll('.rts.on').length==1);retroX();a.push(!dlg.open&&!dlg.classList.contains('retro'));   // retrospectiva
@@ -526,7 +526,7 @@ with sync_playwright() as p:
      {const P0=window.P;P={...JSON.parse(JSON.stringify(l)),id:'zz',songIds:[],date:'2099-01-01'};a.push(sugPlan().length>=4);P.name='Musical';a.push(sugPlan().length<=2);P=P0}   // repertório sugerido
      a.push(/Painel/.test(dashAct()));                                                                                                          // painel: o que pede ação
      l.songIds=s0;MEC=null;localStorage.removeItem('rep.prep');R();return a}""")
-    ok(r == [True]*13, 'Hoje enxuto: preparo do culto, troca com sugestão, retrospectiva e culto Musical sem estrutura obrigatória', str(r))
+    ok(r == [True]*14, 'Hoje enxuto: preparo do culto, troca com sugestão, retrospectiva e culto Musical sem estrutura obrigatória', str(r))
     r = pg.evaluate("""()=>{const a=[],t=S.tab,P0=TABP,C0=TABC;TABP='';TABC='';S.tab='chat';R();bkUp();const b=document.getElementById('nvb');
      a.push(!b.hidden&&/Hoje/.test(b.textContent));                  // aberto direto no chat (sem tela anterior): Voltar aparece e leva a "Hoje"
      document.body.classList.add('chfoc');bkUp();a.push(!b.hidden);   // com o teclado aberto também
